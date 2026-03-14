@@ -10,51 +10,55 @@
             --orange: #ff8c00; 
             --ryanl-blue: #1e4a9e; 
         }
-        body { font-family: -apple-system, sans-serif; background: #ffffff; margin: 0; padding: 0; display: flex; flex-direction: column; align-items: center; }
+        body { font-family: -apple-system, sans-serif; background: #ffffff; margin: 0; padding: 0; display: flex; flex-direction: column; align-items: center; overflow-x: hidden; }
         
-        .wrapper { width: 100%; padding-top: 40px; display: flex; flex-direction: column; align-items: center; }
-        .header { width: 100%; text-align: center; margin-bottom: 25px; }
-        
-        /* [수정] 파일명을 mlogo.jpg 로 변경 */
-        .logo-img { width: 220px; height: auto; display: inline-block; border-radius: 8px; }
-        
-        .rocket-title { font-size: 30px; font-weight: 950; color: var(--ryanl-blue); margin: 20px 0 8px 0; letter-spacing: -1.2px; }
-        .sub-tag { font-size: 18px; color: var(--ryanl-blue); font-weight: 850; margin-top: 5px; }
+        /* [조정] 전체 높이를 줄이기 위해 상단 여백을 25px로 압축 */
+        .wrapper { width: 100%; padding-top: 25px; display: flex; flex-direction: column; align-items: center; }
 
+        .header { width: 100%; text-align: center; margin-bottom: 15px; }
+        
+        /* [수정] 로고 크기를 160px로 줄여서 공간 확보 */
+        .logo-img { width: 160px; height: auto; display: inline-block; border-radius: 8px; }
+        
+        /* [조정] 문구 간격 밀착 */
+        .rocket-title { font-size: 26px; font-weight: 950; color: var(--ryanl-blue); margin: 10px 0 5px 0; letter-spacing: -1.2px; }
+        .sub-tag { font-size: 16px; color: var(--ryanl-blue); font-weight: 850; margin-top: 0; }
+
+        /* 남색 카드 크기 살짝 압축 */
         .main-card { 
             width: 92%; max-width: 380px; background: var(--navy); border-radius: 12px; 
-            padding: 25px 20px; box-sizing: border-box; border: 3px solid var(--orange);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1); margin-top: 15px;
+            padding: 20px 18px; box-sizing: border-box; border: 3px solid var(--orange);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1); margin-top: 10px;
         }
 
         #setup-view { width: 92%; max-width: 380px; text-align: center; }
-        .setup-label { display:block; margin-bottom:10px; font-weight:900; color: var(--ryanl-blue); text-align: left; font-size: 17px; }
+        .setup-label { display:block; margin-bottom:8px; font-weight:900; color: var(--ryanl-blue); text-align: left; font-size: 16px; }
 
-        .info-box { margin-bottom: 20px; text-align: left; border-bottom: 1px dashed rgba(255,255,255,0.2); padding-bottom: 15px; }
-        .user-info { color: #fff; font-size: 17px; margin-bottom: 12px; font-weight: 700; line-height: 1.4; }
+        .info-box { margin-bottom: 15px; text-align: left; border-bottom: 1px dashed rgba(255,255,255,0.2); padding-bottom: 12px; }
+        .user-info { color: #fff; font-size: 16px; margin-bottom: 10px; font-weight: 700; line-height: 1.4; }
         .btn-change { 
-            width: 100%; padding: 12px; background: #ffffff; color: #333; border: none;
-            border-radius: 8px; font-weight: 900; font-size: 15px; cursor: pointer;
+            width: 100%; padding: 10px; background: #ffffff; color: #333; border: none;
+            border-radius: 8px; font-weight: 900; font-size: 14px; cursor: pointer;
         }
 
-        .input-group { margin-bottom: 20px; text-align: left; }
-        .label-area { display: flex; align-items: center; margin-bottom: 10px; color: #fff; font-weight: 900; font-size: 18px; }
+        .input-group { margin-bottom: 15px; text-align: left; }
+        .label-area { display: flex; align-items: center; margin-bottom: 8px; color: #fff; font-weight: 900; font-size: 17px; }
         .label-area span { margin-left: 8px; }
 
         input, select { 
-            width: 100%; padding: 16px; border: none; border-radius: 8px; 
-            font-size: 18px; box-sizing: border-box; outline: none; background: #ffffff; color: #000; font-weight: 600;
+            width: 100%; padding: 14px; border: none; border-radius: 8px; 
+            font-size: 17px; box-sizing: border-box; outline: none; background: #ffffff; color: #000; font-weight: 600;
         }
-        #setup-view input, #setup-view select { border: 2.5px solid #ddd; }
+        #setup-view input, #setup-view select { border: 2px solid #ddd; }
 
         .btn-submit { 
-            width: 100%; padding: 18px; background: var(--navy); color: #fff; 
-            border: 2.5px solid var(--orange); border-radius: 10px; font-size: 20px; 
+            width: 100%; padding: 16px; background: var(--navy); color: #fff; 
+            border: 2.5px solid var(--orange); border-radius: 10px; font-size: 19px; 
             font-weight: 900; cursor: pointer; margin-top: 5px;
         }
 
-        .footer { margin-top: 30px; font-size: 13px; color: #666; padding-bottom: 40px; text-align: center; font-weight: 700; }
-        .designer-tag { font-size: 12px; color: #666; display: block; margin-top: 5px; font-weight: 800; }
+        .footer { margin-top: 20px; font-size: 12px; color: #666; padding-bottom: 30px; text-align: center; font-weight: 700; }
+        .designer-tag { font-size: 11px; color: #666; display: block; margin-top: 4px; font-weight: 800; }
     </style>
 </head>
 <body>
