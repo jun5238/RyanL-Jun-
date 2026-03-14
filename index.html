@@ -21,7 +21,7 @@
 
         .main-card { 
             width: 92%; max-width: 380px; background: var(--navy); border-radius: 12px; 
-            padding: 25px 20px; box-sizing: border-box; border: 3.5px solid var(--orange);
+            padding: 25px 20px; box-sizing: border-box; border: 3px solid var(--orange);
             box-shadow: 0 4px 12px rgba(0,0,0,0.1); margin-top: 15px;
         }
 
@@ -29,7 +29,6 @@
         .setup-label { display:block; margin-bottom:10px; font-weight:900; color: var(--ryanl-blue); text-align: left; font-size: 17px; }
 
         .info-box { margin-bottom: 20px; text-align: left; border-bottom: 1px dashed rgba(255,255,255,0.2); padding-bottom: 15px; }
-        /* 표시 정보 폰트 사이즈 살짝 조절 */
         .user-info { color: #fff; font-size: 17px; margin-bottom: 12px; font-weight: 700; line-height: 1.4; }
         .btn-change { 
             width: 100%; padding: 12px; background: #ffffff; color: #333; border: none;
@@ -83,7 +82,7 @@
 
     <div id="main-view" style="display:none;" class="main-card">
         <div class="info-box">
-            <div class="user-info">현재 계정: <strong><span id="display-id"></span> <span id="display-camp"></span></strong> 기사님</div>
+            <div class="user-info">현재 계정: <strong><span id="display-id"></span> <span id="display-camp"></span></strong></div>
             <button class="btn-change" onclick="showSetup()">정보 변경</button>
         </div>
         <form id="f" action="https://docs.google.com/forms/d/e/1FAIpQLScC6H-XbS7l6T_N6k8_u_iF0V-u8J_X8V8J8V8J8V8J8V8J8V8J8V8/formResponse" method="POST" target="ifr">
