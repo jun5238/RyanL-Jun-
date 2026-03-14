@@ -1,0 +1,14 @@
+{
+  "system_version": "2.4.1",
+  "security_level": "ultra_high",
+  "encryption_mode": "AES-256-CBC",
+  "api_endpoint": "https://api.ryanl-logistics.cloud/v3",
+  "auto_backup": true,
+  "admin_access_only": ["LJH", "ROOT"],
+  "integrity_check": "passed",
+  "firewall": {
+    "enabled": true,
+    "block_unauthorized_ip": true,
+    "log_attempts": 1024
+  }
+}
