@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>천안1캠프 채번 1초컷</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; padding: 15px; max-width: 400px; margin: auto; background-color: #f0f2f5;}
+        input, select, button { width: 100%; padding: 14px; margin: 8px 0; box-sizing: border-box; font-size: 16px; border-radius: 8px; border: 1px solid #ccc;}
+        button { background-color: #673ab7; color: white; border: none; font-weight: bold; cursor: pointer; margin-top: 15px; }
+        button.edit-btn { background-color: #e0e0e0; color: #333; margin-top: 5px; padding: 8px; font-size: 13px;}
+        .hidden { display: none; }
+        .box { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        .header { text-align: center; color: #673ab7; margin-bottom: 20px; }
+        .success { color: green; text-align: center; font-weight: bold; margin-top: 15px; display: none; }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <h2 style="margin-bottom: 5px;">🚀 채번 요청 1초컷</h2>
+    <p style="margin-top: 0; font-size: 13px; color: gray;">천안1캠프 전용</p>
+</div>
+
+<div id="settingsArea" class="box">
+    <h3 style="margin-top:0;">👤 내 정보 설정</h3>
+    <p style="font-size: 13px; color: gray;">최초 1회만 설정하면 이후 자동 입력됩니다.</p>
+    
+    <label><b>기사님 아이디</b></label>
+    <input type="text" id="myId" placeholder="예: Roket">
+    
+    <label><b>요청 캠프</b></label>
+    <select id="myCamp">
+        <option value="">캠프를 선택해주세요</option>
+        <option value="음봉MB">음봉MB</option>
+        <option value="송촌MB">송촌MB</option>
+    </select>
+    
+    <button onclick="saveSettings()">저장하고 시작하기</button>
+</div>
+
+<div id="inputArea" class="box hidden">
+    <div style="background: #f8f9fa; padding: 12px; border-radius: 8px; margin-bottom: 15px; font-size: 14px;">
+        <b>현재 계정:</b> <span id="displayId" style="color:#673ab7; font-weight:bold;"></span> (<span id="displayCamp"></span>)
+        <button class="edit-btn" onclick="resetSettings()">정보 변경</button>
+    </div>
+
+    <form action="https://docs.google.com/forms/u/0/d/e/1FAIpQLSeIMR-wkYKFwnldd2qKKyUlaxLN85tu7OBX0HsLt7fzezZKWg/formResponse" method="POST" target="hidden_iframe" onsubmit="showSuccess()">
+        
+        <input type="hidden" name="entry.697011792" value="채번 요청">
+        <input type="hidden" name="entry.1315166815" id="formId">
+        <input type="hidden" name="entry.1573740217" id="formCamp">
+        <input type="hidden" name="pageHistory" value="0,1">
+
+        <label><b>📦 운송장 번호</b></label>
+        <input type="text" name="entry.359305263" required placeholder="복사한 운송장 붙여넣기" id="waybillInput">
+
+        <label><b>🔢 채번 수량</b></label>
+        <input type="number" name="entry.1437474928" required placeholder="숫자만 입력 (예: 1)">
+
+        <button type="submit" id="submitBtn">바로 제출하기</button>
+    </form>
+    <p id="successMsg" class="success">✅ 제출 완료! 다음 건을 입력하세요.</p>
+</div>
+
+<iframe name="hidden_iframe" id="hidden_iframe" style="display:none;"></iframe>
+
+<script>
+    function checkSettings() {
+        var savedId = localStorage.getItem('delivery_id');
+        var savedCamp = localStorage.getItem('delivery_camp');
+        if (savedId && savedCamp) {
+            document.getElementById('settingsArea').classList.add('hidden');
+            document.getElementById('inputArea').classList.remove('hidden');
+            document.getElementById('displayId').innerText = savedId;
+            document.getElementById('displayCamp').innerText = savedCamp;
+            document.getElementById('formId').value = savedId;
+            document.getElementById('formCamp').value = savedCamp;
+        } else {
+            document.getElementById('settingsArea').classList.remove('hidden');
+            document.getElementById('inputArea').classList.add('hidden');
+        }
+    }
+
+    function saveSettings() {
+        var id = document.getElementById('myId').value.trim();
+        var camp = document.getElementById('myCamp').value;
+        if(id && camp) {
+            localStorage.setItem('delivery_id', id);
+            localStorage.setItem('delivery_camp', camp);
+            checkSettings();
+        } else {
+            alert('아이디와 캠프를 모두 입력(선택)해주세요!');
+        }
+    }
+
+    function resetSettings() {
+        localStorage.removeItem('delivery_id');
+        localStorage.removeItem('delivery_camp');
+        checkSettings();
+    }
+
+    function showSuccess() {
+        var btn = document.getElementById('submitBtn');
+        btn.innerText = '제출 중...';
+        btn.disabled = true;
+        btn.style.backgroundColor = '#9e9e9e';
+
+        setTimeout(function() {
+            document.getElementById('successMsg').style.display = 'block';
+            document.getElementById('waybillInput').value = ''; // 운송장 칸 자동 비우기
+            document.querySelector('input[type="number"]').value = ''; // 수량 칸 자동 비우기
+            
+            btn.innerText = '바로 제출하기';
+            btn.disabled = false;
+            btn.style.backgroundColor = '#673ab7';
+
+            setTimeout(function() {
+                document.getElementById('successMsg').style.display = 'none';
+                document.getElementById('waybillInput').focus(); // 다음 작업을 위해 커서 자동 이동
+            }, 1500);
+        }, 800);
+    }
+
+    window.onload = checkSettings;
+</script>
+</body>
+</html>
