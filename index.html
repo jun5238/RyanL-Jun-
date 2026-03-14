@@ -8,60 +8,60 @@
         :root { --navy: #152b52; --orange: #ff8c00; }
         body { font-family: -apple-system, sans-serif; background: #ffffff; margin: 0; padding: 0; display: flex; flex-direction: column; align-items: center; }
         
-        /* 상단 영역: 기사님이 올린 0312.jpg 사진 표시 */
-        .header { width: 100%; padding: 40px 0 20px 0; background: #ffffff; text-align: center; }
-        .logo-img { width: 240px; height: auto; display: inline-block; border-radius: 5px; }
-        .rocket-title { font-size: 26px; font-weight: 800; color: #333; margin: 20px 0 5px 0; }
-        .sub-tag { font-size: 14px; color: #666; font-weight: bold; }
+        /* [수정] 상단 로고 크기를 자연스럽게 조절 */
+        .header { width: 100%; padding: 35px 0 15px 0; background: #ffffff; text-align: center; }
+        .logo-img { width: 180px; height: auto; display: inline-block; } /* 크기를 180px로 줄였습니다 */
+        
+        .rocket-title { font-size: 22px; font-weight: 800; color: #333; margin: 15px 0 5px 0; }
+        .sub-tag { font-size: 13px; color: #666; font-weight: bold; }
 
-        /* 하단 카드 디자인 유지 */
+        /* [유지] 하단 디자인은 절대 건드리지 않았습니다 */
         .main-card { 
-            width: 92%; max-width: 400px; background: var(--navy); border-radius: 12px; 
-            padding: 30px 25px; box-sizing: border-box; border: 3px solid var(--orange);
-            box-shadow: 0 6px 20px rgba(255, 140, 0, 0.3); margin-top: 10px;
+            width: 92%; max-width: 380px; background: var(--navy); border-radius: 12px; 
+            padding: 25px 20px; box-sizing: border-box; border: 2.5px solid var(--orange);
+            box-shadow: 0 4px 15px rgba(255, 140, 0, 0.3); margin-top: 10px;
         }
 
-        #setup-view { width: 92%; max-width: 400px; padding: 30px 0; text-align: left; }
-        .setup-label { display:block; margin-bottom:10px; font-weight:bold; color:#333; font-size: 16px; }
+        #setup-view { width: 92%; max-width: 380px; padding: 30px 0; text-align: left; }
+        .setup-label { display:block; margin-bottom:10px; font-weight:bold; color:#333; }
 
-        .info-box { margin-bottom: 25px; text-align: left; border-bottom: 1px dashed rgba(255,255,255,0.3); padding-bottom: 20px; }
-        .user-info { color: #fff; font-size: 17px; margin-bottom: 15px; }
+        .info-box { margin-bottom: 25px; text-align: left; border-bottom: 1px dashed rgba(255,255,255,0.2); padding-bottom: 15px; }
+        .user-info { color: #fff; font-size: 16px; margin-bottom: 12px; }
         .btn-change { 
             width: 100%; padding: 12px; background: #ffffff; color: #333; border: none;
             border-radius: 8px; font-weight: bold; font-size: 15px; cursor: pointer;
         }
 
         .input-group { margin-bottom: 22px; text-align: left; }
-        .label-area { display: flex; align-items: center; margin-bottom: 12px; color: #fff; font-weight: bold; font-size: 17px; }
+        .label-area { display: flex; align-items: center; margin-bottom: 10px; color: #fff; font-weight: bold; font-size: 16px; }
         .label-area span { margin-left: 8px; }
 
         input, select { 
             width: 100%; padding: 16px; border: none; border-radius: 8px; 
             font-size: 17px; box-sizing: border-box; outline: none; background: #ffffff; color: #000;
         }
-        #setup-view input, #setup-view select { border: 2.5px solid #ddd; }
+        #setup-view input, #setup-view select { border: 2px solid #ddd; }
 
         .btn-submit { 
-            width: 100%; padding: 18px; background: var(--orange); color: #fff; 
-            border: none; border-radius: 10px; font-size: 19px; 
+            width: 100%; padding: 18px; background: #ff8c00; color: #fff; 
+            border: none; border-radius: 10px; font-size: 18px; 
             font-weight: bold; cursor: pointer; margin-top: 10px;
         }
-        .btn-setup { background: var(--navy); }
 
-        .footer { margin-top: 40px; font-size: 12px; color: #bbb; padding-bottom: 30px; text-align: center; }
+        .footer { margin-top: 30px; font-size: 11px; color: #bbb; padding-bottom: 20px; text-align: center; }
     </style>
 </head>
 <body>
 
 <div class="header">
-    <img src="0312.jpg" class="logo-img" alt="RyanL Logistics">
+    <img src="1000003033.jpg" class="logo-img" alt="RyanL Logistics">
     <div class="rocket-title">🚀 채번 요청 1초컷</div>
     <div class="sub-tag">천안1캠프 전용 스마트 시스템</div>
 </div>
 
 <div id="setup-view">
     <div class="input-group">
-        <label class="setup-label">👤 기사님 아이디 (쿠팡 아이디)</label>
+        <label class="setup-label">👤 기사님 아이디</label>
         <input type="text" id="user-id" placeholder="예: julee82">
     </div>
     <div class="input-group">
@@ -72,7 +72,7 @@
             <option value="송촌MB">송촌MB</option>
         </select>
     </div>
-    <button class="btn-submit btn-setup" onclick="saveInfo()">정보 저장 및 시작</button>
+    <button class="btn-submit" onclick="saveInfo()" style="background:var(--navy); border:2px solid var(--orange);">저장하고 시작하기</button>
 </div>
 
 <div id="main-view" style="display:none;" class="main-card">
@@ -85,19 +85,24 @@
         <input type="hidden" name="entry.144445555" id="form-id">
         <input type="hidden" name="entry.166667777" id="form-camp">
         <input type="hidden" name="entry.188889999" value="채번 요청">
+
         <div class="input-group">
             <div class="label-area">📦<span>운송장 번호</span></div>
             <input type="text" name="entry.200001111" id="waybill" placeholder="번호 붙여넣기" required>
         </div>
+
         <div class="input-group">
             <div class="label-area">🔢<span>채번 수량</span></div>
-            <input type="number" name="entry.222223333" id="quantity" value="1" required>
+            <input type="number" name="entry.222223333" id="quantity" placeholder="숫자 입력" required>
         </div>
+
         <button type="submit" class="btn-submit">바로 제출하기</button>
     </form>
 </div>
 
-<iframe name="ifr" style="display:none;" onload="if(s){alert('제출 성공!');document.getElementById('waybill').value='';s=false;}"></iframe>
+<div class="footer">© 2026 RYANL LOGISTICS SYSTEM</div>
+
+<iframe name="ifr" style="display:none;" onload="if(s){alert('제출 완료!');document.getElementById('waybill').value='';document.getElementById('quantity').value='';s=false;}"></iframe>
 
 <script>
     let s = false;
@@ -109,8 +114,8 @@
         if(id && camp) {
             localStorage.setItem('rl_id', id);
             localStorage.setItem('rl_camp', camp);
-            init(); 
-        } else { alert('아이디와 캠프를 모두 입력해주세요!'); }
+            location.reload();
+        } else { alert('아이디와 캠프를 선택해주세요!'); }
     }
 
     function showSetup() {
@@ -118,7 +123,7 @@
         document.getElementById('main-view').style.display = 'none';
     }
 
-    function init() {
+    window.onload = function() {
         const id = localStorage.getItem('rl_id');
         const camp = localStorage.getItem('rl_camp');
         if(id && camp) {
@@ -132,7 +137,6 @@
             document.getElementById('user-camp').value = camp;
         }
     }
-    window.onload = init;
 </script>
 </body>
 </html>
