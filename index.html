@@ -5,10 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>라이언엘 채번 시스템</title>
     
-    <link rel="apple-touch-icon" href="icon.jpg">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#152b52"> <link rel="apple-touch-icon" href="icon.jpg">
     <link rel="shortcut icon" href="icon.jpg">
     <link rel="icon" sizes="192x192" href="icon.jpg">
-    <meta name="mobile-web-app-capable" content="yes">
 
     <style>
         :root { 
@@ -20,10 +22,7 @@
         
         .wrapper { width: 100%; padding-top: 25px; display: flex; flex-direction: column; align-items: center; }
         .header { width: 100%; text-align: center; margin-bottom: 15px; }
-        
-        /* [유지] 화면 상단 로고는 mlogo.jpg 그대로 둡니다 */
         .logo-img { width: 160px; height: auto; display: inline-block; border-radius: 8px; }
-        
         .rocket-title { font-size: 26px; font-weight: 950; color: var(--ryanl-blue); margin: 10px 0 5px 0; letter-spacing: -1.2px; }
         .sub-tag { font-size: 16px; color: var(--ryanl-blue); font-weight: 850; margin-top: 0; }
 
@@ -54,8 +53,8 @@
         #setup-view input, #setup-view select { border: 2px solid #ddd; }
 
         .btn-submit { 
-            width: 100%; padding: 16px; background: var(--navy); color: #fff; 
-            border: 2.5px solid var(--orange); border-radius: 10px; font-size: 19px; 
+            width: 100%; padding: 18px; background: var(--navy); color: #fff; 
+            border: 2.5px solid var(--orange); border-radius: 10px; font-size: 20px; 
             font-weight: 900; cursor: pointer; margin-top: 5px;
         }
 
@@ -116,8 +115,6 @@
 </div>
 
 <script>
-    let s = false;
-    document.getElementById('f').onsubmit = function() { s = true; };
     function saveInfo() {
         const id = document.getElementById('user-id').value;
         const camp = document.getElementById('user-camp').value;
