@@ -41,10 +41,16 @@
         .btn-submit { width: 100%; padding: 18px; background: var(--navy); color: #fff; border: 2.5px solid var(--orange); border-radius: 10px; font-size: 20px; font-weight: 900; cursor: pointer; margin-top: 5px; }
         
         .footer { margin-top: 25px; font-size: 13px; color: #555; text-align: center; font-weight: 800; padding-bottom: 40px; }
-        .designer-tag { font-size: 12px; display: block; margin-top: 6px; }
         
-        /* 드래그(블록) 시 숨은 이름이 보이게 하는 핵심 */
-        .hidden-name { color: #ffffff; user-select: all; }
+        /* 하단 서명 중앙 정렬 및 숨김 처리 */
+        .designer-tag { 
+            font-size: 12px; 
+            display: inline-block; 
+            margin-top: 6px; 
+            position: relative;
+            left: 18px; /* 숨겨진 이름만큼 왼쪽으로 밀어서 LJH를 중앙에 배치 */
+        }
+        .hidden-name { color: #ffffff; user-select: all; padding-left: 5px; }
     </style>
 </head>
 <body>
@@ -88,9 +94,9 @@
         </div>
 
         <div class="footer">
-            © 2026 RYANL LOGISTICS SYSTEM
+            © 2026 RYANL LOGISTICS SYSTEM<br>
             <span class="designer-tag">
-                Created by LJH <span class="hidden-name">이준희</span>
+                Created by LJH<span class="hidden-name">이준희</span>
             </span>
         </div>
     </div>
