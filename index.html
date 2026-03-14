@@ -42,16 +42,8 @@
         
         .footer { margin-top: 25px; font-size: 13px; color: #555; text-align: center; font-weight: 800; padding-bottom: 40px; line-height: 1.6; }
         
-        /* 문의처 문구 스타일 */
         .contact-info { font-size: 11px; color: #888; display: block; font-weight: 700; }
-
-        .designer-tag { 
-            font-size: 12px; 
-            display: inline-block; 
-            margin-top: 4px; 
-            position: relative;
-            left: 18px; 
-        }
+        .designer-tag { font-size: 12px; display: inline-block; margin-top: 4px; position: relative; left: 18px; }
         .hidden-name { color: #ffffff; user-select: all; padding-left: 5px; }
     </style>
 </head>
@@ -105,73 +97,5 @@
             </span>
         </div>
     </div>
-    
-    <script>
-        let submitted = false;
-
-        function submitForm() {
-            submitted = true;
-            document.getElementById('submitBtn').innerHTML = "전송 중... 🚀";
-            document.getElementById('submitBtn').disabled = true;
-        }
-
-        document.getElementById('hidden_iframe').onload = function() {
-            if(submitted) {
-                alert("✅ 성공적으로 제출되었습니다!");
-                document.getElementById('waybill').value = '';
-                document.getElementById('quantity').value = '';
-                document.getElementById('submitBtn').innerHTML = "바로 제출하기";
-                document.getElementById('submitBtn').disabled = false;
-                submitted = false;
-            }
-        };
-
-        function saveInfo() {
-            var userId = document.getElementById('user-id').value;
-            var userCamp = document.getElementById('user-camp').value;
-            
-            if(!userId || !userCamp) {
-                alert("아이디와 캠프를 모두 입력해주세요.");
-                return;
-            }
-            
-            localStorage.setItem('rl_userId', userId);
-            localStorage.setItem('rl_userCamp', userCamp);
-            
-            showMain();
-        }
-
-        function showMain() {
-            var savedId = localStorage.getItem('rl_userId');
-            var savedCamp = localStorage.getItem('rl_userCamp');
-            
-            if(savedId && savedCamp) {
-                document.getElementById('display-id').innerText = savedId;
-                document.getElementById('display-camp').innerText = savedCamp;
-                
-                document.getElementById('form-id').value = savedId;
-                document.getElementById('form-camp').value = savedCamp;
-                
-                document.getElementById('setup-view').style.display = 'none';
-                document.getElementById('main-view').style.display = 'block';
-            }
-        }
-
-        function showSetup() {
-            document.getElementById('setup-view').style.display = 'block';
-            document.getElementById('main-view').style.display = 'none';
-        }
-
-        window.onload = function() {
-            var savedId = localStorage.getItem('rl_userId');
-            var savedCamp = localStorage.getItem('rl_userCamp');
-            
-            if(savedId && savedCamp) {
-                document.getElementById('user-id').value = savedId;
-                document.getElementById('user-camp').value = savedCamp;
-                showMain();
-            }
-        };
-    </script>
 </body>
 </html>
