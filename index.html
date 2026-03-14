@@ -5,48 +5,70 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>라이언엘 채번 시스템</title>
     <style>
-        :root { --p: #ff8c00; --bg: #f5f7fa; --c: #ffffff; --t: #333; }
-        body { font-family: -apple-system, sans-serif; background: var(--bg); color: var(--t); margin: 0; padding: 20px; display: flex; flex-direction: column; align-items: center; }
-        .container { width: 100%; max-width: 400px; background: var(--c); border-radius: 20px; padding: 30px 20px; box-sizing: border-box; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.08); }
+        :root { 
+            --navy: #152b52; /* 사진 속 그 남색 */
+            --bg: #ffffff; 
+        }
+        body { font-family: -apple-system, sans-serif; background: #f0f2f5; margin: 0; padding: 15px; display: flex; flex-direction: column; align-items: center; }
         
-        /* 기사님이 주신 사자 로고 이미지를 불러옵니다 */
-        .logo-img { width: 150px; height: auto; margin-bottom: 20px; border-radius: 5px; }
-        
-        .brand-name { font-size: 32px; font-weight: 900; letter-spacing: -1.5px; color: #000; margin-bottom: 5px; }
-        .brand-name span { color: var(--p); }
-        .brand-sub { font-size: 11px; letter-spacing: 5px; color: #999; text-transform: uppercase; font-weight: bold; margin-bottom: 25px; }
-        
-        .tag { display: inline-block; padding: 5px 12px; background: #eef4ff; border-radius: 6px; font-size: 12px; font-weight: bold; color: var(--p); margin-bottom: 20px; }
-        h2 { margin: 0 0 30px 0; font-size: 20px; color: #333; font-weight: 600; }
+        .container { 
+            width: 100%; max-width: 400px; background: var(--bg); border-radius: 15px; overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1); text-align: center; border: 1px solid #ddd;
+        }
 
-        .info-box { background: #f8f9fa; padding: 15px; border-radius: 12px; margin-bottom: 25px; border: 1px solid #eee; font-size: 14px; }
-        .info-box strong { color: var(--p); }
+        /* 상단 네이비 바 */
+        .header { padding: 20px 10px; background: var(--navy); color: #fff; }
+        
+        /* 트럭 로고를 코드로 직접 구현 (이미지 파일 불필요) */
+        .truck-svg { width: 180px; height: auto; margin-bottom: 10px; }
 
-        .input-group { text-align: left; margin-bottom: 20px; }
-        label { display: block; margin-bottom: 8px; font-weight: bold; font-size: 14px; color: #666; }
-        input, select { width: 100%; padding: 16px; border: 2px solid #eee; border-radius: 12px; background: #fff; color: #000; font-size: 16px; box-sizing: border-box; outline: none; transition: 0.2s; }
-        input:focus { border-color: var(--p); background: #fcfdfe; }
+        .title-area { margin-top: 10px; }
+        .title-text { font-size: 22px; font-weight: 800; color: #fff; }
+        .sub-text { font-size: 13px; color: rgba(255,255,255,0.7); margin-top: 5px; }
+
+        /* 설정 전 화면 */
+        .setup-area { padding: 30px 20px; text-align: left; }
+        .input-group { margin-bottom: 20px; }
+        label { display: block; margin-bottom: 8px; font-weight: bold; color: #333; font-size: 15px; }
         
-        button { width: 100%; padding: 18px; border: none; border-radius: 12px; font-size: 18px; font-weight: bold; cursor: pointer; transition: 0.2s; }
-        .btn-submit { background: var(--p); color: white; box-shadow: 0 4px 12px rgba(0, 82, 204, 0.2); }
-        .btn-submit:active { transform: scale(0.98); }
-        .btn-edit { background: #eee; color: #777; font-size: 12px; padding: 8px 15px; margin-top: 10px; width: auto; }
-        
-        .footer { margin-top: 30px; font-size: 11px; color: #ccc; letter-spacing: 1px; }
+        input, select { 
+            width: 100%; padding: 15px; border: 2px solid #ced4da; border-radius: 8px; 
+            font-size: 16px; box-sizing: border-box; outline: none; background: #f8f9fa;
+        }
+        input:focus { border-color: var(--navy); background: #fff; }
+
+        /* 제출/다음 버튼 (사진 속 그 색상) */
+        .btn-submit { 
+            width: 100%; padding: 18px; background: var(--navy); color: white; 
+            border: none; border-radius: 10px; font-size: 18px; font-weight: bold; cursor: pointer;
+        }
+
+        /* 설정 후 메인 화면 */
+        .info-card { background: #f8f9fa; margin: 0 15px 20px 15px; border-radius: 10px; padding: 15px; text-align: center; border: 1px solid #eee; }
+        .info-card strong { color: var(--navy); }
+        .btn-edit { background: #eee; color: #777; border: none; padding: 6px 12px; border-radius: 5px; font-size: 12px; margin-left: 10px; cursor: pointer; }
+
+        .form-area { padding: 0 15px 20px 15px; text-align: left; }
+
+        .footer { padding: 15px; font-size: 11px; color: #aaa; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <img src="https://raw.githubusercontent.com/jun5238/RyanL-Jun-/main/1000003027.jpg" class="logo-img" alt="RyanL">
-    
-    <div class="brand-name">Ryan<span>L</span></div>
-    <div class="brand-sub">Logistics</div>
-    
-    <div class="tag">천안1캠프 전용</div>
-    <h2>🚀 채번 요청 1초컷</h2>
+    <div class="header">
+        <svg class="truck-svg" viewBox="0 0 200 60" fill="white">
+            <path d="M20 20h120v25H20z M142 25h25l10 10v10h-35z" />
+            <circle cx="40" cy="48" r="6" /> <circle cx="120" cy="48" r="6" /> <circle cx="160" cy="48" r="6" />
+            <path d="M10 25h10 M5 30h10 M10 35h10" stroke="white" stroke-width="2"/>
+        </svg>
+        <div class="title-area">
+            <div class="title-text">RyanL 채번 요청</div>
+            <div class="sub-text">천안1캠프 전용 스마트 시스템</div>
+        </div>
+    </div>
 
-    <div id="setup-view">
+    <div id="setup-view" class="setup-area">
         <div class="input-group">
             <label>👤 기사님 아이디</label>
             <input type="text" id="user-id" placeholder="예: julee82">
@@ -63,28 +85,29 @@
     </div>
 
     <div id="main-view" style="display:none;">
-        <div class="info-box">
-            <strong><span id="display-id"></span></strong> 기사님 (<span id="display-camp"></span>)
-            <br>
+        <div class="info-card">
+            현재 계정: <strong><span id="display-id"></span> 기사님 (<span id="display-camp"></span>)</strong>
             <button class="btn-edit" onclick="showSetup()">정보 수정</button>
         </div>
 
-        <form id="f" action="https://docs.google.com/forms/d/e/1FAIpQLScC6H-XbS7l6T_N6k8_u_iF0V-u8J_X8V8J8V8J8V8J8V8J8V8J8V8/formResponse" method="POST" target="ifr">
-            <input type="hidden" name="entry.144445555" id="form-id">
-            <input type="hidden" name="entry.166667777" id="form-camp">
-            <input type="hidden" name="entry.188889999" value="채번 요청">
-            <div class="input-group">
-                <label>📦 운송장 번호</label>
-                <input type="text" name="entry.200001111" id="waybill" placeholder="번호 붙여넣기" required>
-            </div>
-            <div class="input-group">
-                <label>🔢 채번 수량</label>
-                <input type="number" name="entry.222223333" id="quantity" placeholder="숫자만 입력 (예: 1)" required>
-            </div>
-            <button type="submit" class="btn-submit">바로 제출하기</button>
-        </form>
+        <div class="form-area">
+            <form id="f" action="https://docs.google.com/forms/d/e/1FAIpQLScC6H-XbS7l6T_N6k8_u_iF0V-u8J_X8V8J8V8J8V8J8V8J8V8J8V8/formResponse" method="POST" target="ifr">
+                <input type="hidden" name="entry.144445555" id="form-id">
+                <input type="hidden" name="entry.166667777" id="form-camp">
+                <input type="hidden" name="entry.188889999" value="채번 요청">
+                <div class="input-group">
+                    <label>📦 운송장 번호</label>
+                    <input type="text" name="entry.200001111" id="waybill" placeholder="번호 붙여넣기" required>
+                </div>
+                <div class="input-group">
+                    <label>🔢 채번 수량</label>
+                    <input type="number" name="entry.222223333" id="quantity" placeholder="숫자 입력" required>
+                </div>
+                <button type="submit" class="btn-submit">바로 제출하기</button>
+            </form>
+        </div>
     </div>
-    <div class="footer">© 2026 RYANL LOGISTICS</div>
+    <div class="footer">© RYANL LOGISTICS SYSTEM</div>
 </div>
 
 <iframe name="ifr" style="display:none;" onload="if(s){alert('제출 완료!');document.getElementById('waybill').value='';document.getElementById('quantity').value='';}"></iframe>
@@ -99,7 +122,7 @@
             localStorage.setItem('rl_id', id);
             localStorage.setItem('rl_camp', camp);
             location.reload();
-        } else { alert('아이디와 캠프를 선택해주세요!'); }
+        } else { alert('정보를 모두 입력해주세요!'); }
     }
     function showSetup() {
         document.getElementById('setup-view').style.display = 'block';
