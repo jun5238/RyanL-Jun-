@@ -51,31 +51,4 @@
         <form id="f" action="https://docs.google.com/forms/d/e/1FAIpQLScC6H-XbS7l6T_N6k8_u_iF0V-u8J_X8V8J8V8J8V8J8V8J8V8J8V8/formResponse" method="POST" target="ifr">
             <input type="hidden" name="entry.144445555" id="form-id">
             <input type="hidden" name="entry.166667777" id="form-camp">
-            <input type="hidden" name="entry.188889999" value="채번 요청">
-            <div class="input-group"><label>📦 운송장 번호</label><input type="text" name="entry.200001111" id="waybill" placeholder="번호 붙여넣기" required></div>
-            <div class="input-group"><label>🔢 채번 수량</label><input type="number" name="entry.222223333" id="quantity" placeholder="숫자만 입력 (예: 1)" required></div>
-            <button type="submit" class="btn-submit">바로 제출하기</button>
-        </form>
-    </div>
-    <div class="footer">© 2026 RYANL LOGISTICS SYSTEM</div>
-</div>
-<iframe name="ifr" style="display:none;" onload="if(s){alert('제출 완료!');document.getElementById('waybill').value='';document.getElementById('quantity').value='';}"></iframe>
-<script>
-    let s = false; document.getElementById('f').onsubmit = function() { s = true; };
-    function saveInfo() {
-        const id = document.getElementById('user-id').value; const camp = document.getElementById('user-camp').value;
-        if(id && camp) { localStorage.setItem('rl_id', id); localStorage.setItem('rl_camp', camp); location.reload(); }
-        else { alert('정보를 입력해주세요!'); }
-    }
-    function showSetup() { document.getElementById('setup-view').style.display = 'block'; document.getElementById('main-view').style.display = 'none'; }
-    window.onload = function() {
-        const id = localStorage.getItem('rl_id'); const camp = localStorage.getItem('rl_camp');
-        if(id && camp) {
-            document.getElementById('setup-view').style.display = 'none'; document.getElementById('main-view').style.display = 'block';
-            document.getElementById('display-id').innerText = id; document.getElementById('display-camp').innerText = camp;
-            document.getElementById('form-id').value = id; document.getElementById('form-camp').value = camp;
-        }
-    }
-</script>
-</body>
-</html>
+            <input type="hidden" name="
