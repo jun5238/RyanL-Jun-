@@ -8,118 +8,69 @@
         :root { --navy: #152b52; --orange: #ff8c00; }
         body { font-family: -apple-system, sans-serif; background: #ffffff; margin: 0; padding: 0; display: flex; flex-direction: column; align-items: center; }
         
-        /* 상단 영역: 깨끗한 로고 배치 */
-        .header { width: 100%; padding: 40px 0 20px 0; text-align: center; }
-        .logo-img { width: 200px; height: auto; }
-        .rocket-title { font-size: 26px; font-weight: 800; color: #333; margin: 15px 0 5px 0; }
+        /* 상단 영역: 기사님이 원하시는 좌측 사진 스타일 (흰 배경 + 파란 로고) */
+        .header { width: 100%; padding: 40px 0 20px 0; background: #ffffff; text-align: center; }
+        .logo-img { width: 220px; height: auto; display: inline-block; }
+        .rocket-title { font-size: 26px; font-weight: 800; color: #333; margin: 20px 0 5px 0; }
+        /* 아래 문구: 스마트 시스템 빼고 깔끔하게 원복 */
         .sub-tag { font-size: 15px; color: #666; font-weight: bold; }
 
-        /* 메인 카드: 기사님 사진 속 디자인 그대로 복구 */
+        /* 하단 카드 디자인 유지 */
         .main-card { 
             width: 92%; max-width: 400px; background: var(--navy); border-radius: 12px; 
-            padding: 25px 20px; box-sizing: border-box; margin-top: 10px;
+            padding: 25px 20px; box-sizing: border-box; border: 3px solid var(--orange);
+            box-shadow: 0 6px 20px rgba(255, 140, 0, 0.3); margin-top: 10px;
         }
 
-        .user-info-area { color: #fff; font-size: 17px; margin-bottom: 12px; font-weight: bold; }
+        .info-box { margin-bottom: 25px; text-align: left; }
+        .user-info { color: #fff; font-size: 17px; margin-bottom: 12px; }
         .btn-change { 
-            width: 100%; padding: 12px; background: #ffffff; color: #333; border: 3px solid var(--orange);
-            border-radius: 10px; font-weight: bold; font-size: 16px; cursor: pointer; margin-bottom: 25px;
+            width: 100%; padding: 12px; background: #ffffff; color: #333; border: none;
+            border-radius: 8px; font-weight: bold; font-size: 16px; cursor: pointer;
         }
 
         .input-group { margin-bottom: 22px; text-align: left; }
-        .label-text { color: #fff; font-weight: bold; font-size: 17px; margin-bottom: 10px; display: flex; align-items: center; }
-        .label-text span { margin-left: 8px; }
+        .label-area { display: flex; align-items: center; margin-bottom: 12px; color: #fff; font-weight: bold; font-size: 17px; }
+        .label-area span { margin-left: 8px; }
 
         input { 
-            width: 100%; padding: 16px; border: none; border-radius: 10px; 
-            font-size: 17px; box-sizing: border-box; outline: none; background: #ffffff;
+            width: 100%; padding: 16px; border: none; border-radius: 8px; 
+            font-size: 17px; box-sizing: border-box; outline: none; background: #ffffff; color: #000;
         }
 
-        /* 하단 버튼: 사진처럼 주황색 빛나는 테두리 효과 */
         .btn-submit { 
-            width: 100%; padding: 18px; background: var(--navy); color: #fff; 
-            border: 3px solid var(--orange); border-radius: 10px; font-size: 18px; 
+            width: 100%; padding: 18px; background: var(--orange); color: #fff; 
+            border: none; border-radius: 10px; font-size: 19px; 
             font-weight: bold; cursor: pointer; margin-top: 10px;
-            box-shadow: 0 0 15px rgba(255, 140, 0, 0.6);
         }
-
-        #setup-view { width: 92%; max-width: 400px; padding: 40px 0; }
-        .setup-input { width: 100%; padding: 16px; border: 2px solid #ddd; border-radius: 10px; font-size: 17px; margin-bottom: 20px; box-sizing: border-box; }
     </style>
 </head>
 <body>
 
 <div class="header">
-    <img src="https://raw.githubusercontent.com/jun5238/RyanL-Jun-/main/1000003045.jpg" class="logo-img" alt="Logo">
+    <img src="https://raw.githubusercontent.com/jun5238/RyanL-Jun-/main/1000003045.jpg" class="logo-img" alt="RyanL Logistics">
     <div class="rocket-title">🚀 채번 요청 1초컷</div>
     <div class="sub-tag">천안1캠프 전용</div>
 </div>
 
-<div id="setup-view">
-    <div class="user-info-area" style="color:#333">👤 기사님 아이디</div>
-    <input type="text" id="user-id" class="setup-input" placeholder="예: RyanL82">
-    <div class="user-info-area" style="color:#333">📍 소속 캠프 선택</div>
-    <select id="user-camp" class="setup-input">
-        <option value="">탭하여 선택</option>
-        <option value="음봉MB">음봉MB</option>
-        <option value="송촌MB">송촌MB</option>
-    </select>
-    <button class="btn-submit" style="background:var(--navy); border:none;" onclick="saveInfo()">정보 저장</button>
-</div>
+<div id="main-view" class="main-card">
+    <div class="info-box">
+        <div class="user-info">접속 중: <strong><span id="display-id">julee82</span></strong> (<span id="display-camp">음봉MB</span>)</div>
+        <button class="btn-change">정보 변경</button>
+    </div>
 
-<div id="main-view" style="display:none;" class="main-card">
-    <div class="user-info-area">현재 계정: <span id="display-id"></span> (<span id="display-camp"></span>)</div>
-    <button class="btn-change" onclick="showSetup()">정보 변경</button>
-
-    <form id="f" action="https://docs.google.com/forms/d/e/1FAIpQLScC6H-XbS7l6T_N6k8_u_iF0V-u8J_X8V8J8V8J8V8J8V8J8V8J8V8/formResponse" method="POST" target="ifr">
-        <input type="hidden" name="entry.144445555" id="form-id">
-        <input type="hidden" name="entry.166667777" id="form-camp">
-        
+    <form>
         <div class="input-group">
-            <div class="label-text">📦<span>운송장 번호</span></div>
-            <input type="text" name="entry.200001111" id="waybill" placeholder="복사한 운송장 붙여넣기" required>
+            <div class="label-area">📦<span>운송장 번호</span></div>
+            <input type="text" placeholder="복사한 번호 붙여넣기" required>
         </div>
-        
         <div class="input-group">
-            <div class="label-text">🔢<span>채번 수량</span></div>
-            <input type="number" name="entry.222223333" id="quantity" placeholder="숫자만 입력 (예: 1)" required>
+            <div class="label-area">🔢<span>채번 수량</span></div>
+            <input type="number" value="1" required>
         </div>
-        
         <button type="submit" class="btn-submit">바로 제출하기</button>
     </form>
 </div>
 
-<iframe name="ifr" style="display:none;" onload="if(s){alert('제출 성공!');document.getElementById('waybill').value='';document.getElementById('quantity').value='';s=false;}"></iframe>
-
-<script>
-    let s = false;
-    document.getElementById('f').onsubmit = function() { s = true; };
-    function saveInfo() {
-        const id = document.getElementById('user-id').value;
-        const camp = document.getElementById('user-camp').value;
-        if(id && camp) {
-            localStorage.setItem('rl_id', id);
-            localStorage.setItem('rl_camp', camp);
-            init();
-        } else { alert('정보를 입력해주세요!'); }
-    }
-    function showSetup() {
-        document.getElementById('setup-view').style.display = 'block';
-        document.getElementById('main-view').style.display = 'none';
-    }
-    function init() {
-        const id = localStorage.getItem('rl_id');
-        const camp = localStorage.getItem('rl_camp');
-        if(id && camp) {
-            document.getElementById('setup-view').style.display = 'none';
-            document.getElementById('main-view').style.display = 'block';
-            document.getElementById('display-id').innerText = id;
-            document.getElementById('display-camp').innerText = camp;
-            document.getElementById('form-id').value = id;
-            document.getElementById('form-camp').value = camp;
-        }
-    }
-    window.onload = init;
-</script>
 </body>
 </html>
