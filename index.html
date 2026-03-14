@@ -5,17 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>라이언엘 채번 시스템</title>
     <style>
-        :root { 
-            --navy: #152b52; 
-            --orange: #ff8c00; 
-        }
+        :root { --navy: #152b52; --orange: #ff8c00; }
         body { font-family: -apple-system, sans-serif; background: #ffffff; margin: 0; padding: 0; display: flex; flex-direction: column; align-items: center; }
         
-        /* [중요] 상단은 사진처럼 무조건 하얀색 배경에 로고만 딱! */
+        /* 상단: 사진과 100% 똑같은 흰 배경 + 로고 배치 */
         .header { width: 100%; padding: 40px 0 20px 0; background: #ffffff; text-align: center; }
         .logo-img { width: 220px; height: auto; display: inline-block; }
+        .rocket-title { font-size: 24px; font-weight: 800; color: #333; margin: 20px 0 5px 0; }
+        .sub-tag { font-size: 14px; color: #666; font-weight: bold; }
 
-        /* [중요] 하단 디자인은 그대로 유지 */
+        /* 하단: 기사님이 만족하신 남색 카드 디자인 유지 */
         .main-card { 
             width: 92%; max-width: 380px; background: var(--navy); border-radius: 12px; 
             padding: 25px 20px; box-sizing: border-box; border: 2.5px solid var(--orange);
@@ -50,7 +49,9 @@
 <body>
 
 <div class="header">
-    <img src="https://raw.githubusercontent.com/jun5238/RyanL-Jun-/main/1000003027.jpg" class="logo-img" alt="RyanL Logistics">
+    <img src="https://raw.githubusercontent.com/jun5238/RyanL-Jun-/main/1000003013.jpg" class="logo-img" alt="RyanL Logistics">
+    <div class="rocket-title">🚀 채번 요청 1초컷</div>
+    <div class="sub-tag">천안1캠프 전용</div>
 </div>
 
 <div id="setup-view" style="width: 92%; max-width: 380px; padding: 20px 0;">
@@ -79,22 +80,17 @@
         <input type="hidden" name="entry.144445555" id="form-id">
         <input type="hidden" name="entry.166667777" id="form-camp">
         <input type="hidden" name="entry.188889999" value="채번 요청">
-
         <div class="input-group">
             <div class="label-area">📦<span>운송장 번호</span></div>
             <input type="text" name="entry.200001111" id="waybill" placeholder="복사한 번호 붙여넣기" required>
         </div>
-
         <div class="input-group">
             <div class="label-area">🔢<span>채번 수량</span></div>
             <input type="number" name="entry.222223333" id="quantity" placeholder="숫자만 입력 (예: 1)" required>
         </div>
-
         <button type="submit" class="btn-submit">바로 제출하기</button>
     </form>
 </div>
-
-<div class="footer">© 2026 RYANL LOGISTICS SYSTEM</div>
 
 <iframe name="ifr" style="display:none;" onload="if(s){alert('제출 완료!');document.getElementById('waybill').value='';}"></iframe>
 
