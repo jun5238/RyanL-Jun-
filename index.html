@@ -40,15 +40,17 @@
         
         .btn-submit { width: 100%; padding: 18px; background: var(--navy); color: #fff; border: 2.5px solid var(--orange); border-radius: 10px; font-size: 20px; font-weight: 900; cursor: pointer; margin-top: 5px; }
         
-        .footer { margin-top: 25px; font-size: 13px; color: #555; text-align: center; font-weight: 800; padding-bottom: 40px; }
+        .footer { margin-top: 25px; font-size: 13px; color: #555; text-align: center; font-weight: 800; padding-bottom: 40px; line-height: 1.6; }
         
-        /* 하단 서명 중앙 정렬 및 숨김 처리 */
+        /* 문의처 문구 스타일 */
+        .contact-info { font-size: 11px; color: #888; display: block; font-weight: 700; }
+
         .designer-tag { 
             font-size: 12px; 
             display: inline-block; 
-            margin-top: 6px; 
+            margin-top: 4px; 
             position: relative;
-            left: 18px; /* 숨겨진 이름만큼 왼쪽으로 밀어서 LJH를 중앙에 배치 */
+            left: 18px; 
         }
         .hidden-name { color: #ffffff; user-select: all; padding-left: 5px; }
     </style>
@@ -94,6 +96,7 @@
         </div>
 
         <div class="footer">
+            <span class="contact-info">버그 및 오류 문의 : cndrone@naver.com</span>
             © 2026 RYANL LOGISTICS SYSTEM<br>
             <span class="designer-tag">
                 Created by LJH<span class="hidden-name">이준희</span>
