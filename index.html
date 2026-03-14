@@ -6,13 +6,12 @@
     <title>라이언엘 채번 시스템</title>
     <style>
         :root { --p: #ff8c00; --bg: #0f1113; --c: #1e2124; }
-        body { font-family: -apple-system, sans-serif; background: var(--bg); color: #fff; margin: 0; padding: 20px; display: flex; flex-direction: column; align-items: center; }
+        body { font-family: sans-serif; background: var(--bg); color: #fff; margin: 0; padding: 20px; display: flex; flex-direction: column; align-items: center; }
         .container { width: 100%; max-width: 400px; background: var(--c); border-radius: 24px; padding: 30px 20px; box-sizing: border-box; text-align: center; border: 1px solid #333; }
-        .lion-logo { font-size: 50px; margin-bottom: 10px; filter: drop-shadow(0 0 10px var(--p)); }
+        .logo-area img { width: 100%; max-width: 220px; height: auto; margin-bottom: 15px; }
         .brand-name { font-size: 28px; font-weight: 900; letter-spacing: -1px; margin-bottom: 2px; }
         .brand-name span { color: var(--p); }
         .brand-sub { font-size: 11px; letter-spacing: 5px; color: #777; text-transform: uppercase; margin-bottom: 25px; }
-        h2 { margin: 10px 0 5px 0; font-size: 20px; font-weight: 600; }
         .tag { display: inline-block; padding: 4px 10px; background: var(--p); border-radius: 5px; font-size: 11px; font-weight: bold; margin-bottom: 25px; }
         .info-box { background: rgba(255,140,0,0.1); padding: 15px; border-radius: 12px; margin-bottom: 20px; border: 1px solid rgba(255,140,0,0.2); font-size: 14px; }
         .input-group { text-align: left; margin-bottom: 18px; }
@@ -20,21 +19,19 @@
         input, select { width: 100%; padding: 16px; border: 2px solid #333; border-radius: 12px; background: #fff; color: #000; font-size: 16px; box-sizing: border-box; outline: none; }
         input:focus { border-color: var(--p); }
         button { width: 100%; padding: 18px; border: none; border-radius: 12px; font-size: 18px; font-weight: bold; cursor: pointer; }
-        .btn-submit { background: linear-gradient(135deg, #ff8c00, #ff5500); color: white; box-shadow: 0 4px 15px rgba(255, 85, 0, 0.3); }
+        .btn-submit { background: linear-gradient(135deg, #ff8c00, #ff5500); color: white; }
         .btn-edit { background: #333; color: #888; font-size: 12px; padding: 8px 15px; margin-top: 10px; width: auto; }
-        .footer { margin-top: 30px; font-size: 10px; color: #444; letter-spacing: 1px; }
+        .footer { margin-top: 30px; font-size: 10px; color: #444; }
     </style>
 </head>
 <body>
-
 <div class="container">
-    <div class="lion-logo">🦁</div>
+    <div class="logo-area">
+        <img src="https://raw.githubusercontent.com/jun5238/RyanL-Jun-/main/1000003013.jpg" alt="RyanL Logistics">
+    </div>
     <div class="brand-name">Ryan<span>L</span></div>
     <div class="brand-sub">Logistics</div>
-    
     <div class="tag">천안1캠프 전용</div>
-    <h2>🚀 채번 요청 1초컷</h2>
-
     <div id="setup-view">
         <div class="input-group">
             <label>👤 기사님 아이디</label>
@@ -42,71 +39,38 @@
         </div>
         <div class="input-group">
             <label>📍 소속 캠프 선택</label>
-            <select id="user-camp">
-                <option value="">탭하여 선택</option>
-                <option value="음봉MB">음봉MB</option>
-                <option value="송촌MB">송촌MB</option>
-            </select>
+            <select id="user-camp"><option value="">탭하여 선택</option><option value="음봉MB">음봉MB</option><option value="송촌MB">송촌MB</option></select>
         </div>
         <button class="btn-submit" onclick="saveInfo()">설정 저장 및 시작</button>
     </div>
-
     <div id="main-view" style="display:none;">
-        <div class="info-box">
-            <strong><span id="display-id"></span></strong> 기사님 (<span id="display-camp"></span>)
-            <br>
-            <button class="btn-edit" onclick="showSetup()">정보 수정</button>
-        </div>
-
-        <form id="f" action="https://docs.google.com/forms/d/e/1FAIpQLScC6H-XbS7l6T_N6k8_u_iF0V-u8J_X8V8J8V8J8V8J8V8J8V8/formResponse" method="POST" target="ifr">
+        <div class="info-box"><strong id="display-id"></strong> 기사님 (<span id="display-camp"></span>)<br><button class="btn-edit" onclick="showSetup()">정보 수정</button></div>
+        <form id="f" action="https://docs.google.com/forms/d/e/1FAIpQLScC6H-XbS7l6T_N6k8_u_iF0V-u8J_X8V8J8V8J8V8J8V8J8V8J8V8/formResponse" method="POST" target="ifr">
             <input type="hidden" name="entry.144445555" id="form-id">
             <input type="hidden" name="entry.166667777" id="form-camp">
             <input type="hidden" name="entry.188889999" value="채번 요청">
-
-            <div class="input-group">
-                <label>📦 운송장 번호</label>
-                <input type="text" name="entry.200001111" id="waybill" placeholder="번호 붙여넣기" required>
-            </div>
-            
-            <div class="input-group">
-                <label>🔢 채번 수량</label>
-                <input type="number" name="entry.222223333" id="quantity" placeholder="숫자만 입력 (예: 1)" required>
-            </div>
-
+            <div class="input-group"><label>📦 운송장 번호</label><input type="text" name="entry.200001111" id="waybill" placeholder="번호 붙여넣기" required></div>
+            <div class="input-group"><label>🔢 채번 수량</label><input type="number" name="entry.222223333" id="quantity" placeholder="숫자만 입력 (예: 1)" required></div>
             <button type="submit" class="btn-submit">바로 제출하기</button>
         </form>
     </div>
     <div class="footer">© 2026 RYANL LOGISTICS SYSTEM</div>
 </div>
-
-<iframe name="ifr" style="display:none;" onload="if(s){alert('제출 완료! 안운하세요!');document.getElementById('waybill').value='';document.getElementById('quantity').value='';}"></iframe>
-
+<iframe name="ifr" style="display:none;" onload="if(s){alert('제출 완료!');document.getElementById('waybill').value='';document.getElementById('quantity').value='';}"></iframe>
 <script>
-    let s = false;
-    document.getElementById('f').onsubmit = function() { s = true; };
+    let s = false; document.getElementById('f').onsubmit = function() { s = true; };
     function saveInfo() {
-        const id = document.getElementById('user-id').value;
-        const camp = document.getElementById('user-camp').value;
-        if(id && camp) {
-            localStorage.setItem('rl_id', id);
-            localStorage.setItem('rl_camp', camp);
-            location.reload();
-        } else { alert('정보를 모두 입력해주세요!'); }
+        const id = document.getElementById('user-id').value; const camp = document.getElementById('user-camp').value;
+        if(id && camp) { localStorage.setItem('rl_id', id); localStorage.setItem('rl_camp', camp); location.reload(); }
+        else { alert('정보를 입력해주세요!'); }
     }
-    function showSetup() {
-        document.getElementById('setup-view').style.display = 'block';
-        document.getElementById('main-view').style.display = 'none';
-    }
+    function showSetup() { document.getElementById('setup-view').style.display = 'block'; document.getElementById('main-view').style.display = 'none'; }
     window.onload = function() {
-        const id = localStorage.getItem('rl_id');
-        const camp = localStorage.getItem('rl_camp');
+        const id = localStorage.getItem('rl_id'); const camp = localStorage.getItem('rl_camp');
         if(id && camp) {
-            document.getElementById('setup-view').style.display = 'none';
-            document.getElementById('main-view').style.display = 'block';
-            document.getElementById('display-id').innerText = id;
-            document.getElementById('display-camp').innerText = camp;
-            document.getElementById('form-id').value = id;
-            document.getElementById('form-camp').value = camp;
+            document.getElementById('setup-view').style.display = 'none'; document.getElementById('main-view').style.display = 'block';
+            document.getElementById('display-id').innerText = id; document.getElementById('display-camp').innerText = camp;
+            document.getElementById('form-id').value = id; document.getElementById('form-camp').value = camp;
         }
     }
 </script>
