@@ -8,12 +8,142 @@
         :root { --navy: #0f2347; --orange: #ff8c00; }
         body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #ffffff; margin: 0; padding: 0; display: flex; flex-direction: column; align-items: center; }
         
-        /* 상단 영역: 사진 비율 자연스럽게 유지 */
+        /* 상단 영역: 로고 사진 */
         .header { width: 100%; padding: 40px 0 20px 0; background: #ffffff; text-align: center; }
         .logo-img { width: 220px; height: auto; display: block; margin: 0 auto; }
         .rocket-title { font-size: 24px; font-weight: 800; color: #333; margin: 15px 0 5px 0; }
         .sub-tag { font-size: 14px; color: #666; font-weight: bold; }
 
-        /* 1단계 설정 화면 (깔끔한 카드 형태) */
+        /* 1단계 설정 화면 */
         #setup-view { 
-            width: 92%; max-width: 380px; background: #f8f9
+            width: 92%; max-width: 380px; background: #f8f9fa; border-radius: 12px; 
+            padding: 30px 20px; box-sizing: border-box; border: 1px solid #e0e0e0;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05); margin-top: 10px; text-align: left;
+        }
+        .setup-label { display:block; margin-bottom:8px; font-weight:bold; color:#333; font-size: 15px; }
+
+        /* 2단계 메인 화면 (오리지널 디자인) */
+        .main-card { 
+            width: 92%; max-width: 380px; background: var(--navy); border-radius: 8px; 
+            padding: 25px 20px; box-sizing: border-box; border: 2px solid var(--orange);
+            margin-top: 10px;
+        }
+
+        .info-box { margin-bottom: 20px; text-align: left; border-bottom: 1px dashed rgba(255,255,255,0.2); padding-bottom: 20px; }
+        .user-info { color: #fff; font-size: 15px; margin-bottom: 12px; }
+        .btn-change { 
+            width: 100%; padding: 12px; background: #ffffff; color: #333; border: none;
+            border-radius: 6px; font-weight: bold; font-size: 15px; cursor: pointer;
+        }
+
+        .input-group { margin-bottom: 20px; text-align: left; }
+        .label-area { display: flex; align-items: center; margin-bottom: 8px; color: #fff; font-weight: bold; font-size: 15px; }
+        .label-area span { margin-left: 6px; }
+
+        input, select { 
+            width: 100%; padding: 14px; border: none; border-radius: 6px; 
+            font-size: 15px; box-sizing: border-box; outline: none; background: #ffffff; color: #000;
+        }
+        #setup-view input, #setup-view select { border: 1px solid #ccc; }
+
+        /* 제출 버튼 */
+        .btn-submit { 
+            width: 100%; padding: 15px; background: var(--navy); color: #fff; 
+            border: 2px solid var(--orange); border-radius: 6px; font-size: 16px; 
+            font-weight: bold; cursor: pointer; margin-top: 10px;
+        }
+        .btn-setup { background: #3b5998; border: none; }
+
+        .footer { margin-top: 30px; font-size: 11px; color: #bbb; padding-bottom: 20px; text-align: center; }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <img src="logo.jpg" class="logo-img" alt="RyanL Logistics">
+    <div class="rocket-title">🚀 채번 요청 1초컷</div>
+    <div class="sub-tag">천안1캠프 전용 스마트 시스템</div>
+</div>
+
+<div id="setup-view">
+    <div class="input-group">
+        <label class="setup-label">👤 기사님 아이디</label>
+        <input type="text" id="user-id" placeholder="예: RyanL82">
+    </div>
+    <div class="input-group">
+        <label class="setup-label">📍 소속 캠프 선택</label>
+        <select id="user-camp">
+            <option value="">탭하여 선택</option>
+            <option value="음봉MB">음봉MB</option>
+            <option value="송촌MB">송촌MB</option>
+        </select>
+    </div>
+    <button class="btn-submit btn-setup" onclick="saveInfo()">정보 저장</button>
+</div>
+
+<div id="main-view" style="display:none;" class="main-card">
+    <div class="info-box">
+        <div class="user-info">접속 중: <strong><span id="display-id"></span></strong> (<span id="display-camp"></span>)</div>
+        <button class="btn-change" onclick="showSetup()">사용자 정보 변경</button>
+    </div>
+
+    <form id="f" action="https://docs.google.com/forms/d/e/1FAIpQLScC6H-XbS7l6T_N6k8_u_iF0V-u8J_X8V8J8V8J8V8J8V8J8V8J8V8/formResponse" method="POST" target="ifr">
+        <input type="hidden" name="entry.144445555" id="form-id">
+        <input type="hidden" name="entry.166667777" id="form-camp">
+        <input type="hidden" name="entry.188889999" value="채번 요청">
+        
+        <div class="input-group">
+            <div class="label-area">📦<span>운송장 번호</span></div>
+            <input type="text" name="entry.200001111" id="waybill" placeholder="복사한 운송장 붙여넣기" required>
+        </div>
+        
+        <div class="input-group">
+            <div class="label-area">🔢<span>채번 수량</span></div>
+            <input type="number" name="entry.222223333" id="quantity" placeholder="숫자만 입력 (예: 1)" required>
+        </div>
+        
+        <button type="submit" class="btn-submit">바로 제출하기</button>
+    </form>
+</div>
+
+<div class="footer">© 2026 RYANL LOGISTICS</div>
+
+<iframe name="ifr" style="display:none;" onload="if(s){alert('제출 완료!');document.getElementById('waybill').value='';document.getElementById('quantity').value='';s=false;}"></iframe>
+
+<script>
+    let s = false;
+    document.getElementById('f').onsubmit = function() { s = true; };
+    
+    function saveInfo() {
+        const id = document.getElementById('user-id').value;
+        const camp = document.getElementById('user-camp').value;
+        if(id && camp) {
+            localStorage.setItem('rl_id', id);
+            localStorage.setItem('rl_camp', camp);
+            init(); 
+        } else { alert('아이디와 캠프를 모두 입력해주세요!'); }
+    }
+
+    function showSetup() {
+        document.getElementById('setup-view').style.display = 'block';
+        document.getElementById('main-view').style.display = 'none';
+    }
+
+    function init() {
+        const id = localStorage.getItem('rl_id');
+        const camp = localStorage.getItem('rl_camp');
+        if(id && camp) {
+            document.getElementById('setup-view').style.display = 'none';
+            document.getElementById('main-view').style.display = 'block';
+            document.getElementById('display-id').innerText = id;
+            document.getElementById('display-camp').innerText = camp;
+            document.getElementById('form-id').value = id;
+            document.getElementById('form-camp').value = camp;
+            document.getElementById('user-id').value = id;
+            document.getElementById('user-camp').value = camp;
+        }
+    }
+    window.onload = init;
+</script>
+</body>
+</html>
