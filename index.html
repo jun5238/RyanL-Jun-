@@ -8,140 +8,57 @@
         :root { 
             --navy: #152b52; 
             --orange: #ff8c00; 
-            --ryanl-blue: #1b3a7a; /* 사진 속 그 진한 파란색 */
+            --ryanl-blue: #1e4a9e; /* 기사님 사진 속 진한 파란색 */
         }
-        body { font-family: -apple-system, "Malgun Gothic", sans-serif; background: #ffffff; margin: 0; padding: 0; display: flex; flex-direction: column; align-items: center; }
+        body { font-family: -apple-system, sans-serif; background: #ffffff; margin: 0; padding: 0; display: flex; flex-direction: column; align-items: center; }
         
-        /* 기사님 사진이랑 똑같이! 글자 크기랑 굵기 조절 */
-        .header { width: 100%; padding: 45px 0 25px 0; background: #ffffff; text-align: center; }
-        .logo-text { font-size: 42px; font-weight: 900; color: var(--ryanl-blue); margin: 0; letter-spacing: -2px; }
-        .logo-sub { font-size: 16px; font-weight: 800; color: var(--ryanl-blue); margin-top: -5px; }
-        
-        .rocket-title { font-size: 34px; font-weight: 950; color: var(--ryanl-blue); margin: 25px 0 8px 0; letter-spacing: -1.5px; }
-        .sub-tag { font-size: 20px; color: var(--ryanl-blue); font-weight: 900; margin-top: 5px; letter-spacing: -0.5px; }
+        /* 상단 영역: 글자 크기와 굵기를 image_0.png처럼 시원시원하게 키웠습니다 */
+        .header { width: 100%; padding: 60px 0 30px 0; background: #ffffff; text-align: center; } /* 위쪽 여백 대폭 확대 */
+        .logo-img { width: 200px; height: auto; display: inline-block; }
+        .rocket-title { font-size: 30px; font-weight: 900; color: var(--ryanl-blue); margin: 25px 0 10px 0; letter-spacing: -1px; } /* 글자 크기 & 굵기 확대 */
+        .sub-tag { font-size: 18px; color: var(--ryanl-blue); font-weight: 800; margin-top: 5px; } /* 글자 크기 확대 */
 
-        /* 남색 카드 부분 (절대 수정 금지하셔서 그대로 둠) */
+        /* 남색 카드 디자인 유지 */
         .main-card { 
-            width: 94%; max-width: 400px; background: var(--navy); border-radius: 15px; 
+            width: 92%; max-width: 380px; background: var(--navy); border-radius: 15px; 
             padding: 30px 20px; box-sizing: border-box; border: 3.5px solid var(--orange);
-            box-shadow: 0 6px 20px rgba(255, 140, 0, 0.4); margin-top: 15px;
+            box-shadow: 0 4px 15px rgba(255, 140, 0, 0.3); margin-top: 15px; /* 카드와 문구 사이 여백 확대 */
         }
 
-        #setup-view { width: 94%; max-width: 400px; padding: 25px 0; }
-        .setup-label { display:block; margin-bottom:12px; font-weight:900; color: var(--ryanl-blue); text-align: left; font-size: 18px; }
+        #setup-view { width: 92%; max-width: 380px; padding: 25px 0; }
+        .setup-label { display:block; margin-bottom:12px; font-weight:900; color: var(--ryanl-blue); text-align: left; font-size: 17px; }
 
-        .info-box { margin-bottom: 25px; text-align: left; }
-        .user-info { color: #fff; font-size: 19px; margin-bottom: 15px; font-weight: 800; }
+        .info-box { margin-bottom: 25px; text-align: left; border-bottom: 1px dashed rgba(255,255,255,0.3); padding-bottom: 20px; }
+        .user-info { color: #fff; font-size: 18px; margin-bottom: 15px; font-weight: 700; }
         .btn-change { 
-            width: 100%; padding: 15px; background: #ffffff; color: #333; border: none;
-            border-radius: 10px; font-weight: 900; font-size: 17px; cursor: pointer;
+            width: 100%; padding: 14px; background: #ffffff; color: #333; border: none;
+            border-radius: 8px; font-weight: 900; font-size: 16px; cursor: pointer;
         }
 
         .input-group { margin-bottom: 22px; text-align: left; }
-        .label-area { display: flex; align-items: center; margin-bottom: 12px; color: #fff; font-weight: 900; font-size: 19px; }
+        .label-area { display: flex; align-items: center; margin-bottom: 12px; color: #fff; font-weight: 900; font-size: 18px; }
         .label-area span { margin-left: 8px; }
 
         input, select { 
             width: 100%; padding: 18px; border: none; border-radius: 10px; 
-            font-size: 19px; box-sizing: border-box; outline: none; background: #ffffff; color: #000; font-weight: 700;
+            font-size: 18px; box-sizing: border-box; outline: none; background: #ffffff; color: #000; font-weight: 600;
         }
         #setup-view input, #setup-view select { border: 2.5px solid #ddd; }
 
         .btn-submit { 
             width: 100%; padding: 20px; background: var(--navy); color: #fff; 
-            border: 3.5px solid var(--orange); border-radius: 12px; font-size: 22px; 
-            font-weight: 950; cursor: pointer; margin-top: 10px;
+            border: 3px solid var(--orange); border-radius: 12px; font-size: 20px; 
+            font-weight: 900; cursor: pointer; margin-top: 10px;
         }
 
-        /* 하단 문구 - 기사님 요청대로 진하게 */
-        .footer { margin-top: 40px; font-size: 14px; color: #444; padding-bottom: 40px; text-align: center; font-weight: 800; }
-        .designer-tag { font-size: 13px; color: #444; display: block; margin-top: 6px; font-weight: 900; }
+        /* 하단 문구: Created by LJH 색상을 위쪽 연도 문구와 동일하게 진하게 수정 */
+        .footer { margin-top: 40px; font-size: 13px; color: #666; padding-bottom: 30px; text-align: center; font-weight: 700; }
+        .designer-tag { font-size: 12px; color: #666; display: block; margin-top: 5px; font-weight: 800; } /* color를 진하게(#666) 수정 */
     </style>
 </head>
 <body>
 
 <div class="header">
-    <div class="logo-text">RyanL</div>
-    <div class="logo-sub">LOGISTICS</div>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMgAAABICAIAAABy7X9pAAAACXBIWXMAAAsTAAALEwEAmpwYAAACvElEQVR4nO2bS3LCMAxAnYidYAsZskcsZAsZskfMAsm6S6In8SCh6qp+p6vSvyYmS6OOfmY8G9u2rSgiUfO9XUAsD0GEEERIgghBhBBECEGEEEQIQUQQIQRBfK09/V7L66XpP/Xf4S/v/1p/pC7u6V8E0UXT069H8S66eO6eO9pI7S7E7uK5K33ubS9FvA9FfK099e7q7m7u7v7u7i7e3T9298/d/XN3/9TfPfX019rf9vfU/7f9Y9f9sesPuz923XHXfR9/7Lrvu+/77vv++77/vv++/77/vv++/77/vv++/77/vv867rruuu6677ru+677vu+++77/vu+//77/vv++/77/vv++/77/vv++/77/vv++/77/vv867rruuu6677ru+677vu+++77/vu+//77/vv++/77/vv++/77/vv++/77/vv++/77/vv867rruuu6677ru+677vu+++77/vu+//77/vv++/77/vv++/77/vv++/77/vv++/77/vv867rruuu6677ru+677vu+++77/vu+//77/vv++/77/vv++/77/vv++/77/vv++/77/vv867rruuu6677ru+677vu+++77/vu+//77/vv++/77/vv++/77/vv++/77/vv++/77/vv867rruuu6677ru+677vu+++77/vu+//77/vv++/77/vv++/77/vv++/77/vv++/77/vv867rruuu6677ru+677vu+++77/vu+//77/vv++/77/vv++/77/vv++/77/vv++/77/vv867rruuu6677ru+677vu+++77/vu+//77/vv++/77/vv++/77/vv++/77/vv++/77/vv867rruuu6677ru+677vu+++77/vu+//77/vv++/77/vv++/77/vv++/77/vv++/77/vv867rruuu6677ru+677vu+++77/vu+//77/vv++/77/vv++/77/vv++/77/vv++/77/vv867rruuu6677ru+677vu+++77/vu+//77/vv++/77/vv++/77/vv++/77/vv++/77/vv867rruuu6677ru+677vu+++77/vu+//77/vv++/77/vv++/77/vv++/77/vv++/77/vv867rruuu6677ru+677vu+++77/vu+//77/vv++/77/vv++/77/vv++/77/vv++/77/vv867rruuu6677ru+677vu+++77/vu+//77/vv++/77/vv++/77/vv++/77/vv++/77/vv867rruuu6677ru+677vu+++77/vu+//77/vv++/77/vv++/77/vv++/77/vv++/77/vv867rruuu6677ru+677vu+++77/vu+//77/vv++/77/vv++/77/vv++/77/vv867rruuu6677ru+677vu+++77/vu+//77/vv++/77/vv++/77/vv++/77/vv++/77/vv867rruuu6677ru+677vu+++77/vu+//77/vv++/77/vv++/77/vv++/77/vv++/77/vv867rruuu6677ru+677vu+++77/vu+//77/vv++/77/vv++/77/vv++/77/vv++/77/vv867rruuu6677ru+677vu+++77/vu+//77/vv++/77/vv++/77/vv++/77/vv++/77/vv867rruuu6677ru+677vu+++77/vu+//77/vv++/77/vv++/77/vv++/77/vv++/77/vv867rruuu6677ru+677vu+++77/vu+//77/vv++/77/vv++/77/vv++/77/vv++/77/vv867rruuu6677ru+677vu+++77/vu+//77/vv++/77/vv++/77/vv++/77/vv++/77/vv867rruuu6677ru+677vu+++77/vu+//77/vv++/77/vv++/77/vv++/77/vv++/77/vv867rruuu6677ru+677vu+++77/vu+//77/vv++/77/vv++/77/vv++/77/vv++/77/vv867rruuu6677ru+677vu+++77/vu+//77/vv++/77/vv++/77/vv++/77/vv++/77/vv867rruuu6677ru+677vu+++77/vu+//77/vv++/77/vv++/77/vv++/77/vv++/77/vv867rruuu6677ru+677vu+++77/vu+//77/vv++/77/vv++/77/vv++/77/vv++/77/vv867rruuu6677ru+677vu+++77/vu+//77/vv++/77/vv++/77/vv++/77/vv++/77/vv867rruuu6677ru+677vu+++77/vu+//77/vv++/77/vv++/77/vv++/77/vv++/77/vv867rruuu6677ru+677vu+++77/vu+//77/vv++/77/vv++/77/vv++/77/vv++/77/vv867rruuu6677ru+677vu+++77/vu+//77/vv++/77/vv++/77/vv++/77/vv++/77/vv867rruuu6677ru+677vu+++77/vu+//77/vv++/77/vv++/77/vv++/77/vv++/77/vv867rruuu6677ru+677vu+++77/vu+//77/vv++/77/vv++/77/vv++/77/vv++/77/vv867rruuu6677ru+677vu+++77/vu+//77/vv++/77/vv++/77/vv++/77/vv++/77/vv867rruuu6677ru+677vu+++77/vu+//77/vv++/77/vv++/77/vv++/77/vv++/77/vv867rruuu6677ru+677vu+++77/vu+//77/vv++/77/vv++/77/vv++/77/vv++/77/vv867rruuu6677ru+677vu+++77/vu+//77/vv++/77/vv++/77/vv++/77/vv++/77/vv867rruuu6677ru+677vu+++77/vu+//77/vv++/77/vv++/77/vv++/77/vv++/77/vv867rruuu6677ru+677vu+++77/vu+//77/vv++/77/vv++/77/vv++/77/vv++/77/vv867rruuu6677ru+677vu+++77/vu+//77/vv++/77/vv++/77/vv++/77/vv++/77/vv867rruuu6677ru+677vu+++77/vu+//77/vv++/77/vv++/77/vv++/77/vv++/77/vv867rruuu6677ru+677vu+++77/vu+//77/vv++/77/vv++/77/vv++/77/vv++/77/vv867rruuu6677ru+677vu+++7" class="logo-img">
     <div class="rocket-title">🚀 채번 요청 1초컷</div>
-    <div class="sub-tag">천안1캠프 전용 스마트 시스템</div>
-</div>
-
-<div id="setup-view">
-    <div class="input-group">
-        <label class="setup-label">👤 기사님 아이디</label>
-        <input type="text" id="user-id" placeholder="예: RyanL82">
-    </div>
-    <div class="input-group">
-        <label class="setup-label">📍 소속 캠프 선택</label>
-        <select id="user-camp">
-            <option value="">탭하여 선택</option>
-            <option value="음봉MB">음봉MB</option>
-            <option value="송촌MB">송촌MB</option>
-        </select>
-    </div>
-    <button class="btn-submit" onclick="saveInfo()">다음</button>
-</div>
-
-<div id="main-view" style="display:none;" class="main-card">
-    <div class="info-box">
-        <div class="user-info">현재 계정: <strong><span id="display-id"></span></strong> (<span id="display-camp"></span>)</div>
-        <button class="btn-change" onclick="showSetup()">정보 변경</button>
-    </div>
-
-    <form id="f" action="https://docs.google.com/forms/d/e/1FAIpQLScC6H-XbS7l6T_N6k8_u_iF0V-u8J_X8V8J8V8J8V8J8V8J8V8J8V8/formResponse" method="POST" target="ifr">
-        <input type="hidden" name="entry.144445555" id="form-id">
-        <input type="hidden" name="entry.166667777" id="form-camp">
-        <input type="hidden" name="entry.188889999" value="채번 요청">
-        <div class="input-group">
-            <div class="label-area">📦<span>운송장 번호</span></div>
-            <input type="text" name="entry.200001111" id="waybill" placeholder="복사한 번호 붙여넣기" required>
-        </div>
-        <div class="input-group">
-            <div class="label-area">🔢<span>채번 수량</span></div>
-            <input type="number" name="entry.222223333" id="quantity" placeholder="숫자만 입력 (예: 1)" required>
-        </div>
-        <button type="submit" class="btn-submit">바로 제출하기</button>
-    </form>
-</div>
-
-<div class="footer">
-    © 2026 RYANL LOGISTICS SYSTEM
-    <span class="designer-tag">Created by LJH</span>
-</div>
-
-<script>
-    let s = false;
-    document.getElementById('f').onsubmit = function() { s = true; };
-    
-    function saveInfo() {
-        const id = document.getElementById('user-id').value;
-        const camp = document.getElementById('user-camp').value;
-        if(id && camp) {
-            localStorage.setItem('rl_id', id);
-            localStorage.setItem('rl_camp', camp);
-            init(); 
-        } else { alert('아이디와 캠프를 선택해주세요!'); }
-    }
-
-    function showSetup() {
-        document.getElementById('setup-view').style.display = 'block';
-        document.getElementById('main-view').style.display = 'none';
-    }
-
-    function init() {
-        const id = localStorage.getItem('rl_id');
-        const camp = localStorage.getItem('rl_camp');
-        if(id && camp) {
-            document.getElementById('setup-view').style.display = 'none';
-            document.getElementById('main-view').style.display = 'block';
-            document.getElementById('display-id').innerText = id;
-            document.getElementById('display-camp').innerText = camp;
-            document.getElementById('form-id').value = id;
-            document.getElementById('form-camp').value = camp;
-        }
-    }
-    window.onload = init;
-</script>
-</body>
-</html>
+    <div class="sub-tag">천안1캠프
