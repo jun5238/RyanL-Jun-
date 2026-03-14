@@ -21,18 +21,24 @@
         .logo-img { width: 160px; height: auto; display: inline-block; border-radius: 8px; }
         .rocket-title { font-size: 26px; font-weight: 950; color: var(--ryanl-blue); margin: 10px 0 5px 0; letter-spacing: -1.2px; }
         .sub-tag { font-size: 16px; color: var(--ryanl-blue); font-weight: 850; margin-top: 0; }
-        .main-card { width: 92%; max-width: 380px; background: var(--navy); border-radius: 12px; padding: 20px 18px; box-sizing: border-box; border: 3px solid var(--orange); box-shadow: 0 4px 12px rgba(0,0,0,0.1); margin-top: 10px; }
-        #setup-view { width: 92%; max-width: 380px; text-align: center; }
+        
+        .main-card, #setup-view { width: 92%; max-width: 380px; box-sizing: border-box; }
+        .main-card { background: var(--navy); border-radius: 12px; padding: 20px 18px; border: 3px solid var(--orange); box-shadow: 0 4px 12px rgba(0,0,0,0.1); margin-top: 10px; }
+        
         .setup-label { display:block; margin-bottom:8px; font-weight:900; color: var(--ryanl-blue); text-align: left; font-size: 16px; }
         .info-box { margin-bottom: 15px; text-align: left; border-bottom: 1px dashed rgba(255,255,255,0.2); padding-bottom: 12px; }
-        .user-info { color: #fff; font-size: 16px; margin-bottom: 10px; font-weight: 700; }
+        .user-info { color: #fff; font-size: 16px; margin-bottom: 10px; font-weight: 700; line-height: 1.4; }
+        
         .btn-change { width: 100%; padding: 10px; background: #ffffff; color: #333; border: none; border-radius: 8px; font-weight: 900; font-size: 14px; cursor: pointer; }
         .input-group { margin-bottom: 15px; text-align: left; }
         .label-area { display: flex; align-items: center; margin-bottom: 8px; color: #fff; font-weight: 900; font-size: 17px; }
         .label-area span { margin-left: 8px; }
+        
         input, select { width: 100%; padding: 14px; border: none; border-radius: 8px; font-size: 17px; box-sizing: border-box; outline: none; background: #ffffff; color: #000; font-weight: 600; }
-        #setup-view input, #setup-view select { border: 2px solid #ddd; }
-        .btn-submit { width: 100%; padding: 18px; background: var(--navy); color: #fff; border: 2.5px solid var(--orange); border-radius: 10px; font-size: 20px; font-weight: 900; cursor: pointer; margin-top: 5px; }
+        #setup-view input, #setup-view select { border: 2px solid #ddd; margin-bottom: 15px; }
+        
+        .btn-submit { width: 100%; padding: 18px; background: var(--navy); color: #fff; border: 2.5px solid var(--orange); border-radius: 10px; font-size: 20px; font-weight: 900; cursor: pointer; }
+        
         .footer { margin-top: 25px; font-size: 13px; color: #555; padding-bottom: 40px; text-align: center; font-weight: 800; }
         .designer-tag { font-size: 12px; color: #555; display: block; margin-top: 6px; font-weight: 800; }
     </style>
@@ -66,7 +72,7 @@
                 <div class="user-info">현재 계정: <strong><span id="display-id"></span> <span id="display-camp"></span></strong></div>
                 <button class="btn-change" onclick="showSetup()">정보 변경</button>
             </div>
-            <form id="f" action="https://docs.google.com/forms/d/e/1FAIpQLScC6H-XbS7l6T_N6k8_u_iF0V-u8J_X8V8J8V8J8V8J8V8J8V8J8V8/formResponse" method="POST" target="ifr">
+            <form action="https://docs.google.com/forms/d/e/1FAIpQLScC6H-XbS7l6T_N6k8_u_iF0V-u8J_X8V8J8V8J8V8J8V8J8V8J8V8/formResponse" method="POST">
                 <input type="hidden" name="entry.144445555" id="form-id">
                 <input type="hidden" name="entry.166667777" id="form-camp">
                 <input type="hidden" name="entry.188889999" value="채번 요청">
@@ -87,35 +93,51 @@
             <span class="designer-tag">Created by LJH</span>
         </div>
     </div>
+
 <script>
+    // 정보를 저장하고 화면을 넘기는 함수
     function saveInfo() {
-        const id = document.getElementById('user-id').value;
-        const camp = document.getElementById('user-camp').value;
-        if(id && camp) {
-            localStorage.setItem('rl_id', id);
-            localStorage.setItem('rl_camp', camp);
-            init(); // 입력 후 화면 전환 실행
-        } else { 
-            alert('아이디와 캠프를 선택해주세요!'); 
+        const idValue = document.getElementById('user-id').value;
+        const campValue = document.getElementById('user-camp').value;
+        
+        if(idValue && campValue) {
+            localStorage.setItem('rl_id', idValue);
+            localStorage.setItem('rl_camp', campValue);
+            renderMain(); // 저장 후 화면 그리기
+        } else {
+            alert('아이디와 캠프를 모두 선택해주세요!');
         }
     }
+
+    // 설정 화면 보여주기
     function showSetup() {
         document.getElementById('setup-view').style.display = 'block';
         document.getElementById('main-view').style.display = 'none';
     }
-    function init() {
+
+    // 메인 화면 그리기
+    function renderMain() {
         const id = localStorage.getItem('rl_id');
         const camp = localStorage.getItem('rl_camp');
+        
         if(id && camp) {
             document.getElementById('setup-view').style.display = 'none';
             document.getElementById('main-view').style.display = 'block';
+            
+            // 화면에 텍스트 뿌리기
             document.getElementById('display-id').innerText = id;
             document.getElementById('display-camp').innerText = camp;
+            
+            // 폼 히든 필드에 값 넣기
             document.getElementById('form-id').value = id;
             document.getElementById('form-camp').value = camp;
         }
     }
-    window.onload = init;
+
+    // 페이지 로드 시 실행
+    window.onload = function() {
+        renderMain();
+    };
 </script>
 </body>
 </html>
