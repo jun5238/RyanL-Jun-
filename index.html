@@ -88,6 +88,21 @@
         <div class="splash-text">Loading.....</div>
     </div>
 
+    <div id="custom-alert-overlay" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.6); z-index:100000; justify-content:center; align-items:center;">
+        <div style="background:#fff; width:85%; max-width:320px; border-radius:15px; padding:25px 20px; text-align:center; box-shadow:0 10px 25px rgba(0,0,0,0.2);">
+            <div style="font-size:35px; margin-bottom:10px;">🚨</div>
+            <div style="font-size:18px; font-weight:900; color:#152b52; margin-bottom:15px;">미승인 아이디입니다</div>
+            <div style="font-size:14px; color:#444; line-height:1.6; text-align:left; background:#f4f4f4; padding:15px; border-radius:10px; margin-bottom:20px;">
+                관리자에게 승인을 요청하세요.<br><br>
+                <strong style="color:#ff8c00;">[승인 요청 양식]</strong><br>
+                • <b>아이디 :</b> <br>
+                • <b>업체명 :</b> <br><br>
+                👉 위 내용을 <b>cndrone@naver.com</b> 으로 보내주세요.
+            </div>
+            <button onclick="document.getElementById('custom-alert-overlay').style.display='none'" style="width:100%; padding:14px; background:#152b52; color:#fff; border:none; border-radius:10px; font-size:16px; font-weight:900; cursor:pointer;">확인</button>
+        </div>
+    </div>
+
     <div class="wrapper">
         <div class="header">
             <img src="mlogo.jpg" class="logo-img">
@@ -170,6 +185,18 @@
     </div>
 
     <script>
+        // 🔥 추가된 마법 코드: "미승인 아이디" 메시지가 뜰 때만 예쁜 팝업으로 바꿔치기! 🔥
+        var originalAlert = window.alert;
+        window.alert = function(msg) {
+            if(msg && msg.indexOf("미승인 아이디") !== -1) {
+                // 주소 뜨는 기본 창 대신 우리가 만든 예쁜 팝업 띄움
+                document.getElementById('custom-alert-overlay').style.display = 'flex';
+            } else {
+                // 다른 일반적인 알림은 원래대로 작동
+                originalAlert(msg);
+            }
+        };
+
         function toggleGuide() {
             var content = document.getElementById("guide-content");
             content.style.display = (content.style.display === "block") ? "none" : "block";
@@ -194,7 +221,7 @@
         // 🔥 관리자 모드 전용 스크립트 🔥
         // ==========================================
         let adminFailCount = 0;
-        const ADMIN_PW = "jun0312"; // 👈 기사님 요청하신 비밀번호 적용 완료!
+        const ADMIN_PW = "jun0312"; // 관리자 비밀번호 유지됨
 
         function handleLoginClick() {
             var inputId = document.getElementById('user-id').value.trim().toLowerCase();
@@ -205,7 +232,7 @@
                 document.getElementById('admin-login-view').style.display = 'block';
                 document.getElementById('admin-pw').value = '';
             } else {
-                // 일반 기사님은 기존 saveInfo() 로직 그대로 실행!
+                // 일반 기사님은 기존 로직 실행
                 if(typeof saveInfo === 'function') {
                     saveInfo();
                 } else {
@@ -217,16 +244,15 @@
         function checkAdminPw() {
             var pw = document.getElementById('admin-pw').value;
             if(pw === ADMIN_PW) {
-                adminFailCount = 0; // 성공 시 카운트 초기화
+                adminFailCount = 0; 
                 document.getElementById('admin-login-view').style.display = 'none';
                 document.getElementById('admin-dashboard-view').style.display = 'block';
                 renderAdminList();
             } else {
                 adminFailCount++;
                 if(adminFailCount >= 5) {
-                    // 5회 오류 시 무시무시한 경고
                     alert("🚨 보안 경고 🚨\n5회 이상 비밀번호 오류가 발생했습니다.\n보안을 위해 해당 기기의 IP 및 계정 접속이 영구 잠금 처리됩니다.");
-                    location.reload(); // 튕겨버림
+                    location.reload(); 
                 } else {
                     alert("비밀번호가 일치하지 않습니다. (" + adminFailCount + "/5회)");
                 }
@@ -245,7 +271,6 @@
             document.getElementById('user-id').value = '';
         }
 
-        // 업체별 명단 화면에 뿌려주는 기능
         function renderAdminList() {
             var content = document.getElementById('admin-list-content');
             
@@ -255,7 +280,6 @@
             }
 
             var grouped = {};
-            // 업체별로 데이터 묶기
             VIP_COMPANY_DATA.forEach(function(user) {
                 if(!grouped[user.company]) grouped[user.company] = [];
                 grouped[user.company].push(user.id);
