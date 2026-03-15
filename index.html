@@ -18,6 +18,23 @@
     <style>
         :root { --navy: #152b52; --orange: #ff8c00; --ryanl-blue: #1e4a9e; }
         body { font-family: -apple-system, sans-serif; background: #ffffff; margin: 0; padding: 0; display: flex; flex-direction: column; align-items: center; overflow-x: hidden; }
+        
+        /* 🔥 1. 로딩(스플래시) 화면 디자인 추가 🔥 */
+        #splash-screen {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background: var(--navy); display: flex; flex-direction: column;
+            align-items: center; justify-content: center; z-index: 9999;
+            transition: opacity 0.6s ease-out; /* 스르륵 사라지는 효과 */
+        }
+        .splash-logo { width: 160px; border-radius: 12px; margin-bottom: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
+        .splash-text { color: white; font-size: 18px; font-weight: 800; letter-spacing: 1px; animation: blink 1.5s infinite; }
+        
+        @keyframes blink {
+            0% { opacity: 1; }
+            50% { opacity: 0.4; }
+            100% { opacity: 1; }
+        }
+
         .wrapper { width: 100%; padding-top: 25px; display: flex; flex-direction: column; align-items: center; }
         .header { width: 100%; text-align: center; margin-bottom: 15px; }
         .logo-img { width: 160px; height: auto; border-radius: 8px; }
@@ -41,7 +58,6 @@
         .input-group { display: flex; gap: 8px; margin-bottom: 15px; width: 100%; }
         .input-group input { margin-bottom: 0 !important; flex: 1; border: none; color: #000; }
         
-        /* 🔥 심장 박동 애니메이션 유지 🔥 */
         .btn-paste { 
             background: var(--orange); color: white; border: none; border-radius: 8px; 
             font-weight: 900; font-size: 14px; padding: 0 12px; cursor: pointer; white-space: nowrap; 
@@ -67,6 +83,11 @@
     </style>
 </head>
 <body>
+    <div id="splash-screen">
+        <img src="mlogo.jpg" class="splash-logo" alt="RyanL Logo">
+        <div class="splash-text">시스템을 준비 중입니다...</div>
+    </div>
+
     <div class="wrapper">
         <div class="header">
             <img src="mlogo.jpg" class="logo-img">
@@ -133,6 +154,18 @@
                 alert("권한이 차단되었거나 지원하지 않는 브라우저입니다. 칸을 길게 눌러 직접 붙여넣기 해주세요.");
             });
         }
+    </script>
+
+    <script>
+        window.addEventListener('load', function() {
+            setTimeout(function() {
+                var splash = document.getElementById('splash-screen');
+                splash.style.opacity = '0'; // 투명하게 만들기
+                setTimeout(function() {
+                    splash.style.display = 'none'; // 완전히 숨기기
+                }, 600); // 0.6초 동안 스르륵 사라짐
+            }, 1500); // 앱 켜지고 1.5초 대기
+        });
     </script>
 </body>
 </html>
