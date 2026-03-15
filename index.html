@@ -38,10 +38,22 @@
 
         input, select { width: 100%; padding: 14px; border-radius: 8px; font-size: 17px; box-sizing: border-box; background: #fff; font-weight: 600; border: 2px solid #ddd; outline: none; }
         
-        /* 🔥 입력칸과 붙여넣기 버튼을 나란히 두기 위한 스타일 🔥 */
         .input-group { display: flex; gap: 8px; margin-bottom: 15px; width: 100%; }
         .input-group input { margin-bottom: 0 !important; flex: 1; border: none; color: #000; }
-        .btn-paste { background: var(--orange); color: white; border: none; border-radius: 8px; font-weight: 800; font-size: 14px; padding: 0 12px; cursor: pointer; white-space: nowrap; }
+        
+        /* 🔥 버튼 디자인 & 심장 박동 애니메이션 추가 🔥 */
+        .btn-paste { 
+            background: var(--orange); color: white; border: none; border-radius: 8px; 
+            font-weight: 900; font-size: 14px; padding: 0 12px; cursor: pointer; white-space: nowrap; 
+            animation: pulse-animation 1.5s infinite; /* 애니메이션 실행 */
+        }
+
+        /* 쿵쾅쿵쾅 심장 박동 효과 만들기 */
+        @keyframes pulse-animation {
+            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 140, 0, 0.7); }
+            50% { transform: scale(1.05); box-shadow: 0 0 10px 5px rgba(255, 140, 0, 0.3); }
+            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 140, 0, 0); }
+        }
         
         .main-card > input { border: none; margin-bottom: 15px; color: #000; }
         
@@ -89,9 +101,10 @@
                 <input type="hidden" name="entry.697011792" value="채번 요청">
                 
                 <div class="label-area">📦<span>운송장 번호</span></div>
+                
                 <div class="input-group">
-                    <input type="text" name="entry.359305263" id="waybill" placeholder="복사한 번호 붙여넣기" required>
-                    <button type="button" class="btn-paste" onclick="pasteClipboard()">📋 붙여넣기</button>
+                    <input type="text" name="entry.359305263" id="waybill" placeholder="우측 버튼을 누르세요 👉" required>
+                    <button type="button" class="btn-paste" onclick="pasteClipboard()">👆 자동입력 클릭</button>
                 </div>
                 
                 <div class="label-area">🔢<span>채번 수량</span></div>
@@ -115,7 +128,6 @@
     <script>
         function pasteClipboard() {
             navigator.clipboard.readText().then(function(clipText) {
-                // 🔥 엔터(줄바꿈)를 찾아내서 '띄어쓰기 한 칸( )'으로 바꿔주는 마법의 코드입니다! 🔥
                 var fixedText = clipText.replace(/[\r\n]+/g, ' ');
                 document.getElementById("waybill").value = fixedText;
             }).catch(function(err) {
