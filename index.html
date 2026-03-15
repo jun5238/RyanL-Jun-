@@ -37,18 +37,21 @@
         .label-area span { margin-left: 8px; }
 
         input, select { width: 100%; padding: 14px; border-radius: 8px; font-size: 17px; box-sizing: border-box; background: #fff; font-weight: 600; border: 2px solid #ddd; outline: none; }
-        .main-card input { border: none; margin-bottom: 15px; color: #000; }
+        
+        /* 🔥 입력칸과 붙여넣기 버튼을 나란히 두기 위한 스타일 🔥 */
+        .input-group { display: flex; gap: 8px; margin-bottom: 15px; width: 100%; }
+        .input-group input { margin-bottom: 0 !important; flex: 1; border: none; color: #000; }
+        .btn-paste { background: var(--orange); color: white; border: none; border-radius: 8px; font-weight: 800; font-size: 14px; padding: 0 12px; cursor: pointer; white-space: nowrap; }
+        
+        .main-card > input { border: none; margin-bottom: 15px; color: #000; }
         
         .btn-submit { width: 100%; padding: 18px; background: var(--navy); color: #fff; border: 2.5px solid var(--orange); border-radius: 10px; font-size: 20px; font-weight: 900; cursor: pointer; margin-top: 5px; }
         
         .footer { margin-top: 25px; font-size: 13px; color: #555; text-align: center; font-weight: 800; padding-bottom: 40px; line-height: 1.6; }
         
         .contact-info { font-size: 11px; color: #888; display: block; font-weight: 700; }
-        
         .designer-tag { font-size: 12px; display: inline-block; margin-top: 4px; position: relative; left: 18px; }
         .hidden-name { color: #ffffff; user-select: all; padding-left: 5px; }
-
-        /* 🔥 경고 문구 위쪽 여백을 15px로 늘려서 시원하게 띄웠습니다! 🔥 */
         .warning-text { color: #ff3b30; font-size: 11px; font-weight: 900; margin-top: 15px; margin-bottom: 5px; display: block; letter-spacing: -0.5px; }
     </style>
 </head>
@@ -81,30 +84,10 @@
             <form action="https://docs.google.com/forms/d/e/1FAIpQLSeIMR-wkYKFwnldd2qKKyUlaxLN85tu7OBX0HsLt7fzezZKWg/formResponse" method="POST" target="hidden_iframe" onsubmit="submitForm()">
                 
                 <input type="hidden" name="pageHistory" value="0,1">
-                
                 <input type="hidden" name="entry.1315166815" id="form-id">
                 <input type="hidden" name="entry.1573740217" id="form-camp">
                 <input type="hidden" name="entry.697011792" value="채번 요청">
                 
                 <div class="label-area">📦<span>운송장 번호</span></div>
-                <input type="text" name="entry.359305263" id="waybill" placeholder="복사한 번호 붙여넣기" required>
-                
-                <div class="label-area">🔢<span>채번 수량</span></div>
-                <input type="number" name="entry.1437474928" id="quantity" placeholder="숫자만 입력" required>
-                
-                <button type="submit" class="btn-submit" id="submitBtn">바로 제출하기</button>
-            </form>
-            <iframe name="hidden_iframe" id="hidden_iframe" style="display:none;"></iframe>
-        </div>
-
-        <div class="footer">
-            <span class="contact-info">버그 및 오류 문의 : cndrone@naver.com</span>
-            © 2026 RyanL Logistics.<br>
-            <span class="designer-tag">
-                Created by LJH<span class="hidden-name">이준희</span>
-            </span>
-            <span class="warning-text">무단 복제 및 도용 시 법적 처벌을 받을 수 있습니다.</span>
-        </div>
-    </div>
-</body>
-</html>
+                <div class="input-group">
+                    <input type
