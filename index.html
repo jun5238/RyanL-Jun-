@@ -51,8 +51,7 @@
         input, select { width: 100%; padding: 14px; border-radius: 8px; font-size: 17px; box-sizing: border-box; background: #fff; font-weight: 600; border: 2px solid #ddd; outline: none; }
         
         .input-group { display: flex; gap: 8px; margin-bottom: 15px; width: 100%; }
-        /* 🔥 작은 폰에서 안 잘리게 패딩 조정 🔥 */
-        .input-group input { margin-bottom: 0 !important; flex: 1.2; border: none; color: #000; padding: 14px 10px; font-size: 17px; min-width: 0; }
+        .input-group input { margin-bottom: 0 !important; flex: 1.2; border: none; color: #000; padding: 14px; font-size: 17px; min-width: 0; }
         
         .btn-paste { 
             flex: 1;
@@ -66,7 +65,7 @@
         
         .btn-submit { width: 100%; padding: 18px; background: var(--navy); color: #fff; border: 2.5px solid var(--orange); border-radius: 10px; font-size: 20px; font-weight: 900; cursor: pointer; margin-top: 5px; }
         
-        /* 🔥 가이드 버튼 및 박스 🔥 */
+        /* 가이드 버튼/박스 디자인 */
         .btn-guide { background: #f0f0f0; color: #333; border: 1px solid #ccc; border-radius: 8px; padding: 12px; width: 100%; margin-top: 20px; font-weight: 800; font-size: 14px; cursor: pointer; }
         #guide-content { display: none; text-align: left; background: #f9f9f9; padding: 15px; border-radius: 10px; margin-top: 10px; border: 1px solid #ddd; line-height: 1.6; }
         .guide-title { font-weight: 900; color: var(--navy); display: block; margin-bottom: 5px; font-size: 14px; border-left: 4px solid var(--orange); padding-left: 8px; }
@@ -78,12 +77,11 @@
         .hidden-name { color: #ffffff; user-select: all; padding-left: 5px; }
         .warning-text { color: #ff3b30; font-size: 11px; font-weight: 900; margin-top: 15px; margin-bottom: 5px; display: block; letter-spacing: -0.5px; }
 
-        /* 🔥 작은 폰(360px 이하) 대응 마법 코드 🔥 */
+        /* 작은 폰(360px 이하) 대응 */
         @media screen and (max-width: 360px) {
             .input-group input { font-size: 14px; padding: 12px 8px; }
             .btn-paste { font-size: 12px; padding: 0 5px; }
             .rocket-title { font-size: 22px; }
-            .sub-tag { font-size: 14px; }
         }
     </style>
 </head>
@@ -114,9 +112,9 @@
             <button class="btn-guide" onclick="toggleGuide()">❓ 설치 방법 및 오류 해결 가이드</button>
             <div id="guide-content">
                 <div class="guide-box">
-                    <span class="guide-title">📱 바탕화면 바로가기(어플) 설치</span>
-                    • <b>갤럭시:</b> 크롬 우측 상단 <b>점3개</b> → <b>'홈 화면에 추가'</b> 클릭 후 <b>'설치'</b> 클릭!<br>
-                    • <b>아이폰:</b> 사파리 하단 <b>공유 버튼(↑)</b> → <b>'홈 화면에 추가'</b> 클릭
+                    <span class="guide-title">📱 바탕화면 바로가기 설치</span>
+                    • <b>갤럭시:</b> 크롬 우측 상단 <b>점 3개</b> → <b>'홈 화면에 추가'</b> 클릭 후 <b>'설치'</b><br>
+                    • <b>아이폰:</b> 사파리 하단 <b>공유 버튼(↑)</b> → <b>'홈 화면에 추가'</b>
                 </div>
                 <div class="guide-box" style="border-top: 1px dashed #ccc; padding-top: 10px;">
                     <span class="guide-title">⚠️ 채번 오류 시 해결법</span>
@@ -140,7 +138,7 @@
                 
                 <div class="label-area">📦<span>운송장 번호</span></div>
                 <div class="input-group">
-                    <input type="text" name="entry.359305263" id="waybill" placeholder="우측 버튼 클릭 👉" required>
+                    <input type="text" name="entry.359305263" id="waybill" placeholder="우측 버튼을 누르세요 👉" required>
                     <button type="button" class="btn-paste" onclick="pasteClipboard()">👆 붙여넣기 클릭</button>
                 </div>
                 <div class="label-area">🔢<span>채번 수량</span></div>
