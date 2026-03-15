@@ -25,9 +25,7 @@
             align-items: center; justify-content: center; z-index: 9999;
             transition: opacity 0.6s ease-out;
         }
-        /* 그림 사이즈 220px 유지 */
         .splash-logo { width: 220px; border-radius: 18px; margin-bottom: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
-        /* Loading..... 텍스트 스타일 */
         .splash-text { color: white; font-size: 22px; font-weight: 800; letter-spacing: 1px; animation: blink 1.5s infinite; }
         
         @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0.4; } 100% { opacity: 1; } }
@@ -52,13 +50,19 @@
 
         input, select { width: 100%; padding: 14px; border-radius: 8px; font-size: 17px; box-sizing: border-box; background: #fff; font-weight: 600; border: 2px solid #ddd; outline: none; }
         
+        /* 🔥 작은 폰에서 안 잘리게 수정한 입력창 그룹 🔥 */
         .input-group { display: flex; gap: 8px; margin-bottom: 15px; width: 100%; }
-        .input-group input { margin-bottom: 0 !important; flex: 1; border: none; color: #000; }
+        .input-group input { 
+            margin-bottom: 0 !important; flex: 1.4; border: none; color: #000; 
+            padding: 12px; font-size: 15px; /* 글자 크기 최적화 */
+        }
         
         .btn-paste { 
+            flex: 1; /* 버튼이 차지하는 비중 조절 */
             background: var(--orange); color: white; border: none; border-radius: 8px; 
-            font-weight: 900; font-size: 14px; padding: 0 12px; cursor: pointer; white-space: nowrap; 
+            font-weight: 900; font-size: 13px; padding: 0 5px; cursor: pointer; white-space: nowrap; 
             animation: pulse-animation 1.5s infinite; 
+            display: flex; align-items: center; justify-content: center;
         }
 
         @keyframes pulse-animation { 0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 140, 0, 0.7); } 50% { transform: scale(1.05); box-shadow: 0 0 10px 5px rgba(255, 140, 0, 0.3); } 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 140, 0, 0); } }
@@ -71,6 +75,13 @@
         .designer-tag { font-size: 12px; display: inline-block; margin-top: 4px; position: relative; left: 18px; }
         .hidden-name { color: #ffffff; user-select: all; padding-left: 5px; }
         .warning-text { color: #ff3b30; font-size: 11px; font-weight: 900; margin-top: 15px; margin-bottom: 5px; display: block; letter-spacing: -0.5px; }
+
+        /* 화면 폭이 아주 좁은 폰을 위한 보너스 코드 */
+        @media screen and (max-width: 360px) {
+            .rocket-title { font-size: 22px; }
+            .input-group input { font-size: 14px; }
+            .btn-paste { font-size: 12px; }
+        }
     </style>
 </head>
 <body>
@@ -111,9 +122,10 @@
                 <input type="hidden" name="entry.697011792" value="채번 요청">
                 
                 <div class="label-area">📦<span>운송장 번호</span></div>
+                
                 <div class="input-group">
-                    <input type="text" name="entry.359305263" id="waybill" placeholder="우측 버튼을 누르세요 👉" required>
-                    <button type="button" class="btn-paste" onclick="pasteClipboard()">👆 붙여넣기 클릭</button>
+                    <input type="text" name="entry.359305263" id="waybill" placeholder="우측 버튼 클릭 👉" required>
+                    <button type="button" class="btn-paste" onclick="pasteClipboard()">👆 붙여넣기</button>
                 </div>
                 
                 <div class="label-area">🔢<span>채번 수량</span></div>
