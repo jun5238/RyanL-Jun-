@@ -50,33 +50,20 @@
 
         input, select { width: 100%; padding: 14px; border-radius: 8px; font-size: 17px; box-sizing: border-box; background: #fff; font-weight: 600; border: 2px solid #ddd; outline: none; }
         
-        /* 🔥 입력창 그룹 최적화 (버튼을 살짝 줄이고 입력창을 넓힘) 🔥 */
         .input-group { display: flex; gap: 8px; margin-bottom: 15px; width: 100%; align-items: center; }
         
-        .input-group input { 
-            margin-bottom: 0 !important; 
-            flex: 1; 
-            border: none; 
-            color: #000; 
-            padding: 14px 10px; 
-            font-size: 15px; /* 글자 크기를 17->15로 줄여서 잘림 방지 */
-            min-width: 0; 
-        }
+        .input-group input { margin-bottom: 0 !important; flex: 1; border: none; color: #000; padding: 14px 10px; font-size: 15px; min-width: 0; }
         
         .btn-paste { 
-            width: 120px; 
-            flex-shrink: 0; 
-            background: var(--orange); color: white; border: none; border-radius: 8px; 
+            width: 120px; flex-shrink: 0; background: var(--orange); color: white; border: none; border-radius: 8px; 
             font-weight: 900; font-size: 13px; height: 50px; cursor: pointer; white-space: nowrap; 
-            animation: pulse-animation 1.5s infinite; 
-            display: flex; align-items: center; justify-content: center;
+            animation: pulse-animation 1.5s infinite; display: flex; align-items: center; justify-content: center;
         }
 
         @keyframes pulse-animation { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
         
         .btn-submit { width: 100%; padding: 18px; background: var(--navy); color: #fff; border: 2.5px solid var(--orange); border-radius: 10px; font-size: 20px; font-weight: 900; cursor: pointer; margin-top: 5px; }
         
-        /* 가이드 버튼/박스 */
         .btn-guide { background: #f0f0f0; color: #333; border: 1px solid #ccc; border-radius: 8px; padding: 12px; width: 100%; margin-top: 20px; font-weight: 800; font-size: 14px; cursor: pointer; }
         #guide-content { display: none; text-align: left; background: #f9f9f9; padding: 15px; border-radius: 10px; margin-top: 10px; border: 1px solid #ddd; line-height: 1.6; }
         .guide-title { font-weight: 900; color: var(--navy); display: block; margin-bottom: 5px; font-size: 14px; border-left: 4px solid var(--orange); padding-left: 8px; }
@@ -88,7 +75,7 @@
         .hidden-name { color: #ffffff; user-select: all; padding-left: 5px; }
         .warning-text { color: #ff3b30; font-size: 11px; font-weight: 900; margin-top: 15px; margin-bottom: 5px; display: block; letter-spacing: -0.5px; }
 
-        /* 작은 폰 대응 */
+        /* 소형 폰 대응 */
         @media screen and (max-width: 360px) {
             .input-group input { font-size: 13px; }
             .btn-paste { width: 110px; font-size: 11px; }
@@ -117,7 +104,7 @@
                 <option value="음봉MB">음봉MB</option>
                 <option value="송촌MB">송촌MB</option>
             </select>
-            <button class="btn-submit" onclick="saveInfo()" style="margin-top: 20px;">로그인</button>
+            <button class="btn-submit" onclick="handleLoginClick()" style="margin-top: 20px;">로그인</button>
 
             <button class="btn-guide" onclick="toggleGuide()">❓ 설치 방법 및 오류 해결 가이드</button>
             <div id="guide-content">
@@ -132,6 +119,22 @@
                     • <b>두번째:</b> 브라우저 설정에서 '방문 기록/캐시 삭제' 후 재접속
                 </div>
             </div>
+        </div>
+
+        <div id="admin-login-view" style="display:none; width: 92%; max-width: 380px; text-align: center;">
+            <label class="setup-label" style="color:var(--orange);">🔒 관리자 보안 접속</label>
+            <input type="password" id="admin-pw" placeholder="비밀번호를 입력하세요">
+            <button class="btn-submit" onclick="checkAdminPw()" style="margin-top: 20px;">접속하기</button>
+            <button class="btn-change" onclick="cancelAdmin()" style="margin-top: 10px; background:#f0f0f0;">돌아가기</button>
+        </div>
+
+        <div id="admin-dashboard-view" style="display:none;" class="main-card">
+            <div style="text-align: center; border-bottom: 2px dashed rgba(255,255,255,0.3); padding-bottom: 10px; margin-bottom: 15px;">
+                <h3 style="color:var(--orange); margin:0;">📊 업체별 기사 명단</h3>
+            </div>
+            <div id="admin-list-content" style="max-height: 400px; overflow-y: auto;"></div>
+            
+            <button class="btn-change" onclick="closeAdmin()" style="margin-top: 20px;">로그인 화면으로</button>
         </div>
 
         <div id="main-view" style="display:none;" class="main-card">
@@ -186,6 +189,88 @@
                 setTimeout(function() { splash.style.display = 'none'; }, 600);
             }, 1500);
         });
+
+        // ==========================================
+        // 🔥 관리자 모드 전용 스크립트 🔥
+        // ==========================================
+        let adminFailCount = 0;
+        const ADMIN_PW = "jun0312"; // 👈 기사님 요청하신 비밀번호 적용 완료!
+
+        function handleLoginClick() {
+            var inputId = document.getElementById('user-id').value.trim().toLowerCase();
+            
+            // 관리자 아이디 감지
+            if(inputId === 'ryanl82') {
+                document.getElementById('setup-view').style.display = 'none';
+                document.getElementById('admin-login-view').style.display = 'block';
+                document.getElementById('admin-pw').value = '';
+            } else {
+                // 일반 기사님은 기존 saveInfo() 로직 그대로 실행!
+                if(typeof saveInfo === 'function') {
+                    saveInfo();
+                } else {
+                    alert("로직 오류! 시스템 관리자에게 문의하세요.");
+                }
+            }
+        }
+
+        function checkAdminPw() {
+            var pw = document.getElementById('admin-pw').value;
+            if(pw === ADMIN_PW) {
+                adminFailCount = 0; // 성공 시 카운트 초기화
+                document.getElementById('admin-login-view').style.display = 'none';
+                document.getElementById('admin-dashboard-view').style.display = 'block';
+                renderAdminList();
+            } else {
+                adminFailCount++;
+                if(adminFailCount >= 5) {
+                    // 5회 오류 시 무시무시한 경고
+                    alert("🚨 보안 경고 🚨\n5회 이상 비밀번호 오류가 발생했습니다.\n보안을 위해 해당 기기의 IP 및 계정 접속이 영구 잠금 처리됩니다.");
+                    location.reload(); // 튕겨버림
+                } else {
+                    alert("비밀번호가 일치하지 않습니다. (" + adminFailCount + "/5회)");
+                }
+            }
+        }
+
+        function cancelAdmin() {
+            document.getElementById('admin-login-view').style.display = 'none';
+            document.getElementById('setup-view').style.display = 'block';
+            document.getElementById('user-id').value = '';
+        }
+
+        function closeAdmin() {
+            document.getElementById('admin-dashboard-view').style.display = 'none';
+            document.getElementById('setup-view').style.display = 'block';
+            document.getElementById('user-id').value = '';
+        }
+
+        // 업체별 명단 화면에 뿌려주는 기능
+        function renderAdminList() {
+            var content = document.getElementById('admin-list-content');
+            
+            if(typeof VIP_COMPANY_DATA === 'undefined') {
+                content.innerHTML = "<p style='color:white; text-align:center;'>데이터가 없습니다.<br>vip_list.js 파일에 VIP_COMPANY_DATA를 입력해주세요.</p>";
+                return;
+            }
+
+            var grouped = {};
+            // 업체별로 데이터 묶기
+            VIP_COMPANY_DATA.forEach(function(user) {
+                if(!grouped[user.company]) grouped[user.company] = [];
+                grouped[user.company].push(user.id);
+            });
+
+            var html = "";
+            for(var company in grouped) {
+                var users = grouped[company];
+                html += "<div style='margin-bottom:15px; padding:12px; background:rgba(255,255,255,0.1); border-radius:8px;'>";
+                html += "<strong style='color:#fff; font-size:16px;'>" + company + " <span style='color:var(--orange);'>(" + users.length + "명)</span></strong><br>";
+                html += "<div style='color:#ccc; font-size:14px; margin-top:5px; word-break:break-all; line-height:1.4;'>" + users.join(", ") + "</div>";
+                html += "</div>";
+            }
+            content.innerHTML = html;
+        }
     </script>
 </body>
 </html>
