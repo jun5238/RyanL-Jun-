@@ -65,13 +65,18 @@
         
         .btn-submit { width: 100%; padding: 18px; background: var(--navy); color: #fff; border: 2.5px solid var(--orange); border-radius: 10px; font-size: 20px; font-weight: 900; cursor: pointer; margin-top: 5px; }
         
+        /* 🔥 가이드 버튼 스타일 🔥 */
+        .btn-guide { background: #f0f0f0; color: #333; border: 1px solid #ccc; border-radius: 8px; padding: 10px; width: 100%; margin-top: 20px; font-weight: 800; font-size: 14px; cursor: pointer; }
+        #guide-content { display: none; text-align: left; background: #f9f9f9; padding: 15px; border-radius: 10px; margin-top: 10px; border: 1px solid #ddd; line-height: 1.6; }
+        .guide-title { font-weight: 900; color: var(--navy); display: block; margin-bottom: 5px; font-size: 14px; }
+        .guide-box { font-size: 13px; color: #444; margin-bottom: 10px; }
+
         .footer { margin-top: 25px; font-size: 13px; color: #555; text-align: center; font-weight: 800; padding-bottom: 40px; line-height: 1.6; }
         .contact-info { font-size: 11px; color: #888; display: block; font-weight: 700; }
         .designer-tag { font-size: 12px; display: inline-block; margin-top: 4px; position: relative; left: 18px; }
         .hidden-name { color: #ffffff; user-select: all; padding-left: 5px; }
         .warning-text { color: #ff3b30; font-size: 11px; font-weight: 900; margin-top: 15px; margin-bottom: 5px; display: block; letter-spacing: -0.5px; }
 
-        /* 🔥 작은 폰(업무폰)에서만 글자 크기를 살짝 줄이는 마법 코드 🔥 */
         @media screen and (max-width: 360px) {
             .input-group input { font-size: 14px; padding: 12px 8px; }
             .btn-paste { font-size: 12px; padding: 0 5px; }
@@ -101,7 +106,21 @@
                 <option value="음봉MB">음봉MB</option>
                 <option value="송촌MB">송촌MB</option>
             </select>
-            <button class="btn-submit" onclick="saveInfo()" style="margin-top: 20px;">다음</button>
+            <button class="btn-submit" onclick="saveInfo()" style="margin-top: 20px;">로그인</button>
+
+            <button class="btn-guide" onclick="toggleGuide()">❓ 설치 및 오류 해결 방법보기</button>
+            <div id="guide-content">
+                <div class="guide-box">
+                    <span class="guide-title">📱 바탕화면 어플 설치 방법</span>
+                    • <b>갤럭시(크롬):</b> 우측 상단 점 3개 클릭 → <b>'홈 화면에 추가'</b> 또는 <b>'앱 설치'</b><br>
+                    • <b>아이폰(사파리):</b> 하단 중앙 공유 버튼(↑) 클릭 → <b>'홈 화면에 추가'</b>
+                </div>
+                <div class="guide-box" style="border-top: 1px dashed #ccc; padding-top: 10px;">
+                    <span class="guide-title">⚠️ 채번이 안 될 때 (무한 로딩 등)</span>
+                    • <b>방법 1:</b> 열려있는 구글 폼 양식을 완전히 지우기(닫기) 후 다시 시도<br>
+                    • <b>방법 2:</b> 인터넷 기록(캐시) 삭제 후 바탕화면 아이콘 재설치
+                </div>
+            </div>
         </div>
 
         <div id="main-view" style="display:none;" class="main-card">
@@ -117,15 +136,12 @@
                 <input type="hidden" name="entry.697011792" value="채번 요청">
                 
                 <div class="label-area">📦<span>운송장 번호</span></div>
-                
                 <div class="input-group">
                     <input type="text" name="entry.359305263" id="waybill" placeholder="우측 버튼을 누르세요 👉" required>
                     <button type="button" class="btn-paste" onclick="pasteClipboard()">👆 붙여넣기 클릭</button>
                 </div>
-                
                 <div class="label-area">🔢<span>채번 수량</span></div>
                 <input type="number" name="entry.1437474928" id="quantity" placeholder="숫자만 입력" required>
-                
                 <button type="submit" class="btn-submit" id="submitBtn">바로 제출하기</button>
             </form>
             <iframe name="hidden_iframe" id="hidden_iframe" style="display:none;"></iframe>
@@ -140,6 +156,16 @@
     </div>
 
     <script>
+        // 가이드 내용 보이기/숨기기 함수
+        function toggleGuide() {
+            var content = document.getElementById("guide-content");
+            if (content.style.display === "block") {
+                content.style.display = "none";
+            } else {
+                content.style.display = "block";
+            }
+        }
+
         function pasteClipboard() {
             navigator.clipboard.readText().then(function(clipText) {
                 var fixedText = clipText.replace(/[\r\n]+/g, ' ');
@@ -148,9 +174,7 @@
                 alert("권한이 차단되었거나 지원하지 않는 브라우저입니다. 칸을 길게 눌러 직접 붙여넣기 해주세요.");
             });
         }
-    </script>
 
-    <script>
         window.addEventListener('load', function() {
             setTimeout(function() {
                 var splash = document.getElementById('splash-screen');
