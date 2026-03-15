@@ -7,14 +7,14 @@
 </head>
 <body style="text-align:center; padding-top:50px; font-family:sans-serif; background:#f0f0f0;">
     <h2>🎨 RyanL 꽉 찬 아이콘 생성기</h2>
-    <p>새 로고의 테두리가 화면에 꽉 차게 맞춰집니다!</p>
+    <p>빈틈 없이 꽉 찬 JPG 아이콘입니다!</p>
     
-    <canvas id="myCanvas" width="512" height="512" style="width: 300px; max-width: 100%; border-radius: 50%; box-shadow: 0 4px 10px rgba(0,0,0,0.2); background: transparent;"></canvas>
+    <canvas id="myCanvas" width="512" height="512" style="width: 300px; max-width: 100%; border-radius: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.2); background: white;"></canvas>
     
     <br><br>
     
     <button onclick="downloadIcon()" style="padding:15px 30px; font-size:20px; background:#ff8c00; color:white; font-weight:900; border:none; border-radius:10px; cursor:pointer;">
-        📥 icon.png 다운로드
+        📥 icon.jpg 다운로드
     </button>
 
     <script>
@@ -23,29 +23,30 @@
         var img = new Image();
         img.crossOrigin = "Anonymous";
         
-        // 🔥 기사님 말씀대로 원본을 'icon.jpg'로 정확히 수정했습니다! 🔥
         img.src = "icon.jpg"; 
 
         img.onload = function() {
-            // 1. 바탕 투명하게 초기화
-            ctx.clearRect(0, 0, 512, 512);
-            
-            // 2. 완벽한 동그라미로 자르기 (마스크 씌우기)
-            ctx.save();
-            ctx.beginPath();
-            ctx.arc(256, 256, 256, 0, 2 * Math.PI);
-            ctx.clip();
+            // 1. JPG는 투명이 안 되므로 전체를 하얀색으로 꽉 채웁니다.
+            ctx.fillStyle = "white";
+            ctx.fillRect(0, 0, 512, 512);
 
-            // 3. 기사님이 주신 사진의 '검정 테두리'가 화면 끝에 꽉 닿도록 살짝 확대해서 그리기!
-            // (바깥쪽 쓸데없는 흰색 여백은 화면 밖으로 밀어냅니다)
+            // 2. 기사님 사진을 살짝 더 확대해서 빈틈을 화면 밖으로 밀어냅니다!
             ctx.drawImage(img, -15, -15, 542, 542); 
-            ctx.restore();
+
+            // 3. 원래 사진의 울퉁불퉁한 테두리를 가리기 위해,
+            // 완벽하게 둥글고 두꺼운 검정 테두리를 덧그려서 덮어버립니다!
+            ctx.beginPath();
+            ctx.arc(256, 256, 246, 0, 2 * Math.PI);
+            ctx.lineWidth = 20; // 빵빵한 두께로 빈틈 철벽 방어!
+            ctx.strokeStyle = "black";
+            ctx.stroke();
         };
 
         function downloadIcon() {
             var link = document.createElement('a');
-            link.download = 'icon.png'; 
-            link.href = canvas.toDataURL("image/png");
+            // 🔥 기사님 요청대로 다시 JPG로 바꿨습니다! 🔥
+            link.download = 'icon.jpg'; 
+            link.href = canvas.toDataURL("image/jpeg", 1.0);
             link.click();
         }
     </script>
