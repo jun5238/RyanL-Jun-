@@ -19,21 +19,16 @@
         :root { --navy: #152b52; --orange: #ff8c00; --ryanl-blue: #1e4a9e; }
         body { font-family: -apple-system, sans-serif; background: #ffffff; margin: 0; padding: 0; display: flex; flex-direction: column; align-items: center; overflow-x: hidden; }
         
-        /* 🔥 1. 로딩(스플래시) 화면 디자인 추가 🔥 */
         #splash-screen {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
             background: var(--navy); display: flex; flex-direction: column;
             align-items: center; justify-content: center; z-index: 9999;
-            transition: opacity 0.6s ease-out; /* 스르륵 사라지는 효과 */
+            transition: opacity 0.6s ease-out;
         }
-        .splash-logo { width: 160px; border-radius: 12px; margin-bottom: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
+        .splash-logo { width: 180px; border-radius: 15px; margin-bottom: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
         .splash-text { color: white; font-size: 18px; font-weight: 800; letter-spacing: 1px; animation: blink 1.5s infinite; }
         
-        @keyframes blink {
-            0% { opacity: 1; }
-            50% { opacity: 0.4; }
-            100% { opacity: 1; }
-        }
+        @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0.4; } 100% { opacity: 1; } }
 
         .wrapper { width: 100%; padding-top: 25px; display: flex; flex-direction: column; align-items: center; }
         .header { width: 100%; text-align: center; margin-bottom: 15px; }
@@ -64,13 +59,7 @@
             animation: pulse-animation 1.5s infinite; 
         }
 
-        @keyframes pulse-animation {
-            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 140, 0, 0.7); }
-            50% { transform: scale(1.05); box-shadow: 0 0 10px 5px rgba(255, 140, 0, 0.3); }
-            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 140, 0, 0); }
-        }
-        
-        .main-card > input { border: none; margin-bottom: 15px; color: #000; }
+        @keyframes pulse-animation { 0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 140, 0, 0.7); } 50% { transform: scale(1.05); box-shadow: 0 0 10px 5px rgba(255, 140, 0, 0.3); } 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 140, 0, 0); } }
         
         .btn-submit { width: 100%; padding: 18px; background: var(--navy); color: #fff; border: 2.5px solid var(--orange); border-radius: 10px; font-size: 20px; font-weight: 900; cursor: pointer; margin-top: 5px; }
         
@@ -84,7 +73,7 @@
 </head>
 <body>
     <div id="splash-screen">
-        <img src="mlogo.jpg" class="splash-logo" alt="RyanL Logo">
+        <img src="loading.jpg" class="splash-logo" alt="RyanL Loading">
         <div class="splash-text">시스템을 준비 중입니다...</div>
     </div>
 
@@ -114,14 +103,12 @@
             </div>
             
             <form action="https://docs.google.com/forms/d/e/1FAIpQLSeIMR-wkYKFwnldd2qKKyUlaxLN85tu7OBX0HsLt7fzezZKWg/formResponse" method="POST" target="hidden_iframe" onsubmit="submitForm()">
-                
                 <input type="hidden" name="pageHistory" value="0,1">
                 <input type="hidden" name="entry.1315166815" id="form-id">
                 <input type="hidden" name="entry.1573740217" id="form-camp">
                 <input type="hidden" name="entry.697011792" value="채번 요청">
                 
                 <div class="label-area">📦<span>운송장 번호</span></div>
-                
                 <div class="input-group">
                     <input type="text" name="entry.359305263" id="waybill" placeholder="우측 버튼을 누르세요 👉" required>
                     <button type="button" class="btn-paste" onclick="pasteClipboard()">👆 붙여넣기 클릭</button>
@@ -138,9 +125,7 @@
         <div class="footer">
             <span class="contact-info">버그 및 오류 문의 : cndrone@naver.com</span>
             © 2026 RyanL Logistics.<br>
-            <span class="designer-tag">
-                Created by LJH<span class="hidden-name">이준희</span>
-            </span>
+            <span class="designer-tag">Created by LJH<span class="hidden-name">이준희</span></span>
             <span class="warning-text">무단 복제 및 도용 시 법적 처벌을 받을 수 있습니다.</span>
         </div>
     </div>
@@ -160,11 +145,9 @@
         window.addEventListener('load', function() {
             setTimeout(function() {
                 var splash = document.getElementById('splash-screen');
-                splash.style.opacity = '0'; // 투명하게 만들기
-                setTimeout(function() {
-                    splash.style.display = 'none'; // 완전히 숨기기
-                }, 600); // 0.6초 동안 스르륵 사라짐
-            }, 1500); // 앱 켜지고 1.5초 대기
+                splash.style.opacity = '0';
+                setTimeout(function() { splash.style.display = 'none'; }, 600);
+            }, 1500);
         });
     </script>
 </body>
