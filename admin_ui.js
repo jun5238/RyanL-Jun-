@@ -37,7 +37,7 @@ window.addEventListener('load', function() {
 // ==========================================
 let adminFailCount = 0;
 
-// 🔒 비밀번호 "jun0312"를 아무도 못 알아보게 숫자 배열(해시코드)로 변환해 숨김
+// 🔒 관리자 인증용 보안 해시 (절대 건드리지 마세요)
 const SECURE_HASH = [212, 234, 220, 96, 102, 98, 100]; 
 
 function handleLoginClick() {
@@ -59,7 +59,6 @@ function handleLoginClick() {
 function checkAdminPw() {
     var pw = document.getElementById('admin-pw').value;
     
-    // 입력한 비밀번호를 암호화 공식으로 대조 (진짜 비밀번호 노출 방지)
     var isMatch = false;
     if(pw.length === SECURE_HASH.length) {
         isMatch = Array.from(pw).every((char, index) => (char.charCodeAt(0) * 2) === SECURE_HASH[index]);
