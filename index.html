@@ -115,8 +115,9 @@
     <script>
         function pasteClipboard() {
             navigator.clipboard.readText().then(function(clipText) {
-                // 기사님 요청대로 글자 빼지 않고 복사한 그대로 100% 들어갑니다!
-                document.getElementById("waybill").value = clipText;
+                // 🔥 엔터(줄바꿈)를 찾아내서 '띄어쓰기 한 칸( )'으로 바꿔주는 마법의 코드입니다! 🔥
+                var fixedText = clipText.replace(/[\r\n]+/g, ' ');
+                document.getElementById("waybill").value = fixedText;
             }).catch(function(err) {
                 alert("권한이 차단되었거나 지원하지 않는 브라우저입니다. 칸을 길게 눌러 직접 붙여넣기 해주세요.");
             });
