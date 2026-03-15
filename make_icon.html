@@ -6,8 +6,8 @@
     <title>아이콘 변환기</title>
 </head>
 <body style="text-align:center; padding-top:50px; font-family:sans-serif; background:#f0f0f0;">
-    <h2>🎨 RyanL 아이콘 생성기 (수정본)</h2>
-    <p>트럭을 꽉 차게! 테두리 밖은 투명하게!</p>
+    <h2>🎨 RyanL 아이콘 생성기 (복합 로고)</h2>
+    <p>새로운 복합 로고가 꽉 차게! 테두리 밖은 투명하게!</p>
     
     <canvas id="myCanvas" width="512" height="512" style="width: 300px; max-width: 100%; border-radius: 50%; box-shadow: 0 4px 10px rgba(0,0,0,0.2); background: transparent;"></canvas>
     
@@ -23,6 +23,7 @@
         var img = new Image();
         img.crossOrigin = "Anonymous";
         
+        // 🔥 기사님이 업로드하신 새로운 복합 로고(mlogo.jpg)를 가져옵니다! 🔥
         img.src = "mlogo.jpg"; 
 
         img.onload = function() {
@@ -34,9 +35,10 @@
             ctx.arc(256, 256, 246, 0, 2 * Math.PI);
             ctx.fillStyle = "white";
             ctx.fill();
-            ctx.lineWidth = 14; 
-            ctx.strokeStyle = "black";
-            ctx.stroke();
+            // 새로운 로고는 이미 테두리가 있으므로 테두리를 그리는 코드는 제거했습니다!
+            //ctx.lineWidth = 14; 
+            //ctx.strokeStyle = "black";
+            //ctx.stroke();
 
             // 3. 트럭이 삐져나가지 않게 동그라미 안쪽만 쓰겠다고 선언!
             ctx.save();
@@ -44,7 +46,7 @@
             ctx.arc(256, 256, 240, 0, 2 * Math.PI);
             ctx.clip();
 
-            // 4. 트럭 사이즈를 엄청 키워서 꽉 차게 그리기
+            // 4. 새로운 복합 로고 사이즈를 엄청 키워서 꽉 차게 그리기 (여백 제거)
             ctx.drawImage(img, -20, 20, 552, 552); 
             ctx.restore();
         };
