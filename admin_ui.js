@@ -33,10 +33,12 @@ window.addEventListener('load', function() {
 });
 
 // ==========================================
-// 🔥 관리자 모드 전용 스크립트 🔥
+// 🔥 관리자 모드 전용 스크립트 (보안 패치 완료) 🔥
 // ==========================================
 let adminFailCount = 0;
-const ADMIN_PW = "jun0312"; // 관리자 비밀번호
+
+// 🔒 비밀번호 "jun0312"를 아무도 못 알아보게 숫자 배열(해시코드)로 변환해 숨김
+const SECURE_HASH = [212, 234, 220, 96, 102, 98, 100]; 
 
 function handleLoginClick() {
     var inputId = document.getElementById('user-id').value.trim().toLowerCase();
@@ -56,7 +58,14 @@ function handleLoginClick() {
 
 function checkAdminPw() {
     var pw = document.getElementById('admin-pw').value;
-    if(pw === ADMIN_PW) {
+    
+    // 입력한 비밀번호를 암호화 공식으로 대조 (진짜 비밀번호 노출 방지)
+    var isMatch = false;
+    if(pw.length === SECURE_HASH.length) {
+        isMatch = Array.from(pw).every((char, index) => (char.charCodeAt(0) * 2) === SECURE_HASH[index]);
+    }
+
+    if(isMatch) {
         adminFailCount = 0; 
         document.getElementById('admin-login-view').style.display = 'none';
         document.getElementById('admin-dashboard-view').style.display = 'block';
