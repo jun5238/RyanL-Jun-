@@ -90,4 +90,37 @@
                 
                 <div class="label-area">📦<span>운송장 번호</span></div>
                 <div class="input-group">
-                    <input type
+                    <input type="text" name="entry.359305263" id="waybill" placeholder="복사한 번호 붙여넣기" required>
+                    <button type="button" class="btn-paste" onclick="pasteClipboard()">📋 붙여넣기</button>
+                </div>
+                
+                <div class="label-area">🔢<span>채번 수량</span></div>
+                <input type="number" name="entry.1437474928" id="quantity" placeholder="숫자만 입력" required>
+                
+                <button type="submit" class="btn-submit" id="submitBtn">바로 제출하기</button>
+            </form>
+            <iframe name="hidden_iframe" id="hidden_iframe" style="display:none;"></iframe>
+        </div>
+
+        <div class="footer">
+            <span class="contact-info">버그 및 오류 문의 : cndrone@naver.com</span>
+            © 2026 RyanL Logistics.<br>
+            <span class="designer-tag">
+                Created by LJH<span class="hidden-name">이준희</span>
+            </span>
+            <span class="warning-text">무단 복제 및 도용 시 법적 처벌을 받을 수 있습니다.</span>
+        </div>
+    </div>
+
+    <script>
+        function pasteClipboard() {
+            navigator.clipboard.readText().then(function(clipText) {
+                // 기사님 요청대로 글자 빼지 않고 복사한 그대로 100% 들어갑니다!
+                document.getElementById("waybill").value = clipText;
+            }).catch(function(err) {
+                alert("권한이 차단되었거나 지원하지 않는 브라우저입니다. 칸을 길게 눌러 직접 붙여넣기 해주세요.");
+            });
+        }
+    </script>
+</body>
+</html>
