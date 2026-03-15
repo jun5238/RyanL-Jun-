@@ -7,7 +7,7 @@
 </head>
 <body style="text-align:center; padding-top:50px; font-family:sans-serif; background:#f0f0f0;">
     <h2>🎨 RyanL 꽉 찬 아이콘 생성기</h2>
-    <p>빈틈 없이 꽉 찬 JPG 아이콘입니다!</p>
+    <p>선 겹침 해결! 원본 테두리 하나로 꽉 채웁니다!</p>
     
     <canvas id="myCanvas" width="512" height="512" style="width: 300px; max-width: 100%; border-radius: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.2); background: white;"></canvas>
     
@@ -26,25 +26,18 @@
         img.src = "icon.jpg"; 
 
         img.onload = function() {
-            // 1. JPG는 투명이 안 되므로 전체를 하얀색으로 꽉 채웁니다.
+            // 1. 하얀색 배경 꽉 채우기
             ctx.fillStyle = "white";
             ctx.fillRect(0, 0, 512, 512);
 
-            // 2. 기사님 사진을 살짝 더 확대해서 빈틈을 화면 밖으로 밀어냅니다!
-            ctx.drawImage(img, -15, -15, 542, 542); 
-
-            // 3. 원래 사진의 울퉁불퉁한 테두리를 가리기 위해,
-            // 완벽하게 둥글고 두꺼운 검정 테두리를 덧그려서 덮어버립니다!
-            ctx.beginPath();
-            ctx.arc(256, 256, 246, 0, 2 * Math.PI);
-            ctx.lineWidth = 20; // 빵빵한 두께로 빈틈 철벽 방어!
-            ctx.strokeStyle = "black";
-            ctx.stroke();
+            // 2. 쓸데없는 선 덧그리는 코드 삭제!
+            // 대신, 원본 사진을 조금 더 확대해서 바깥쪽 흰 여백을 날리고 
+            // 원래 있던 검은 선이 화면 끄트머리에 딱 맞게 꽉 채웁니다!
+            ctx.drawImage(img, -20, -20, 552, 552); 
         };
 
         function downloadIcon() {
             var link = document.createElement('a');
-            // 🔥 기사님 요청대로 다시 JPG로 바꿨습니다! 🔥
             link.download = 'icon.jpg'; 
             link.href = canvas.toDataURL("image/jpeg", 1.0);
             link.click();
