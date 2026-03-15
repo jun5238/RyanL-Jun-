@@ -39,7 +39,7 @@
         .main-card { width: 92%; max-width: 380px; background: var(--navy); border-radius: 12px; padding: 20px 18px; box-sizing: border-box; border: 3.5px solid var(--orange); box-shadow: 0 4px 12px rgba(0,0,0,0.1); margin-top: 10px; }
         #setup-view { width: 92%; max-width: 380px; text-align: center; }
         
-        .setup-label { display:block; margin: 15px 0 8px 0; font-weight:900; color: var(--ryanl-blue); text-align: left; font-size: 16px; }
+        .setup-label { display:block; margin: 15px 0 8px 0; font-weight:900; color: var(--navy); text-align: left; font-size: 16px; }
         .info-box { margin-bottom: 15px; text-align: left; border-bottom: 1px dashed rgba(255,255,255,0.2); padding-bottom: 12px; }
         .user-info { color: #fff; font-size: 16px; font-weight: 700; margin-bottom: 10px; display: block; }
         
@@ -50,34 +50,33 @@
 
         input, select { width: 100%; padding: 14px; border-radius: 8px; font-size: 17px; box-sizing: border-box; background: #fff; font-weight: 600; border: 2px solid #ddd; outline: none; }
         
-        /* 🔥 입력창 그룹 최적화 🔥 */
+        /* 🔥 입력창 그룹 최적화 (버튼을 살짝 줄이고 입력창을 넓힘) 🔥 */
         .input-group { display: flex; gap: 8px; margin-bottom: 15px; width: 100%; align-items: center; }
         
-        /* 입력창: 남은 공간을 꽉 채우게 설정 */
         .input-group input { 
             margin-bottom: 0 !important; 
             flex: 1; 
             border: none; 
             color: #000; 
-            padding: 14px 8px; 
-            font-size: 17px; 
+            padding: 14px 10px; 
+            font-size: 15px; /* 글자 크기를 17->15로 줄여서 잘림 방지 */
             min-width: 0; 
         }
         
-        /* 버튼: 너비를 125px로 딱 고정해서 입력창을 밀지 않게 함 */
         .btn-paste { 
-            width: 125px; 
+            width: 120px; 
             flex-shrink: 0; 
             background: var(--orange); color: white; border: none; border-radius: 8px; 
-            font-weight: 900; font-size: 14px; height: 50px; cursor: pointer; white-space: nowrap; 
+            font-weight: 900; font-size: 13px; height: 50px; cursor: pointer; white-space: nowrap; 
             animation: pulse-animation 1.5s infinite; 
             display: flex; align-items: center; justify-content: center;
         }
 
-        @keyframes pulse-animation { 0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 140, 0, 0.7); } 50% { transform: scale(1.05); box-shadow: 0 0 10px 5px rgba(255, 140, 0, 0.3); } 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 140, 0, 0); } }
+        @keyframes pulse-animation { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
         
         .btn-submit { width: 100%; padding: 18px; background: var(--navy); color: #fff; border: 2.5px solid var(--orange); border-radius: 10px; font-size: 20px; font-weight: 900; cursor: pointer; margin-top: 5px; }
         
+        /* 가이드 버튼/박스 */
         .btn-guide { background: #f0f0f0; color: #333; border: 1px solid #ccc; border-radius: 8px; padding: 12px; width: 100%; margin-top: 20px; font-weight: 800; font-size: 14px; cursor: pointer; }
         #guide-content { display: none; text-align: left; background: #f9f9f9; padding: 15px; border-radius: 10px; margin-top: 10px; border: 1px solid #ddd; line-height: 1.6; }
         .guide-title { font-weight: 900; color: var(--navy); display: block; margin-bottom: 5px; font-size: 14px; border-left: 4px solid var(--orange); padding-left: 8px; }
@@ -89,11 +88,10 @@
         .hidden-name { color: #ffffff; user-select: all; padding-left: 5px; }
         .warning-text { color: #ff3b30; font-size: 11px; font-weight: 900; margin-top: 15px; margin-bottom: 5px; display: block; letter-spacing: -0.5px; }
 
-        /* 작은 폰 대응 (미세조정) */
+        /* 작은 폰 대응 */
         @media screen and (max-width: 360px) {
-            .input-group input { font-size: 15px; }
-            .btn-paste { width: 110px; font-size: 12px; }
-            .rocket-title { font-size: 22px; }
+            .input-group input { font-size: 13px; }
+            .btn-paste { width: 110px; font-size: 11px; }
         }
     </style>
 </head>
@@ -173,7 +171,6 @@
             var content = document.getElementById("guide-content");
             content.style.display = (content.style.display === "block") ? "none" : "block";
         }
-
         function pasteClipboard() {
             navigator.clipboard.readText().then(function(clipText) {
                 var fixedText = clipText.replace(/[\r\n]+/g, ' ');
@@ -182,7 +179,6 @@
                 alert("권한 차단! 칸을 길게 눌러 직접 붙여넣기 해주세요.");
             });
         }
-
         window.addEventListener('load', function() {
             setTimeout(function() {
                 var splash = document.getElementById('splash-screen');
