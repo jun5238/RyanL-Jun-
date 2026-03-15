@@ -2,10 +2,10 @@
 // 1. 통합 승인 명단 (여기에만 적으시면 됩니다!)
 // ==========================================
 const VIP_COMPANY_DATA = [
-    { id: "julee82", company: "라이언엘" },
-    { id: "hojingi0723", company: "라이언엘" },
-    { id: "ggomange86", company: "라이언엘" },
-    { id: "grow11", company: "라이언엘" },
+    { id: "julee82", name: "이준희", company: "라이언엘" },
+    { id: "hojingi0723", name: "호진기", company: "라이언엘" },
+    { id: "ggomange86", name: "김현선", company: "라이언엘" },
+    { id: "grow11", name: "심광석", company: "라이언엘" }
     // 새로운 기사님은 이 아래에 계속 추가해주세요!
 ];
 
