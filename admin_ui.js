@@ -92,6 +92,7 @@ function closeAdmin() {
     document.getElementById('user-id').value = '';
 }
 
+// 🔥 업그레이드된 명단 렌더링 기능 (성함 추가) 🔥
 function renderAdminList() {
     var content = document.getElementById('admin-list-content');
     
@@ -103,7 +104,10 @@ function renderAdminList() {
     var grouped = {};
     VIP_COMPANY_DATA.forEach(function(user) {
         if(!grouped[user.company]) grouped[user.company] = [];
-        grouped[user.company].push(user.id);
+        
+        // 💡 이름(name)이 적혀있으면 "홍길동(ryan001)" 형태로, 없으면 아이디만 표시!
+        var displayName = user.name ? user.name + " (" + user.id + ")" : user.id;
+        grouped[user.company].push(displayName);
     });
 
     var html = "";
@@ -111,7 +115,7 @@ function renderAdminList() {
         var users = grouped[company];
         html += "<div style='margin-bottom:15px; padding:12px; background:rgba(255,255,255,0.1); border-radius:8px;'>";
         html += "<strong style='color:#fff; font-size:16px;'>" + company + " <span style='color:var(--orange);'>(" + users.length + "명)</span></strong><br>";
-        html += "<div style='color:#ccc; font-size:14px; margin-top:5px; word-break:break-all; line-height:1.4;'>" + users.join(", ") + "</div>";
+        html += "<div style='color:#ccc; font-size:14px; margin-top:8px; word-break:break-all; line-height:1.6;'>" + users.join(", ") + "</div>";
         html += "</div>";
     }
     content.innerHTML = html;
