@@ -25,9 +25,10 @@
             align-items: center; justify-content: center; z-index: 9999;
             transition: opacity 0.6s ease-out;
         }
-        /* 🔥 로딩 그림 사이즈 확대 (180px -> 220px) 🔥 */
+        /* 그림 사이즈 220px 유지 */
         .splash-logo { width: 220px; border-radius: 18px; margin-bottom: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
-        .splash-text { color: white; font-size: 20px; font-weight: 800; letter-spacing: 2px; animation: blink 1.5s infinite; }
+        /* Loading..... 텍스트 스타일 */
+        .splash-text { color: white; font-size: 22px; font-weight: 800; letter-spacing: 1px; animation: blink 1.5s infinite; }
         
         @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0.4; } 100% { opacity: 1; } }
 
@@ -75,7 +76,7 @@
 <body>
     <div id="splash-screen">
         <img src="loading.jpg" class="splash-logo" alt="RyanL Loading">
-        <div class="splash-text">로딩중..</div>
+        <div class="splash-text">Loading.....</div>
     </div>
 
     <div class="wrapper">
