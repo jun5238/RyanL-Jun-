@@ -9,7 +9,6 @@
     <title>RyanL Logistics</title>
     <style>
         @keyframes popIn { 0% { transform: scale(0.8); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
-        body { margin:0; padding:0; background-color:#f4f4f9; font-family:sans-serif; }
     </style>
     <script>
         var cssLink = document.createElement("link");
@@ -18,11 +17,11 @@
         document.head.appendChild(cssLink);
     </script>
 </head>
-<body>
+<body style="margin:0; padding:0; background-color:#f4f4f9; font-family:sans-serif;">
 
     <div id="setup-view" style="padding:20px; max-width:400px; margin:20px auto;">
-        <div style="text-align:center; margin-bottom:25px;">
-            <img src="mlogo.jpg" style="width:140px; margin-bottom:15px;" onerror="this.style.display='none'">
+        <div style="text-align:center; margin-bottom:20px;">
+            <img src="mlogo.jpg" style="width:150px; margin-bottom:10px;" onerror="this.style.display='none'">
             <h2 style="color:#1c2541; margin:0; font-size:24px; font-weight:900;">🚀 채번 요청 1초컷</h2>
             <div style="color:#1c2541; font-weight:bold; font-size:14px; margin-top:10px;">
                 천안1캠프 전용 스마트 시스템 <span style="background:#ff3b30; color:#fff; padding:3px 8px; border-radius:5px; font-size:12px; margin-left:5px;">테스트 버전</span>
@@ -35,15 +34,14 @@
         <div style="font-weight:bold; font-size:15px; margin-bottom:8px; color:#333;">📍 소속 캠프</div>
         <select id="user-camp" style="width:100%; padding:14px; margin-bottom:30px; border:1px solid #ccc; border-radius:8px; box-sizing:border-box; font-size:16px; background-color:#fff;">
             <option value="선택하세요">선택하세요</option>
-            <option value="천안1캠프">천안1캠프</option>
             <option value="음봉MB">음봉MB</option>
             <option value="송촌MB">송촌MB</option>
         </select>
         
-        <button class="btn-submit" onclick="saveInfo()" style="width:100%; padding:16px; background:#1c2541; color:#fff; border:none; border-radius:8px; font-weight:bold; font-size:17px; margin-bottom:15px; box-shadow:0 4px 6px rgba(0,0,0,0.1);">로그인</button>
+        <button class="btn-submit" onclick="saveInfo()" style="width:100%; padding:16px; background:#1c2541; color:#fff; border:none; border-radius:8px; font-weight:bold; font-size:17px; margin-bottom:15px;">로그인</button>
         <button style="width:100%; padding:14px; background:#e0e0e0; color:#333; border:none; border-radius:8px; font-weight:bold; font-size:15px;">❓ 설치 방법 및 오류 해결 가이드</button>
 
-        <div style="text-align:center; margin-top:35px; font-size:12px; color:#777; line-height:1.6;">
+        <div style="text-align:center; margin-top:30px; font-size:12px; color:#777; line-height:1.6;">
             버그 및 오류 문의 : cndrone@naver.com<br>
             © 2026 RyanL Logistics.<br>
             Created by LJH<br><br>
@@ -68,7 +66,7 @@
         <button onclick="showSetup()" style="width:100%; padding:16px; background:#ff3b30; color:#fff; border:none; border-radius:8px; font-weight:bold; font-size:17px; margin-top:30px;">로그아웃</button>
     </div>
 
-    <div id="main-view" style="display:none; padding:20px; max-width:400px; margin:20px auto; background:#fff; border-radius:15px; box-shadow:0 5px 15px rgba(0,0,0,0.05);">
+    <div id="main-view" style="display:none; padding:20px; max-width:400px; margin:20px auto;">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:25px; padding-bottom:15px; border-bottom:2px solid #ddd;">
             <div style="font-size:16px; color:#333;">
                 <span id="display-camp" style="font-weight:900; color:#ff8c00;"></span> - <span id="display-id" style="font-weight:900;"></span> 기사님
