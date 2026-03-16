@@ -12,15 +12,17 @@
         body { margin:0; padding:0; background-color:#f4f4f9; font-family:sans-serif; }
     </style>
     <script>
-        var t = new Date().getTime();
-        document.write('<link rel="stylesheet" href="style.css?v=' + t + '">');
+        var cssLink = document.createElement("link");
+        cssLink.rel = "stylesheet";
+        cssLink.href = "Style.css?v=" + new Date().getTime();
+        document.head.appendChild(cssLink);
     </script>
 </head>
 <body>
 
     <div id="setup-view" style="padding:20px; max-width:400px; margin:20px auto;">
         <div style="text-align:center; margin-bottom:25px;">
-            <img src="logo.png" style="width:140px; margin-bottom:15px;" onerror="this.style.display='none'">
+            <img src="mlogo.jpg" style="width:140px; margin-bottom:15px;" onerror="this.style.display='none'">
             <h2 style="color:#1c2541; margin:0; font-size:24px; font-weight:900;">🚀 채번 요청 1초컷</h2>
             <div style="color:#1c2541; font-weight:bold; font-size:14px; margin-top:10px;">
                 천안1캠프 전용 스마트 시스템 <span style="background:#ff3b30; color:#fff; padding:3px 8px; border-radius:5px; font-size:12px; margin-left:5px;">테스트 버전</span>
@@ -34,6 +36,8 @@
         <select id="user-camp" style="width:100%; padding:14px; margin-bottom:30px; border:1px solid #ccc; border-radius:8px; box-sizing:border-box; font-size:16px; background-color:#fff;">
             <option value="선택하세요">선택하세요</option>
             <option value="천안1캠프">천안1캠프</option>
+            <option value="음봉MB">음봉MB</option>
+            <option value="송촌MB">송촌MB</option>
         </select>
         
         <button class="btn-submit" onclick="saveInfo()" style="width:100%; padding:16px; background:#1c2541; color:#fff; border:none; border-radius:8px; font-weight:bold; font-size:17px; margin-bottom:15px; box-shadow:0 4px 6px rgba(0,0,0,0.1);">로그인</button>
@@ -100,8 +104,14 @@
 
     <script>
         var ts = new Date().getTime();
-        document.write('<script src="vip_list.js?v=' + ts + '"><\/script>');
-        document.write('<script src="rl_core.js?v=' + ts + '"><\/script>');
+        var script1 = document.createElement('script');
+        script1.src = 'vip_list.js?v=' + ts;
+        script1.onload = function() {
+            var script2 = document.createElement('script');
+            script2.src = 'rl_core.js?v=' + ts;
+            document.body.appendChild(script2);
+        };
+        document.body.appendChild(script1);
     </script>
 </body>
 </html>
