@@ -11,12 +11,16 @@
         } catch(e) { console.log("DB 저장 에러"); }
     };
 
+    // 🔥 정보변경 시 기존 아이디 기억을 완전히 삭제!
     window.showSetup = function() {
+        localStorage.removeItem("rl_uid"); 
+        document.getElementById("user-id").value = ""; 
         document.getElementById("main-view").style.display = "none";
         document.getElementById("setup-view").style.display = "block";
     };
 
     window.loginSuccess = function(uid, camp) {
+        // 성공한 아이디를 강력하게 저장
         localStorage.setItem("rl_uid", uid);
         localStorage.setItem("rl_ucamp", camp);
         
@@ -28,10 +32,9 @@
         document.getElementById("setup-view").style.display = "none";
         document.getElementById("main-view").style.display = "block";
 
-        // 🔥 관리자 아이디 띄어쓰기/대소문자 실수 완벽 방어
         var adminIdCheck = uid.trim().toLowerCase();
 
-        // 관리자일 경우 제출버튼 바로 밑에 리모컨 소환!
+        // 관리자 리모컨 소환
         if (adminIdCheck === "ryanl82") {
             var btn = document.getElementById("adminBtn");
             if (!btn) {
@@ -49,12 +52,11 @@
                         }).then(function() {
                             alert(newId.trim() + " 기사님 승인이 완료되었습니다!\n이제 바로 로그인 가능합니다.");
                         }).catch(function() {
-                            alert("승인 중 오류가 발생했습니다. 인터넷 연결을 확인해주세요.");
+                            alert("승인 중 오류가 발생했습니다.");
                         });
                     }
                 };
                 
-                // 제출 버튼(submitBtn) 찾아서 바로 그 밑에 눈에 띄게 추가
                 var submitBtn = document.getElementById("submitBtn");
                 if (submitBtn) {
                     submitBtn.parentNode.insertBefore(btn, submitBtn.nextSibling);
@@ -62,28 +64,23 @@
                     document.getElementById("main-view").appendChild(btn);
                 }
             }
-            btn.style.display = "block"; // 무조건 보이게 강제
+            btn.style.display = "block";
         } else {
-            // 일반 기사님 화면에서는 리모컨 절대 숨김
             var existingBtn = document.getElementById("adminBtn");
             if (existingBtn) existingBtn.style.display = "none";
         }
     };
 
-    window.saveInfo = function() {
-        var a = document.getElementById("user-id").value;
-        var b = document.getElementById("user-camp").value;
-        
+    // 🔥 로그인 처리 로직을 분리 (화면 자동완성 무시용)
+    window.processLogin = function(a, b) {
         if (!a || !b) return alert("아이디와 소속 캠프를 입력해주세요.");
         
-        var cleanId = a.trim(); // 띄어쓰기 실수 제거
+        var cleanId = a.trim();
         var adminIdCheck = cleanId.toLowerCase();
 
-        // 1. 관리자 ryanl82 무조건 통과
         if (adminIdCheck === "ryanl82") {
             window.loginSuccess(cleanId, b);
         } else {
-            // 2. 파이어베이스(새 창고) + VIP_LIST(옛날 명부) 동시 검사
             fetch(DB_URL + "users/" + cleanId + ".json")
             .then(function(res) { return res.json(); })
             .then(function(data) {
@@ -97,10 +94,17 @@
                 if (typeof VIP_LIST !== "undefined" && VIP_LIST.includes(cleanId)) {
                     window.loginSuccess(cleanId, b);
                 } else {
-                    alert("서버와 연결할 수 없습니다. 잠시 후 다시 시도해주세요.");
+                    alert("서버와 연결할 수 없습니다.");
                 }
             });
         }
+    };
+
+    // [접속하기] 버튼 눌렀을 때 실행
+    window.saveInfo = function() {
+        var a = document.getElementById("user-id").value;
+        var b = document.getElementById("user-camp").value;
+        window.processLogin(a, b);
     };
 
     window.submitForm = function() {
@@ -132,13 +136,14 @@
         }
     };
 
+    // 🔥 자동 로그인 실행 (브라우저 자동완성보다 우선권 가짐)
     window.onload = function() {
-        var a = localStorage.getItem("rl_uid");
-        var b = localStorage.getItem("rl_ucamp");
-        if (a && b) {
-            document.getElementById("user-id").value = a;
-            document.getElementById("user-camp").value = b;
-            window.saveInfo();
+        var savedUid = localStorage.getItem("rl_uid");
+        var savedCamp = localStorage.getItem("rl_ucamp");
+        
+        // 기억된 아이디가 있다면, 화면에 뭐가 적혀있든 무시하고 그 아이디로 자동 접속!
+        if (savedUid && savedCamp) {
+            window.processLogin(savedUid, savedCamp);
         }
     };
 })();
