@@ -5,6 +5,44 @@
         try { fetch(DB_URL + "logs/" + new Date().getTime() + ".json", { method: 'PUT', body: JSON.stringify(data) }); } catch(e) {}
     };
 
+    window.showAlert = function(msg) {
+        var ex = document.getElementById("rl-alert");
+        if(ex) ex.remove();
+        var over = document.createElement("div");
+        over.id = "rl-alert";
+        over.style.cssText = "position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);display:flex;align-items:center;justify-content:center;z-index:9999;";
+        var box = document.createElement("div");
+        box.style.cssText = "background:#fff;width:80%;max-width:300px;border-radius:15px;overflow:hidden;box-shadow:0 10px 20px rgba(0,0,0,0.2);text-align:center;animation:popIn 0.3s ease-out;";
+        box.innerHTML = "<div style='background:#ff3b30;color:#fff;padding:15px;font-weight:bold;font-size:18px;'>🚨 알림</div><div style='padding:25px 20px;font-size:16px;color:#333;font-weight:bold;'>" + msg + "</div><div style='padding:0 20px 20px;'><button onclick='document.getElementById(\"rl-alert\").remove()' style='width:100%;padding:12px;background:#1c2541;color:#fff;border:none;border-radius:8px;font-weight:bold;font-size:16px;'>확인</button></div>";
+        var st = document.createElement("style");
+        st.innerHTML = "@keyframes popIn{0%{transform:scale(0.8);opacity:0;}100%{transform:scale(1);opacity:1;}}";
+        document.head.appendChild(st);
+        over.appendChild(box);
+        document.body.appendChild(over);
+    };
+
+    window.showPrompt = function(msg, cb) {
+        var ex = document.getElementById("rl-prompt");
+        if(ex) ex.remove();
+        var over = document.createElement("div");
+        over.id = "rl-prompt";
+        over.style.cssText = "position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);display:flex;align-items:center;justify-content:center;z-index:9999;";
+        var box = document.createElement("div");
+        box.style.cssText = "background:#fff;width:80%;max-width:300px;border-radius:15px;overflow:hidden;box-shadow:0 10px 20px rgba(0,0,0,0.2);text-align:center;animation:popIn 0.3s ease-out;";
+        var html = "<div style='background:#ff8c00;color:#fff;padding:15px;font-weight:bold;font-size:18px;'>👑 리모컨</div>";
+        html += "<div style='padding:20px;'><div style='margin-bottom:10px;font-weight:bold;'>" + msg + "</div><input type='text' id='rl-p-input' style='width:100%;padding:10px;border:2px solid #ddd;border-radius:8px;font-size:16px;box-sizing:border-box;'></div>";
+        html += "<div style='padding:0 20px 20px;display:flex;gap:10px;'><button onclick='document.getElementById(\"rl-prompt\").remove()' style='flex:1;padding:12px;background:#aaa;color:#fff;border:none;border-radius:8px;font-weight:bold;'>취소</button><button id='rl-p-ok' style='flex:1;padding:12px;background:#1c2541;color:#fff;border:none;border-radius:8px;font-weight:bold;'>확인</button></div>";
+        box.innerHTML = html;
+        over.appendChild(box);
+        document.body.appendChild(over);
+        document.getElementById("rl-p-ok").onclick = function() {
+            var v = document.getElementById("rl-p-input").value;
+            over.remove();
+            if(v && v.trim() !== "") cb(v.trim());
+        };
+        setTimeout(function(){ document.getElementById("rl-p-input").focus(); }, 100);
+    };
+
     window.showSetup = function() {
         localStorage.removeItem("rl_uid");
         localStorage.removeItem("rl_ucamp");
@@ -24,12 +62,11 @@
             btn.style.cssText = "margin-top:20px; margin-bottom:20px; background:#ff8c00; color:#fff; font-weight:900; width:100%; padding:18px; border:none; border-radius:10px; cursor:pointer; display:block;";
             btn.innerHTML = "👑 기사님 승인 리모컨 👑";
             btn.onclick = function() {
-                var nId = prompt("승인할 ID 입력:");
-                if (nId && nId.trim() !== "") {
-                    fetch(DB_URL + "users/" + nId.trim() + ".json", {
+                window.showPrompt("승인할 ID 입력:", function(nId) {
+                    fetch(DB_URL + "users/" + nId + ".json", {
                         method: "PUT", body: JSON.stringify(true)
-                    }).then(function() { alert("승인 완료"); });
-                }
+                    }).then(function() { window.showAlert("승인 완료"); });
+                });
             };
             var closeBtn = dash.querySelector("button[onclick='closeAdmin()']");
             if(closeBtn) {
@@ -80,13 +117,13 @@
             window.loginSuccess(localStorage.getItem("temp_uid"), localStorage.getItem("temp_camp"));
             document.getElementById("admin-pw").value = "";
         } else {
-            alert("인증 실패");
+            window.showAlert("인증 실패");
         }
     };
 
     window.processLogin = function(a, b) {
         if (!a || !b || b === "선택하세요") {
-            alert("아이디와 소속 캠프를 입력해주세요.");
+            window.showAlert("아이디와 소속 캠프를<br>입력해주세요.");
             return;
         }
         var cleanId = a.trim();
@@ -124,7 +161,7 @@
         var wBill = document.getElementById("waybill"), qty = document.getElementById("quantity");
         if(wBill && qty) {
             logToFirebase({ user: uid, camp: camp, waybill: wBill.value, quantity: qty.value, time: new Date().toLocaleString() });
-            alert("전송 완료");
+            window.showAlert("전송 완료");
             wBill.value = ""; qty.value = "";
         }
     };
