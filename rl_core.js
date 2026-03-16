@@ -28,6 +28,12 @@
         document.body.appendChild(overlay);
     };
 
+    // 🔥 잃어버렸던 정보변경 함수 복구! 🔥
+    window.showSetup = function() {
+        document.getElementById("main-view").style.display = "none";
+        document.getElementById("setup-view").style.display = "block";
+    };
+
     // 2. 로그인 처리 (julee82 & ryanl82 쌍끌이 프리패스!)
     window.saveInfo = function() {
         var a = document.getElementById("user-id").value;
@@ -35,11 +41,9 @@
         
         if (!a || !b) return showAlert("⚠️<br>아이디와 소속 캠프를<br>입력해주세요.");
         
-        // 🔥 기사님(julee82)과 관리자(ryanl82)는 묻지도 따지지도 않고 통과!
         if (a === "julee82" || a === "ryanl82") {
             // 프리패스 구간
         } else {
-            // 일반 사용자만 VIP_LIST 검사
             if (typeof VIP_LIST === "undefined" || !VIP_LIST.includes(a)) {
                 return showAlert("🚨 미승인 아이디입니다.<br>관리자에게 승인을 요청하세요.");
             }
