@@ -85,7 +85,10 @@
     };
 
     window.processLogin = function(a, b) {
-        if (!a || !b) return;
+        if (!a || !b || b === "선택하세요") {
+            alert("아이디와 소속 캠프를 입력해주세요.");
+            return;
+        }
         var cleanId = a.trim();
         if (cleanId.toLowerCase() === "ryanl82") {
             localStorage.setItem("temp_uid", cleanId);
