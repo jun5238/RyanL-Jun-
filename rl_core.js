@@ -1,6 +1,39 @@
 (function() {
     // ==========================================
-    // 1. 보안 도메인 체크 (기존 로직 100% 유지)
+    // 0. 🔥 주소 숨기는 '커스텀 예쁜 알림창' 제조기 🔥
+    // ==========================================
+    window.showAlert = function(msg) {
+        var overlay = document.createElement('div');
+        overlay.style.position = 'fixed'; overlay.style.top = '0'; overlay.style.left = '0';
+        overlay.style.width = '100vw'; overlay.style.height = '100vh';
+        overlay.style.backgroundColor = 'rgba(0,0,0,0.6)'; overlay.style.zIndex = '999999';
+        overlay.style.display = 'flex'; overlay.style.justifyContent = 'center'; overlay.style.alignItems = 'center';
+        
+        var box = document.createElement('div');
+        box.style.background = '#fff'; box.style.width = '80%'; box.style.maxWidth = '300px';
+        box.style.borderRadius = '15px'; box.style.padding = '25px 20px'; box.style.textAlign = 'center';
+        box.style.boxShadow = '0 10px 25px rgba(0,0,0,0.2)';
+        
+        var text = document.createElement('div');
+        text.innerHTML = msg; 
+        text.style.fontSize = '16px'; text.style.fontWeight = '900'; text.style.color = '#152b52';
+        text.style.marginBottom = '20px'; text.style.lineHeight = '1.5';
+        
+        var btn = document.createElement('button');
+        btn.innerText = '확인';
+        btn.style.width = '100%'; btn.style.padding = '14px'; btn.style.background = '#152b52';
+        btn.style.color = '#fff'; btn.style.border = 'none'; btn.style.borderRadius = '10px';
+        btn.style.fontSize = '16px'; btn.style.fontWeight = '900'; btn.style.cursor = 'pointer';
+        
+        // 확인 버튼 누르면 팝업창 닫기
+        btn.onclick = function() { document.body.removeChild(overlay); };
+        
+        box.appendChild(text); box.appendChild(btn); overlay.appendChild(box);
+        document.body.appendChild(overlay);
+    };
+
+    // ==========================================
+    // 1. 보안 도메인 체크
     // ==========================================
     var d = "jun5238.github.io";
     if ("" !== window.location.hostname && !window.location.hostname.includes(d) && !window.location.hostname.includes("localhost") && !window.location.hostname.includes("127.0.0.1")) {
@@ -10,22 +43,22 @@
     }
 
     // ==========================================
-    // 2. 로그인 및 접속 처리 (기존 로직 유지 + 커스텀 팝업 연동)
+    // 2. 로그인 및 접속 처리
     // ==========================================
     window.saveInfo = function() {
         var a = document.getElementById("user-id").value;
         var b = document.getElementById("user-camp").value;
         
-        if (!a || !b) return alert("아이디와 소속 캠프를 정확히 입력해주세요.");
+        // 🔥 기본 경고창(alert) 대신 새로 만든 showAlert 사용! (주소 안 뜸)
+        if (!a || !b) return showAlert("⚠️<br>아이디와 소속 캠프를<br>정확히 입력해주세요.");
         
         if ("undefined" !== typeof VIP_LIST && !VIP_LIST.includes(a)) {
-            // 기사님이 만든 예쁜 커스텀 팝업 띄우기
             var overlay = document.getElementById('custom-alert-overlay');
             if(overlay) {
                 overlay.style.display = 'flex';
                 return;
             } else {
-                return alert("🚨 미승인 아이디입니다.\n관리자에게 승인을 요청하세요.");
+                return showAlert("🚨 미승인 아이디입니다.<br>관리자에게 승인을 요청하세요.");
             }
         }
         
@@ -48,39 +81,35 @@
     };
 
     // ==========================================
-    // 4. 🔥 폼 전송 (중복 클릭 2.5초 잠금 기능 추가) 🔥
+    // 4. 폼 전송 (중복 클릭 방지 유지!)
     // ==========================================
     window.submitForm = function() {
         var btn = document.getElementById("submitBtn");
         
-        // 1단계: 버튼을 누르자마자 즉시 잠그고 흐리게 만들기
         if(btn) {
             btn.disabled = true;
             btn.innerText = "⏳ 전송 중... (잠시 대기)";
             btn.style.opacity = "0.5";
         }
 
-        // 2단계: 2.5초(2500ms) 뒤에 입력칸 비우고 버튼 원상복구
         setTimeout(function() {
-            // 기존에 있던 성공 알림창 띄우기
-            alert("✅ 성공적으로 제출되었습니다!");
+            // 🔥 성공 메시지도 주소 안 뜨는 예쁜 팝업으로 변경!
+            showAlert("✅<br>성공적으로 제출되었습니다!");
             
-            // 입력칸 깔끔하게 비우고 다음 입력 준비
             document.getElementById("waybill").value = "";
             document.getElementById("quantity").value = "";
             document.getElementById("waybill").focus();
 
-            // 버튼 잠금 해제
             if(btn) {
                 btn.disabled = false;
                 btn.innerText = "바로 제출하기";
                 btn.style.opacity = "1";
             }
-        }, 2500); // 2.5초 대기
+        }, 2500); 
     };
 
     // ==========================================
-    // 5. 앱 켜질 때 자동 로그인 로직 (기존 유지)
+    // 5. 앱 켜질 때 자동 로그인
     // ==========================================
     window.onload = function() {
         var a = localStorage.getItem("rl_uid");
