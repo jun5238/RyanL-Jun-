@@ -9,7 +9,6 @@
         } catch(e) {}
     };
 
-    // 🔥 정보변경 시 기억 완벽 삭제 & 입력창 초기화
     window.showSetup = function() {
         localStorage.removeItem("rl_uid");
         localStorage.removeItem("rl_ucamp");
@@ -33,7 +32,6 @@
 
         var cleanUid = uid.trim().toLowerCase();
 
-        // 👑 기존 리모컨이 혹시 숨어있다면 싹 지워버리고 새로 만듦!
         var existingBtn = document.getElementById("adminBtn");
         if (existingBtn) {
             existingBtn.parentNode.removeChild(existingBtn);
@@ -129,11 +127,14 @@
         }
     };
 
-    window.onload = function() {
+    // 🔥 다른 코드와 충돌을 막는 가장 강력한 자동실행 방식
+    window.addEventListener('DOMContentLoaded', function() {
         var savedUid = localStorage.getItem("rl_uid");
         var savedCamp = localStorage.getItem("rl_ucamp");
         if (savedUid && savedCamp) {
+            document.getElementById("user-id").value = savedUid;
+            document.getElementById("user-camp").value = savedCamp;
             window.processLogin(savedUid, savedCamp);
         }
-    };
+    });
 })();
