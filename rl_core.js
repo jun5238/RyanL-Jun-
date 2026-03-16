@@ -8,13 +8,14 @@
     window.showSetup = function() {
         localStorage.removeItem("rl_uid");
         localStorage.removeItem("rl_ucamp");
-        location.reload();
+        location.href = location.href.split('?')[0];
     };
 
     function renderAdminList() {
         var listCont = document.getElementById("admin-list-content");
         if(listCont) {
             listCont.innerHTML = `
+                <button id="adminBtn" class="btn-submit" style="margin-bottom:20px; background:#ff8c00; color:#fff; font-weight:900; width:100%; padding:18px; border:none; border-radius:10px; cursor:pointer;">👑 기사님 승인 리모컨 👑</button>
                 <div style='background:rgba(255,255,255,0.05); padding:15px; border-radius:10px; color:white; line-height:2.2;'>
                     <b style='color:#ff8c00; font-size:17px; border-bottom:1px solid #ff8c00; padding-bottom:5px; margin-bottom:12px; display:inline-block;'>[ 업체별 라이언엘 ]</b><br>
                     • <b>julee82</b> (이준희)<br>
@@ -22,28 +23,22 @@
                     • <b>ryanl82</b> (관리자)<br>
                     • <b>test01</b> (테스트용)
                 </div>
-                <button id="adminBtn" class="btn-submit" style="margin-top:20px; background:#ff8c00; color:#fff; font-weight:900; width:100%; padding:15px; border:none; border-radius:8px; cursor:pointer; display:block !important; position:relative; z-index:999;">👑 기사님 승인 리모컨 👑</button>
             `;
             
-            var btn = document.getElementById("adminBtn");
-            if(btn) {
-                btn.onclick = function(e) {
-                    e.preventDefault();
-                    var nId = prompt("승인할 기사 ID 입력:");
-                    if (nId && nId.trim() !== "") {
-                        fetch(DB_URL + "users/" + nId.trim() + ".json", {
-                            method: "PUT", body: JSON.stringify(true)
-                        }).then(function() { alert("승인 완료!"); });
-                    }
-                };
-            }
+            document.getElementById("adminBtn").onclick = function(e) {
+                var nId = prompt("승인할 ID 입력:");
+                if (nId && nId.trim() !== "") {
+                    fetch(DB_URL + "users/" + nId.trim() + ".json", {
+                        method: "PUT", body: JSON.stringify(true)
+                    }).then(function() { alert("승인 완료"); });
+                }
+            };
         }
     }
 
     window.loginSuccess = function(uid, camp) {
         localStorage.setItem("rl_uid", uid);
         localStorage.setItem("rl_ucamp", camp);
-        
         document.getElementById("display-id").innerText = uid;
         document.getElementById("display-camp").innerText = camp;
         document.getElementById("form-id").value = uid;
@@ -102,9 +97,14 @@
         document.getElementById("waybill").value = ""; document.getElementById("quantity").value = "";
     };
 
-    // 새로고침 시 즉시 실행
-    var u = localStorage.getItem("rl_uid"), c = localStorage.getItem("rl_ucamp");
-    if (u && c) {
-        window.loginSuccess(u, c);
+    function autoLogin() {
+        var u = localStorage.getItem("rl_uid"), c = localStorage.getItem("rl_ucamp");
+        if (u && c) window.loginSuccess(u, c);
+    }
+
+    if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", autoLogin);
+    } else {
+        autoLogin();
     }
 })();
