@@ -29,7 +29,7 @@
         document.getElementById("setup-view").style.display = "none";
         document.getElementById("main-view").style.display = "block";
 
-        // 🔥 오직 '지휘관(ryanl82)'에게만 리모컨 버튼 생성!
+        // 🔥 지휘관(ryanl82)에게만 리모컨 버튼 생성
         if (uid === "ryanl82") {
             if (!document.getElementById("adminBtn")) {
                 var btn = document.createElement("button");
@@ -52,7 +52,6 @@
                 document.getElementById("main-view").appendChild(btn);
             }
         } else {
-            // 일반 기사님(julee82 포함) 화면에는 리모컨이 절대 안 보이게 처리
             var existingBtn = document.getElementById("adminBtn");
             if (existingBtn) existingBtn.style.display = "none";
         }
@@ -64,23 +63,28 @@
         
         if (!a || !b) return alert("아이디와 소속 캠프를 입력해주세요.");
         
-        // 🔥 관리자 ryanl82만 무조건 프리패스
+        // 1. 관리자 ryanl82 무조건 통과
         if (a === "ryanl82") {
             window.loginSuccess(a, b);
         } else {
-            // 🚚 julee82를 포함한 모든 현장 기사님은 파이어베이스 승인 검사!
+            // 2. 파이어베이스 먼저 확인
             fetch(DB_URL + "users/" + a + ".json")
             .then(function(res) { return res.json(); })
             .then(function(data) {
-                if (data === true) {
+                // 🔥 파이어베이스에 있거나 OR 기존 vip_list.js에 있으면 무사통과! 🔥
+                if (data === true || (typeof VIP_LIST !== "undefined" && VIP_LIST.includes(a))) {
                     window.loginSuccess(a, b);
                 } else {
-                    // 기사님 오리지널 양식 완벽 유지
                     alert("🚨 미승인 아이디입니다.\n\n[승인 요청 방법]\n아래 이메일로 양식에 맞춰 승인을 요청해주세요.\n\n📧 이메일: cndrone@naver.com\n📝 양식: [캠프명 / 이름 / 아이디]");
                 }
             })
             .catch(function(e) {
-                alert("서버와 연결할 수 없습니다. 잠시 후 다시 시도해주세요.");
+                // 인터넷 불안정으로 파이어베이스 조회가 실패해도, 기존 VIP_LIST에 있으면 통과시킴
+                if (typeof VIP_LIST !== "undefined" && VIP_LIST.includes(a)) {
+                    window.loginSuccess(a, b);
+                } else {
+                    alert("서버와 연결할 수 없습니다. 잠시 후 다시 시도해주세요.");
+                }
             });
         }
     };
