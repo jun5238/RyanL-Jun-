@@ -3,24 +3,23 @@
 
     window.logToFirebase = function(data) {
         try {
-            var timestamp = new Date().getTime();
-            fetch(DB_URL + "logs/" + timestamp + ".json", {
-                method: 'PUT',
-                body: JSON.stringify(data)
+            fetch(DB_URL + "logs/" + new Date().getTime() + ".json", {
+                method: 'PUT', body: JSON.stringify(data)
             });
-        } catch(e) { console.log("DB 저장 에러"); }
+        } catch(e) {}
     };
 
-    // 🔥 정보변경 시 기존 아이디 기억을 완전히 삭제!
+    // 🔥 정보변경 시 기억 완벽 삭제 & 입력창 초기화
     window.showSetup = function() {
-        localStorage.removeItem("rl_uid"); 
+        localStorage.removeItem("rl_uid");
+        localStorage.removeItem("rl_ucamp");
         document.getElementById("user-id").value = ""; 
+        document.getElementById("user-camp").value = ""; 
         document.getElementById("main-view").style.display = "none";
         document.getElementById("setup-view").style.display = "block";
     };
 
     window.loginSuccess = function(uid, camp) {
-        // 성공한 아이디를 강력하게 저장
         localStorage.setItem("rl_uid", uid);
         localStorage.setItem("rl_ucamp", camp);
         
@@ -32,49 +31,45 @@
         document.getElementById("setup-view").style.display = "none";
         document.getElementById("main-view").style.display = "block";
 
-        var adminIdCheck = uid.trim().toLowerCase();
+        var cleanUid = uid.trim().toLowerCase();
 
-        // 관리자 리모컨 소환
-        if (adminIdCheck === "ryanl82") {
-            var btn = document.getElementById("adminBtn");
-            if (!btn) {
-                btn = document.createElement("button");
-                btn.id = "adminBtn";
-                btn.innerText = "👑 기사님 승인 리모컨 👑";
-                btn.style = "width:100%; padding:18px; margin-top:20px; margin-bottom:20px; background:#ff8c00; color:#fff; border:none; border-radius:10px; font-weight:900; font-size:18px; cursor:pointer; box-shadow: 0 4px 6px rgba(0,0,0,0.1);";
-                
-                btn.onclick = function() {
-                    var newId = prompt("✅ 승인해줄 기사님의 아이디를 입력하세요:");
-                    if (newId && newId.trim() !== "") {
-                        fetch(DB_URL + "users/" + newId.trim() + ".json", {
-                            method: "PUT",
-                            body: JSON.stringify(true)
-                        }).then(function() {
-                            alert(newId.trim() + " 기사님 승인이 완료되었습니다!\n이제 바로 로그인 가능합니다.");
-                        }).catch(function() {
-                            alert("승인 중 오류가 발생했습니다.");
-                        });
-                    }
-                };
-                
-                var submitBtn = document.getElementById("submitBtn");
-                if (submitBtn) {
-                    submitBtn.parentNode.insertBefore(btn, submitBtn.nextSibling);
-                } else {
-                    document.getElementById("main-view").appendChild(btn);
+        // 👑 기존 리모컨이 혹시 숨어있다면 싹 지워버리고 새로 만듦!
+        var existingBtn = document.getElementById("adminBtn");
+        if (existingBtn) {
+            existingBtn.parentNode.removeChild(existingBtn);
+        }
+
+        if (cleanUid === "ryanl82") {
+            var btn = document.createElement("button");
+            btn.id = "adminBtn";
+            btn.innerHTML = "👑 기사님 승인 리모컨 (작동중) 👑";
+            btn.style = "width:100%; padding:18px; margin-top:20px; margin-bottom:20px; background:#ff8c00; color:#fff; border:none; border-radius:10px; font-weight:900; font-size:18px; cursor:pointer; box-shadow: 0 4px 6px rgba(0,0,0,0.1);";
+            
+            btn.onclick = function() {
+                var newId = prompt("✅ 승인해줄 기사님의 아이디를 입력하세요:");
+                if (newId && newId.trim() !== "") {
+                    fetch(DB_URL + "users/" + newId.trim() + ".json", {
+                        method: "PUT",
+                        body: JSON.stringify(true)
+                    }).then(function() {
+                        alert(newId.trim() + " 기사님 승인이 완료되었습니다!");
+                    }).catch(function() {
+                        alert("승인 중 오류가 발생했습니다.");
+                    });
                 }
+            };
+            
+            var submitBtn = document.getElementById("submitBtn");
+            if (submitBtn && submitBtn.parentNode) {
+                submitBtn.parentNode.insertBefore(btn, submitBtn.nextSibling);
+            } else {
+                document.getElementById("main-view").appendChild(btn);
             }
-            btn.style.display = "block";
-        } else {
-            var existingBtn = document.getElementById("adminBtn");
-            if (existingBtn) existingBtn.style.display = "none";
         }
     };
 
-    // 🔥 로그인 처리 로직을 분리 (화면 자동완성 무시용)
     window.processLogin = function(a, b) {
         if (!a || !b) return alert("아이디와 소속 캠프를 입력해주세요.");
-        
         var cleanId = a.trim();
         var adminIdCheck = cleanId.toLowerCase();
 
@@ -100,7 +95,6 @@
         }
     };
 
-    // [접속하기] 버튼 눌렀을 때 실행
     window.saveInfo = function() {
         var a = document.getElementById("user-id").value;
         var b = document.getElementById("user-camp").value;
@@ -119,7 +113,6 @@
         });
 
         alert("성공적으로 제출되었습니다!");
-        
         document.getElementById("waybill").value = "";
         document.getElementById("quantity").value = "";
         document.getElementById("waybill").focus();
@@ -136,12 +129,9 @@
         }
     };
 
-    // 🔥 자동 로그인 실행 (브라우저 자동완성보다 우선권 가짐)
     window.onload = function() {
         var savedUid = localStorage.getItem("rl_uid");
         var savedCamp = localStorage.getItem("rl_ucamp");
-        
-        // 기억된 아이디가 있다면, 화면에 뭐가 적혀있든 무시하고 그 아이디로 자동 접속!
         if (savedUid && savedCamp) {
             window.processLogin(savedUid, savedCamp);
         }
