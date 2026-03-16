@@ -12,8 +12,10 @@
     window.showSetup = function() {
         localStorage.removeItem("rl_uid");
         localStorage.removeItem("rl_ucamp");
-        document.getElementById("user-id").value = ""; 
-        document.getElementById("user-camp").value = ""; 
+        var uidInput = document.getElementById("user-id");
+        var campInput = document.getElementById("user-camp");
+        if(uidInput) uidInput.value = ""; 
+        if(campInput) campInput.value = ""; 
         document.getElementById("main-view").style.display = "none";
         document.getElementById("setup-view").style.display = "block";
     };
@@ -37,9 +39,8 @@
             existingBtn.parentNode.removeChild(existingBtn);
         }
 
-        // 🔥 관리자 아이디일 때 팝업창 먼저 띄우기! (새 코드 적용 확인용)
         if (cleanUid === "ryanl82") {
-            // 이 알림창이 떠야 새 코드가 적용된 겁니다!
+            // 이 알림창이 떠야 최신 코드가 적용된 겁니다!
             alert("👑 관리자(ryanl82) 접속 확인!\n리모컨을 소환합니다."); 
 
             var btn = document.createElement("button");
@@ -131,13 +132,18 @@
         }
     };
 
-    window.addEventListener('DOMContentLoaded', function() {
-        var savedUid = localStorage.getItem("rl_uid");
-        var savedCamp = localStorage.getItem("rl_ucamp");
-        if (savedUid && savedCamp) {
-            document.getElementById("user-id").value = savedUid;
-            document.getElementById("user-camp").value = savedCamp;
-            window.processLogin(savedUid, savedCamp);
-        }
-    });
+    // 🔥 새로고침 시 절대 안 튕기게 만드는 0.1초 타이머 자동실행
+    window.onload = function() {
+        setTimeout(function() {
+            var savedUid = localStorage.getItem("rl_uid");
+            var savedCamp = localStorage.getItem("rl_ucamp");
+            if (savedUid && savedCamp) {
+                var uidInput = document.getElementById("user-id");
+                var campInput = document.getElementById("user-camp");
+                if (uidInput) uidInput.value = savedUid;
+                if (campInput) campInput.value = savedCamp;
+                window.processLogin(savedUid, savedCamp);
+            }
+        }, 100);
+    };
 })();
