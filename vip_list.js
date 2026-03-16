@@ -6,7 +6,8 @@ const VIP_COMPANY_DATA = [
     { id: "hojingi0723", name: "호진기", company: "라이언엘" },
     { id: "ggomange86", name: "김현선", company: "라이언엘" },
     { id: "grow11", name: "심광석", company: "라이언엘" },
-    { id: "oinoma0908", name: "이상희", company: "라이언엘" }
+    { id: "oinoma0908", name: "이상희", company: "라이언엘" },
+    { id: "dldudwls0530", name: "이영진", company: "모벤티스" }
     
     // 새로운 기사님은 이 아래에 계속 추가해주세요!
 ];
