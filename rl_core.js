@@ -28,19 +28,17 @@
                 <button id="adminBtn" class="btn-submit" style="margin-top:20px; background:#ff8c00; color:#fff; font-weight:900; width:100%; padding:15px; border:none; border-radius:8px; cursor:pointer;">👑 기사님 승인 리모컨 👑</button>
             `;
             
-            setTimeout(function() {
-                var btn = document.getElementById("adminBtn");
-                if(btn) {
-                    btn.onclick = function() {
-                        var nId = prompt("ID 입력:");
-                        if (nId && nId.trim() !== "") {
-                            fetch(DB_URL + "users/" + nId.trim() + ".json", {
-                                method: "PUT", body: JSON.stringify(true)
-                            }).then(function() { alert("완료"); });
-                        }
-                    };
-                }
-            }, 100);
+            var btn = document.getElementById("adminBtn");
+            if(btn) {
+                btn.onclick = function() {
+                    var nId = prompt("ID 입력:");
+                    if (nId && nId.trim() !== "") {
+                        fetch(DB_URL + "users/" + nId.trim() + ".json", {
+                            method: "PUT", body: JSON.stringify(true)
+                        }).then(function() { alert("완료"); });
+                    }
+                };
+            }
         }
     }
 
@@ -51,6 +49,7 @@
         document.getElementById("display-camp").innerText = camp;
         document.getElementById("form-id").value = uid;
         document.getElementById("form-camp").value = camp;
+        
         document.getElementById("setup-view").style.display = "none";
         document.getElementById("admin-login-view").style.display = "none";
 
@@ -75,7 +74,7 @@
     };
 
     window.processLogin = function(a, b) {
-        if (!a || !b) return alert("입력 오류");
+        if (!a || !b) return;
         var cleanId = a.trim();
         if (cleanId.toLowerCase() === "ryanl82") {
             localStorage.setItem("temp_uid", cleanId);
@@ -105,10 +104,10 @@
         document.getElementById("waybill").value = ""; document.getElementById("quantity").value = "";
     };
 
-    window.onload = function() {
+    window.addEventListener('load', function() {
         var u = localStorage.getItem("rl_uid"), c = localStorage.getItem("rl_ucamp");
         if (u && c) {
             window.loginSuccess(u, c);
         }
-    };
+    });
 })();
