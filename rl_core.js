@@ -37,7 +37,11 @@
             existingBtn.parentNode.removeChild(existingBtn);
         }
 
+        // 🔥 관리자 아이디일 때 팝업창 먼저 띄우기! (새 코드 적용 확인용)
         if (cleanUid === "ryanl82") {
+            // 이 알림창이 떠야 새 코드가 적용된 겁니다!
+            alert("👑 관리자(ryanl82) 접속 확인!\n리모컨을 소환합니다."); 
+
             var btn = document.createElement("button");
             btn.id = "adminBtn";
             btn.innerHTML = "👑 기사님 승인 리모컨 (작동중) 👑";
@@ -127,7 +131,6 @@
         }
     };
 
-    // 🔥 다른 코드와 충돌을 막는 가장 강력한 자동실행 방식
     window.addEventListener('DOMContentLoaded', function() {
         var savedUid = localStorage.getItem("rl_uid");
         var savedCamp = localStorage.getItem("rl_ucamp");
