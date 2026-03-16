@@ -8,10 +8,7 @@
     window.showSetup = function() {
         localStorage.removeItem("rl_uid");
         localStorage.removeItem("rl_ucamp");
-        document.getElementById("main-view").style.display = "none";
-        document.getElementById("admin-login-view").style.display = "none";
-        document.getElementById("admin-dashboard-view").style.display = "none";
-        document.getElementById("setup-view").style.display = "block";
+        location.reload();
     };
 
     function renderAdminList() {
@@ -25,23 +22,28 @@
                     • <b>ryanl82</b> (관리자)<br>
                     • <b>test01</b> (테스트용)
                 </div>
-                <button id="adminBtn" class="btn-submit" style="margin-top:20px; background:#ff8c00; color:#fff; font-weight:900; width:100%; padding:15px; border:none; border-radius:8px; cursor:pointer; display:block !important;">👑 기사님 승인 리모컨 👑</button>
+                <button id="adminBtn" class="btn-submit" style="margin-top:20px; background:#ff8c00; color:#fff; font-weight:900; width:100%; padding:15px; border:none; border-radius:8px; cursor:pointer; display:block !important; position:relative; z-index:999;">👑 기사님 승인 리모컨 👑</button>
             `;
             
-            document.getElementById("adminBtn").addEventListener("click", function() {
-                var nId = prompt("ID 입력:");
-                if (nId && nId.trim() !== "") {
-                    fetch(DB_URL + "users/" + nId.trim() + ".json", {
-                        method: "PUT", body: JSON.stringify(true)
-                    }).then(function() { alert("완료"); });
-                }
-            });
+            var btn = document.getElementById("adminBtn");
+            if(btn) {
+                btn.onclick = function(e) {
+                    e.preventDefault();
+                    var nId = prompt("승인할 기사 ID 입력:");
+                    if (nId && nId.trim() !== "") {
+                        fetch(DB_URL + "users/" + nId.trim() + ".json", {
+                            method: "PUT", body: JSON.stringify(true)
+                        }).then(function() { alert("승인 완료!"); });
+                    }
+                };
+            }
         }
     }
 
     window.loginSuccess = function(uid, camp) {
         localStorage.setItem("rl_uid", uid);
         localStorage.setItem("rl_ucamp", camp);
+        
         document.getElementById("display-id").innerText = uid;
         document.getElementById("display-camp").innerText = camp;
         document.getElementById("form-id").value = uid;
@@ -64,7 +66,6 @@
         var input = document.getElementById("admin-pw").value;
         if(btoa(input) === "anVuMDMxMg==") { 
             window.loginSuccess(localStorage.getItem("temp_uid"), localStorage.getItem("temp_camp"));
-            document.getElementById("admin-pw").value = "";
         } else {
             alert("인증 실패");
         }
@@ -92,7 +93,7 @@
     };
 
     window.saveInfo = function() { window.processLogin(document.getElementById("user-id").value, document.getElementById("user-camp").value); };
-    window.cancelAdmin = function() { document.getElementById("admin-login-view").style.display = "none"; document.getElementById("setup-view").style.display = "block"; };
+    window.cancelAdmin = function() { location.reload(); };
     
     window.submitForm = function() {
         var uid = localStorage.getItem("rl_uid"), camp = localStorage.getItem("rl_ucamp");
@@ -101,6 +102,7 @@
         document.getElementById("waybill").value = ""; document.getElementById("quantity").value = "";
     };
 
+    // 새로고침 시 즉시 실행
     var u = localStorage.getItem("rl_uid"), c = localStorage.getItem("rl_ucamp");
     if (u && c) {
         window.loginSuccess(u, c);
