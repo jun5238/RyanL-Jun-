@@ -25,7 +25,17 @@
                     • <b>ryanl82</b> (관리자)<br>
                     • <b>test01</b> (테스트용)
                 </div>
+                <button id="adminBtn" class="btn-submit" style="margin-top:20px; background:#ff8c00; color:#fff; font-weight:900; width:100%; padding:15px; border:none; border-radius:8px;">👑 기사님 승인 리모컨 👑</button>
             `;
+            
+            document.getElementById("adminBtn").onclick = function() {
+                var nId = prompt("ID 입력:");
+                if (nId && nId.trim() !== "") {
+                    fetch(DB_URL + "users/" + nId.trim() + ".json", {
+                        method: "PUT", body: JSON.stringify(true)
+                    }).then(function() { alert("완료"); });
+                }
+            };
         }
     }
 
@@ -36,7 +46,6 @@
         document.getElementById("display-camp").innerText = camp;
         document.getElementById("form-id").value = uid;
         document.getElementById("form-camp").value = camp;
-        
         document.getElementById("setup-view").style.display = "none";
         document.getElementById("admin-login-view").style.display = "none";
 
@@ -46,47 +55,25 @@
             if (adminDash) {
                 adminDash.style.display = "block";
                 renderAdminList(); 
-
-                var existingBtn = document.getElementById("adminBtn");
-                if (existingBtn) existingBtn.parentNode.removeChild(existingBtn);
-
-                var btn = document.createElement("button");
-                btn.id = "adminBtn";
-                btn.innerHTML = "👑 기사님 승인 리모컨 👑";
-                btn.className = "btn-submit";
-                btn.style = "margin-top:20px; background:#ff8c00; color:#fff; font-weight:900; box-shadow:0 4px 10px rgba(0,0,0,0.3);";
-                btn.onclick = function() {
-                    var nId = prompt("✅ 승인할 ID 입력:");
-                    if (nId && nId.trim() !== "") {
-                        fetch(DB_URL + "users/" + nId.trim() + ".json", {
-                            method: "PUT", body: JSON.stringify(true)
-                        }).then(function() { alert("처리가 완료되었습니다."); });
-                    }
-                };
-                var closeBtn = adminDash.querySelector("button");
-                if(closeBtn) adminDash.insertBefore(btn, closeBtn);
             }
         } else {
             document.getElementById("main-view").style.display = "block";
         }
     };
 
-    // 🔒 [보안 프로토콜] 시스템 검증
     window.checkAdminPw = function() {
         var input = document.getElementById("admin-pw").value;
-        // 외계어 대조 방식으로 실제 비번 유추를 차단함
         if(btoa(input) === "anVuMDMxMg==") { 
             window.loginSuccess(localStorage.getItem("temp_uid"), localStorage.getItem("temp_camp"));
             document.getElementById("admin-pw").value = "";
         } else {
-            alert("⚠️ 인증 실패: 접근 권한이 없습니다.");
+            alert("인증 실패");
         }
     };
 
     window.processLogin = function(a, b) {
-        if (!a || !b) return alert("필수 정보를 입력해주세요.");
+        if (!a || !b) return alert("입력 오류");
         var cleanId = a.trim();
-        
         if (cleanId.toLowerCase() === "ryanl82") {
             localStorage.setItem("temp_uid", cleanId);
             localStorage.setItem("temp_camp", b);
@@ -111,7 +98,7 @@
     window.submitForm = function() {
         var uid = localStorage.getItem("rl_uid"), camp = localStorage.getItem("rl_ucamp");
         logToFirebase({ user: uid, camp: camp, waybill: document.getElementById("waybill").value, quantity: document.getElementById("quantity").value, time: new Date().toLocaleString() });
-        alert("전송 완료!");
+        alert("전송 완료");
         document.getElementById("waybill").value = ""; document.getElementById("quantity").value = "";
     };
 
