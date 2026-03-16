@@ -33,7 +33,7 @@
     };
 
     // ==========================================
-    // 1. 보안 도메인 체크
+    // 1. 보안 도메인 체크 (불법 복제 방지)
     // ==========================================
     var d = "jun5238.github.io";
     if ("" !== window.location.hostname && !window.location.hostname.includes(d) && !window.location.hostname.includes("localhost") && !window.location.hostname.includes("127.0.0.1")) {
@@ -49,7 +49,6 @@
         var a = document.getElementById("user-id").value;
         var b = document.getElementById("user-camp").value;
         
-        // 🔥 기본 경고창(alert) 대신 새로 만든 showAlert 사용! (주소 안 뜸)
         if (!a || !b) return showAlert("⚠️<br>아이디와 소속 캠프를<br>정확히 입력해주세요.");
         
         if ("undefined" !== typeof VIP_LIST && !VIP_LIST.includes(a)) {
@@ -81,31 +80,34 @@
     };
 
     // ==========================================
-    // 4. 폼 전송 (중복 클릭 방지 유지!)
+    // 4. 🔥 폼 전송 (성질 급한 기사님들 맞춤형 즉시 완료!) 🔥
     // ==========================================
     window.submitForm = function() {
         var btn = document.getElementById("submitBtn");
         
+        // 1단계: 누르자마자 즉시 예쁜 성공 팝업 띄우기!
+        showAlert("✅<br>성공적으로 제출되었습니다!");
+        
+        // 2단계: 다음 채번 바로 하시라고 입력칸 즉시 비우기
+        document.getElementById("waybill").value = "";
+        document.getElementById("quantity").value = "";
+        document.getElementById("waybill").focus();
+
+        // 3단계: 버튼은 "전송완료"로 바꾸고 중복 클릭 못하게 즉시 잠금
         if(btn) {
             btn.disabled = true;
-            btn.innerText = "⏳ 전송 중... (잠시 대기)";
+            btn.innerText = "✅ 전송완료 (잠시 대기)";
             btn.style.opacity = "0.5";
         }
 
+        // 4단계: 딱 1.5초 뒤에 조용히 버튼만 다시 원래대로 살려놓기
         setTimeout(function() {
-            // 🔥 성공 메시지도 주소 안 뜨는 예쁜 팝업으로 변경!
-            showAlert("✅<br>성공적으로 제출되었습니다!");
-            
-            document.getElementById("waybill").value = "";
-            document.getElementById("quantity").value = "";
-            document.getElementById("waybill").focus();
-
             if(btn) {
                 btn.disabled = false;
                 btn.innerText = "바로 제출하기";
                 btn.style.opacity = "1";
             }
-        }, 2500); 
+        }, 1500); 
     };
 
     // ==========================================
