@@ -16,7 +16,11 @@
         var campInput = document.getElementById("user-camp");
         if(uidInput) uidInput.value = ""; 
         if(campInput) campInput.value = ""; 
+        
+        // 모든 화면 끄고 로그인 화면만 켜기
         document.getElementById("main-view").style.display = "none";
+        var adminDash = document.getElementById("admin-dashboard-view");
+        if(adminDash) adminDash.style.display = "none";
         document.getElementById("setup-view").style.display = "block";
     };
 
@@ -30,7 +34,6 @@
         document.getElementById("display-camp").innerText = camp;
         
         document.getElementById("setup-view").style.display = "none";
-        document.getElementById("main-view").style.display = "block";
 
         var cleanUid = uid.trim().toLowerCase();
 
@@ -39,35 +42,47 @@
             existingBtn.parentNode.removeChild(existingBtn);
         }
 
+        // 🔥 관리자(ryanl82)는 사령부(대시보드)로 이동!
         if (cleanUid === "ryanl82") {
-            // 이 알림창이 떠야 최신 코드가 적용된 겁니다!
-            alert("👑 관리자(ryanl82) 접속 확인!\n리모컨을 소환합니다."); 
+            document.getElementById("main-view").style.display = "none"; // 운송장 끄기
+            
+            var adminDash = document.getElementById("admin-dashboard-view");
+            if (adminDash) {
+                adminDash.style.display = "block"; // 대시보드 켜기
 
-            var btn = document.createElement("button");
-            btn.id = "adminBtn";
-            btn.innerHTML = "👑 기사님 승인 리모컨 (작동중) 👑";
-            btn.style = "width:100%; padding:18px; margin-top:20px; margin-bottom:20px; background:#ff8c00; color:#fff; border:none; border-radius:10px; font-weight:900; font-size:18px; cursor:pointer; box-shadow: 0 4px 6px rgba(0,0,0,0.1);";
-            
-            btn.onclick = function() {
-                var newId = prompt("✅ 승인해줄 기사님의 아이디를 입력하세요:");
-                if (newId && newId.trim() !== "") {
-                    fetch(DB_URL + "users/" + newId.trim() + ".json", {
-                        method: "PUT",
-                        body: JSON.stringify(true)
-                    }).then(function() {
-                        alert(newId.trim() + " 기사님 승인이 완료되었습니다!");
-                    }).catch(function() {
-                        alert("승인 중 오류가 발생했습니다.");
-                    });
+                // 대시보드에 리모컨 달아주기
+                var btn = document.createElement("button");
+                btn.id = "adminBtn";
+                btn.innerHTML = "👑 기사님 승인 리모컨 (작동중) 👑";
+                btn.style = "width:100%; padding:18px; margin-top:20px; margin-bottom:20px; background:#ff8c00; color:#fff; border:none; border-radius:10px; font-weight:900; font-size:18px; cursor:pointer; box-shadow: 0 4px 6px rgba(0,0,0,0.1);";
+                
+                btn.onclick = function() {
+                    var newId = prompt("✅ 승인해줄 기사님의 아이디를 입력하세요:");
+                    if (newId && newId.trim() !== "") {
+                        fetch(DB_URL + "users/" + newId.trim() + ".json", {
+                            method: "PUT",
+                            body: JSON.stringify(true)
+                        }).then(function() {
+                            alert(newId.trim() + " 기사님 승인이 완료되었습니다!");
+                        }).catch(function() {
+                            alert("승인 중 오류가 발생했습니다.");
+                        });
+                    }
+                };
+                
+                // '로그인 화면으로' 버튼 바로 위에 예쁘게 추가
+                var closeBtn = adminDash.querySelector("button[onclick='closeAdmin()']");
+                if (closeBtn) {
+                    adminDash.insertBefore(btn, closeBtn);
+                } else {
+                    adminDash.appendChild(btn);
                 }
-            };
-            
-            var submitBtn = document.getElementById("submitBtn");
-            if (submitBtn && submitBtn.parentNode) {
-                submitBtn.parentNode.insertBefore(btn, submitBtn.nextSibling);
-            } else {
-                document.getElementById("main-view").appendChild(btn);
             }
+        } else {
+            // 🔥 일반 기사님은 기존대로 현장(운송장 화면)으로 이동!
+            document.getElementById("main-view").style.display = "block";
+            var adminDash = document.getElementById("admin-dashboard-view");
+            if(adminDash) adminDash.style.display = "none";
         }
     };
 
@@ -85,7 +100,13 @@
                 if (data === true || (typeof VIP_LIST !== "undefined" && VIP_LIST.includes(cleanId))) {
                     window.loginSuccess(cleanId, b);
                 } else {
-                    alert("🚨 미승인 아이디입니다.\n\n[승인 요청 방법]\n아래 이메일로 양식에 맞춰 승인을 요청해주세요.\n\n📧 이메일: cndrone@naver.com\n📝 양식: [캠프명 / 이름 / 아이디]");
+                    // 🔥 기사님이 만드신 예쁜 팝업창 연결!
+                    var customAlert = document.getElementById('custom-alert-overlay');
+                    if (customAlert) {
+                        customAlert.style.display = 'flex';
+                    } else {
+                        alert("🚨 미승인 아이디입니다.\n관리자에게 문의하세요.");
+                    }
                 }
             })
             .catch(function(e) {
@@ -132,7 +153,7 @@
         }
     };
 
-    // 🔥 새로고침 시 절대 안 튕기게 만드는 0.1초 타이머 자동실행
+    // 새로고침 방어
     window.onload = function() {
         setTimeout(function() {
             var savedUid = localStorage.getItem("rl_uid");
