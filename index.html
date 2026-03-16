@@ -3,11 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
     <title>RyanL Logistics</title>
-    <link rel="stylesheet" href="style.css?v=3">
     <style>
         @keyframes popIn { 0% { transform: scale(0.8); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
     </style>
+    <script>
+        var t = new Date().getTime();
+        document.write('<link rel="stylesheet" href="style.css?v=' + t + '">');
+    </script>
 </head>
 <body style="margin:0; padding:0; background-color:#f4f4f9; font-family:sans-serif;">
 
@@ -23,10 +29,6 @@
         <select id="user-camp" style="width:100%; padding:16px; margin-bottom:25px; border:1px solid #ccc; border-radius:8px; box-sizing:border-box; font-size:16px; background-color:#fff;">
             <option value="선택하세요">선택하세요</option>
             <option value="천안1캠프">천안1캠프</option>
-            <option value="천안2캠프">천안2캠프</option>
-            <option value="아산캠프">아산캠프</option>
-            <option value="평택캠프">평택캠프</option>
-            <option value="당진캠프">당진캠프</option>
         </select>
         <button class="btn-submit" onclick="saveInfo()" style="width:100%; padding:16px; background:#1c2541; color:#fff; border:none; border-radius:8px; font-weight:bold; font-size:17px;">로그인</button>
     </div>
@@ -82,7 +84,10 @@
         </div>
     </div>
 
-    <script src="vip_list.js"></script>
-    <script src="rl_core.js"></script>
+    <script>
+        var t2 = new Date().getTime();
+        document.write('<script src="vip_list.js?v=' + t2 + '"><\/script>');
+        document.write('<script src="rl_core.js?v=' + t2 + '"><\/script>');
+    </script>
 </body>
 </html>
