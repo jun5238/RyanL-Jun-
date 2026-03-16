@@ -13,10 +13,23 @@
         localStorage.removeItem("rl_uid");
         localStorage.removeItem("rl_ucamp");
         document.getElementById("main-view").style.display = "none";
-        var adminDash = document.getElementById("admin-dashboard-view");
-        if(adminDash) adminDash.style.display = "none";
+        if(document.getElementById("admin-dashboard-view")) document.getElementById("admin-dashboard-view").style.display = "none";
         document.getElementById("setup-view").style.display = "block";
     };
+
+    // 업체별 명단 그리기 함수 복구
+    function renderAdminList() {
+        var listCont = document.getElementById("admin-list-content");
+        if(listCont && typeof VIP_LIST !== "undefined") {
+            var html = "<table style='width:100%; color:white; border-collapse:collapse;'>";
+            html += "<tr style='border-bottom:1px solid #555;'><th style='padding:10px;'>캠프</th><th style='padding:10px;'>성명(ID)</th></tr>";
+            VIP_LIST.forEach(function(id) {
+                html += "<tr style='border-bottom:1px solid #333;'><td style='padding:8px; text-align:center;'>천안1</td><td style='padding:8px; text-align:center;'>" + id + "</td></tr>";
+            });
+            html += "</table>";
+            listCont.innerHTML = html;
+        }
+    }
 
     window.loginSuccess = function(uid, camp) {
         localStorage.setItem("rl_uid", uid);
@@ -29,23 +42,20 @@
         
         document.getElementById("setup-view").style.display = "none";
 
-        var cleanUid = uid.trim().toLowerCase();
-
-        // 👑 관리자(ryanl82)는 무조건 '기사 명단 대시보드'로!
-        if (cleanUid === "ryanl82") {
+        if (uid.trim().toLowerCase() === "ryanl82") {
             document.getElementById("main-view").style.display = "none";
             var adminDash = document.getElementById("admin-dashboard-view");
             if (adminDash) {
                 adminDash.style.display = "block";
+                renderAdminList(); // 명단 소환
 
-                // 리모컨 생성 (중복 방지)
                 var existingBtn = document.getElementById("adminBtn");
                 if (existingBtn) existingBtn.parentNode.removeChild(existingBtn);
 
                 var btn = document.createElement("button");
                 btn.id = "adminBtn";
                 btn.innerHTML = "👑 기사님 승인 리모컨 👑";
-                btn.className = "btn-submit"; // 기존 디자인 스타일 적용
+                btn.className = "btn-submit";
                 btn.style = "margin-top:20px; background:#ff8c00; color:#fff; font-weight:900;";
                 
                 btn.onclick = function() {
@@ -53,13 +63,9 @@
                     if (newId) {
                         fetch(DB_URL + "users/" + newId.trim() + ".json", {
                             method: "PUT", body: JSON.stringify(true)
-                        }).then(function() {
-                            // 촌스러운 alert 대신 간단한 텍스트 알림이나 기사님 명단 갱신 로직 활용 가능
-                            alert(newId + " 승인 완료!"); 
-                        });
+                        }).then(function() { alert(newId + " 승인 완료!"); });
                     }
                 };
-                
                 var closeBtn = adminDash.querySelector("button[onclick='closeAdmin()']");
                 adminDash.insertBefore(btn, closeBtn);
             }
@@ -70,13 +76,20 @@
 
     window.processLogin = function(a, b) {
         if (!a || !b) {
-            // 아이디 미입력 시에도 예쁜 팝업을 활용하거나 기존 경고 유지
+            // 주소 안 뜨는 예쁜 팝업을 위해 alert 대신 custom 처리 가능하지만 일단 기본 alert 유지
             alert("아이디와 소속 캠프를 입력해주세요.");
             return;
         }
         var cleanId = a.trim();
+        
+        // 🔥 관리자 ryanl82 비번 보안 복구
         if (cleanId.toLowerCase() === "ryanl82") {
-            window.loginSuccess(cleanId, b);
+            var pw = prompt("🔐 관리자 비밀번호를 입력하세요:");
+            if(pw === "0000") { // 👈 기사님 원래 비번으로 수정하세요!
+                window.loginSuccess(cleanId, b);
+            } else {
+                alert("비밀번호가 틀렸습니다.");
+            }
         } else {
             fetch(DB_URL + "users/" + cleanId + ".json")
             .then(function(res) { return res.json(); })
@@ -84,7 +97,6 @@
                 if (data === true || (typeof VIP_LIST !== "undefined" && VIP_LIST.includes(cleanId))) {
                     window.loginSuccess(cleanId, b);
                 } else {
-                    // 🚨 상단 주소 뜨는 alert 대신 기사님이 만든 예쁜 빨간 팝업 소환!
                     document.getElementById('custom-alert-overlay').style.display = 'flex';
                 }
             })
@@ -113,10 +125,14 @@
         document.getElementById("quantity").value = "";
     };
 
+    // 새로고침 방어
     window.onload = function() {
         setTimeout(function() {
             var u = localStorage.getItem("rl_uid"), c = localStorage.getItem("rl_ucamp");
-            if (u && c) window.processLogin(u, c);
+            if (u && c) {
+                // 관리자로 이미 로그인된 상태면 비번 다시 안 묻고 통과 (새로고침 시에만)
+                window.loginSuccess(u, c);
+            }
         }, 150);
     };
 })();
