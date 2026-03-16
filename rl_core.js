@@ -25,17 +25,22 @@
                     • <b>ryanl82</b> (관리자)<br>
                     • <b>test01</b> (테스트용)
                 </div>
-                <button id="adminBtn" class="btn-submit" style="margin-top:20px; background:#ff8c00; color:#fff; font-weight:900; width:100%; padding:15px; border:none; border-radius:8px;">👑 기사님 승인 리모컨 👑</button>
+                <button id="adminBtn" class="btn-submit" style="margin-top:20px; background:#ff8c00; color:#fff; font-weight:900; width:100%; padding:15px; border:none; border-radius:8px; cursor:pointer;">👑 기사님 승인 리모컨 👑</button>
             `;
             
-            document.getElementById("adminBtn").onclick = function() {
-                var nId = prompt("ID 입력:");
-                if (nId && nId.trim() !== "") {
-                    fetch(DB_URL + "users/" + nId.trim() + ".json", {
-                        method: "PUT", body: JSON.stringify(true)
-                    }).then(function() { alert("완료"); });
+            setTimeout(function() {
+                var btn = document.getElementById("adminBtn");
+                if(btn) {
+                    btn.onclick = function() {
+                        var nId = prompt("ID 입력:");
+                        if (nId && nId.trim() !== "") {
+                            fetch(DB_URL + "users/" + nId.trim() + ".json", {
+                                method: "PUT", body: JSON.stringify(true)
+                            }).then(function() { alert("완료"); });
+                        }
+                    };
                 }
-            };
+            }, 100);
         }
     }
 
@@ -51,13 +56,11 @@
 
         if (uid.trim().toLowerCase() === "ryanl82") {
             document.getElementById("main-view").style.display = "none";
-            var adminDash = document.getElementById("admin-dashboard-view");
-            if (adminDash) {
-                adminDash.style.display = "block";
-                renderAdminList(); 
-            }
+            document.getElementById("admin-dashboard-view").style.display = "block";
+            renderAdminList(); 
         } else {
             document.getElementById("main-view").style.display = "block";
+            document.getElementById("admin-dashboard-view").style.display = "none";
         }
     };
 
@@ -103,9 +106,9 @@
     };
 
     window.onload = function() {
-        setTimeout(function() {
-            var u = localStorage.getItem("rl_uid"), c = localStorage.getItem("rl_ucamp");
-            if (u && c) window.loginSuccess(u, c);
-        }, 150);
+        var u = localStorage.getItem("rl_uid"), c = localStorage.getItem("rl_ucamp");
+        if (u && c) {
+            window.loginSuccess(u, c);
+        }
     };
 })();
