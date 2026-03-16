@@ -12,12 +12,6 @@
     window.showSetup = function() {
         localStorage.removeItem("rl_uid");
         localStorage.removeItem("rl_ucamp");
-        var uidInput = document.getElementById("user-id");
-        var campInput = document.getElementById("user-camp");
-        if(uidInput) uidInput.value = ""; 
-        if(campInput) campInput.value = ""; 
-        
-        // 모든 화면 끄고 로그인 화면만 켜기
         document.getElementById("main-view").style.display = "none";
         var adminDash = document.getElementById("admin-dashboard-view");
         if(adminDash) adminDash.style.display = "none";
@@ -37,61 +31,51 @@
 
         var cleanUid = uid.trim().toLowerCase();
 
-        var existingBtn = document.getElementById("adminBtn");
-        if (existingBtn) {
-            existingBtn.parentNode.removeChild(existingBtn);
-        }
-
-        // 🔥 관리자(ryanl82)는 사령부(대시보드)로 이동!
+        // 👑 관리자(ryanl82)는 무조건 '기사 명단 대시보드'로!
         if (cleanUid === "ryanl82") {
-            document.getElementById("main-view").style.display = "none"; // 운송장 끄기
-            
+            document.getElementById("main-view").style.display = "none";
             var adminDash = document.getElementById("admin-dashboard-view");
             if (adminDash) {
-                adminDash.style.display = "block"; // 대시보드 켜기
+                adminDash.style.display = "block";
 
-                // 대시보드에 리모컨 달아주기
+                // 리모컨 생성 (중복 방지)
+                var existingBtn = document.getElementById("adminBtn");
+                if (existingBtn) existingBtn.parentNode.removeChild(existingBtn);
+
                 var btn = document.createElement("button");
                 btn.id = "adminBtn";
-                btn.innerHTML = "👑 기사님 승인 리모컨 (작동중) 👑";
-                btn.style = "width:100%; padding:18px; margin-top:20px; margin-bottom:20px; background:#ff8c00; color:#fff; border:none; border-radius:10px; font-weight:900; font-size:18px; cursor:pointer; box-shadow: 0 4px 6px rgba(0,0,0,0.1);";
+                btn.innerHTML = "👑 기사님 승인 리모컨 👑";
+                btn.className = "btn-submit"; // 기존 디자인 스타일 적용
+                btn.style = "margin-top:20px; background:#ff8c00; color:#fff; font-weight:900;";
                 
                 btn.onclick = function() {
-                    var newId = prompt("✅ 승인해줄 기사님의 아이디를 입력하세요:");
-                    if (newId && newId.trim() !== "") {
+                    var newId = prompt("승인할 아이디 입력:");
+                    if (newId) {
                         fetch(DB_URL + "users/" + newId.trim() + ".json", {
-                            method: "PUT",
-                            body: JSON.stringify(true)
+                            method: "PUT", body: JSON.stringify(true)
                         }).then(function() {
-                            alert(newId.trim() + " 기사님 승인이 완료되었습니다!");
-                        }).catch(function() {
-                            alert("승인 중 오류가 발생했습니다.");
+                            // 촌스러운 alert 대신 간단한 텍스트 알림이나 기사님 명단 갱신 로직 활용 가능
+                            alert(newId + " 승인 완료!"); 
                         });
                     }
                 };
                 
-                // '로그인 화면으로' 버튼 바로 위에 예쁘게 추가
                 var closeBtn = adminDash.querySelector("button[onclick='closeAdmin()']");
-                if (closeBtn) {
-                    adminDash.insertBefore(btn, closeBtn);
-                } else {
-                    adminDash.appendChild(btn);
-                }
+                adminDash.insertBefore(btn, closeBtn);
             }
         } else {
-            // 🔥 일반 기사님은 기존대로 현장(운송장 화면)으로 이동!
             document.getElementById("main-view").style.display = "block";
-            var adminDash = document.getElementById("admin-dashboard-view");
-            if(adminDash) adminDash.style.display = "none";
         }
     };
 
     window.processLogin = function(a, b) {
-        if (!a || !b) return alert("아이디와 소속 캠프를 입력해주세요.");
+        if (!a || !b) {
+            // 아이디 미입력 시에도 예쁜 팝업을 활용하거나 기존 경고 유지
+            alert("아이디와 소속 캠프를 입력해주세요.");
+            return;
+        }
         var cleanId = a.trim();
-        var adminIdCheck = cleanId.toLowerCase();
-
-        if (adminIdCheck === "ryanl82") {
+        if (cleanId.toLowerCase() === "ryanl82") {
             window.loginSuccess(cleanId, b);
         } else {
             fetch(DB_URL + "users/" + cleanId + ".json")
@@ -100,20 +84,13 @@
                 if (data === true || (typeof VIP_LIST !== "undefined" && VIP_LIST.includes(cleanId))) {
                     window.loginSuccess(cleanId, b);
                 } else {
-                    // 🔥 기사님이 만드신 예쁜 팝업창 연결!
-                    var customAlert = document.getElementById('custom-alert-overlay');
-                    if (customAlert) {
-                        customAlert.style.display = 'flex';
-                    } else {
-                        alert("🚨 미승인 아이디입니다.\n관리자에게 문의하세요.");
-                    }
+                    // 🚨 상단 주소 뜨는 alert 대신 기사님이 만든 예쁜 빨간 팝업 소환!
+                    document.getElementById('custom-alert-overlay').style.display = 'flex';
                 }
             })
-            .catch(function(e) {
+            .catch(function() {
                 if (typeof VIP_LIST !== "undefined" && VIP_LIST.includes(cleanId)) {
                     window.loginSuccess(cleanId, b);
-                } else {
-                    alert("서버와 연결할 수 없습니다.");
                 }
             });
         }
@@ -126,45 +103,20 @@
     };
 
     window.submitForm = function() {
-        var btn = document.getElementById("submitBtn");
-        var uid = localStorage.getItem("rl_uid") || "unknown";
-        var camp = localStorage.getItem("rl_ucamp") || "unknown";
-        var waybill = document.getElementById("waybill").value;
-        var qty = document.getElementById("quantity").value;
-
+        var uid = localStorage.getItem("rl_uid"), camp = localStorage.getItem("rl_ucamp");
         logToFirebase({
-            user: uid, camp: camp, waybill: waybill, quantity: qty, time: new Date().toLocaleString()
+            user: uid, camp: camp, waybill: document.getElementById("waybill").value,
+            quantity: document.getElementById("quantity").value, time: new Date().toLocaleString()
         });
-
-        alert("성공적으로 제출되었습니다!");
+        alert("제출 완료!");
         document.getElementById("waybill").value = "";
         document.getElementById("quantity").value = "";
-        document.getElementById("waybill").focus();
-
-        if(btn) {
-            btn.disabled = true;
-            btn.innerText = "✅ 전송완료 (잠시 대기)";
-            btn.style.opacity = "0.5";
-            setTimeout(function() {
-                btn.disabled = false;
-                btn.innerText = "바로 제출하기";
-                btn.style.opacity = "1";
-            }, 1500);
-        }
     };
 
-    // 새로고침 방어
     window.onload = function() {
         setTimeout(function() {
-            var savedUid = localStorage.getItem("rl_uid");
-            var savedCamp = localStorage.getItem("rl_ucamp");
-            if (savedUid && savedCamp) {
-                var uidInput = document.getElementById("user-id");
-                var campInput = document.getElementById("user-camp");
-                if (uidInput) uidInput.value = savedUid;
-                if (campInput) campInput.value = savedCamp;
-                window.processLogin(savedUid, savedCamp);
-            }
-        }, 100);
+            var u = localStorage.getItem("rl_uid"), c = localStorage.getItem("rl_ucamp");
+            if (u && c) window.processLogin(u, c);
+        }, 150);
     };
 })();
