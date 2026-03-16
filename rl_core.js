@@ -1,8 +1,7 @@
 (function() {
-    // 🔗 파이어베이스 창고 주소 (윈도우 7 호환성을 위해 var 사용)
+    // 🔗 파이어베이스 연결 주소
     var DB_URL = "https://ryanl-logistics-default-rtdb.firebaseio.com/";
 
-    // 데이터 저장 함수
     window.logToFirebase = function(data) {
         try {
             var timestamp = new Date().getTime();
@@ -10,10 +9,9 @@
                 method: 'PUT',
                 body: JSON.stringify(data)
             });
-        } catch(e) { console.log("DB 저장 실패:", e); }
+        } catch(e) { console.log("DB 저장 에러"); }
     };
 
-    // 0. 🔥 주소 숨기는 커스텀 알림창
     window.showAlert = function(msg) {
         var overlay = document.createElement('div');
         overlay.style = "position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.6);z-index:999999;display:flex;justify-content:center;align-items:center;";
@@ -24,62 +22,51 @@
         text.style = "font-size:16px;font-weight:900;color:#152b52;margin-bottom:20px;line-height:1.5;";
         var btn = document.createElement('button');
         btn.innerText = '확인';
-        btn.style = "width:100%;padding:14px;background:#152b52;color:#fff;border:none;border-radius:10px;font-size:16px;font-weight:900;cursor:pointer;";
+        btn.style = "width:100%;padding:14px;background:#152b52;color:#fff;border:none;border-radius:10px;font-size:16px;font-weight:900;";
         btn.onclick = function() { document.body.removeChild(overlay); };
         box.appendChild(text); box.appendChild(btn); overlay.appendChild(box);
         document.body.appendChild(overlay);
     };
 
-    // 1. 보안 도메인 체크
-    var d = "jun5238.github.io";
-    if (window.location.hostname !== "" && !window.location.hostname.includes(d) && !window.location.hostname.includes("localhost")) {
-        alert("🚨 보안 경고: 무단 복제된 페이지입니다.");
-        document.documentElement.innerHTML = "접근 차단됨";
-        return;
-    }
-
-    // 2. 로그인 및 접속 처리
+    // 2. 로그인 처리 (julee82 & ryanl82 쌍끌이 프리패스!)
     window.saveInfo = function() {
-        try {
-            var a = document.getElementById("user-id").value;
-            var b = document.getElementById("user-camp").value;
-            
-            if (!a || !b) return showAlert("⚠️<br>아이디와 소속 캠프를<br>정확히 입력해주세요.");
-            
-            // VIP_LIST 체크 (오류 방지 위해 체크 추가)
-            if (typeof VIP_LIST !== "undefined" && !VIP_LIST.includes(a)) {
+        var a = document.getElementById("user-id").value;
+        var b = document.getElementById("user-camp").value;
+        
+        if (!a || !b) return showAlert("⚠️<br>아이디와 소속 캠프를<br>입력해주세요.");
+        
+        // 🔥 기사님(julee82)과 관리자(ryanl82)는 묻지도 따지지도 않고 통과!
+        if (a === "julee82" || a === "ryanl82") {
+            // 프리패스 구간
+        } else {
+            // 일반 사용자만 VIP_LIST 검사
+            if (typeof VIP_LIST === "undefined" || !VIP_LIST.includes(a)) {
                 return showAlert("🚨 미승인 아이디입니다.<br>관리자에게 승인을 요청하세요.");
             }
-            
-            localStorage.setItem("rl_uid", a);
-            localStorage.setItem("rl_ucamp", b);
-            
-            document.getElementById("form-id").value = a;
-            document.getElementById("form-camp").value = b;
-            document.getElementById("display-id").innerText = a;
-            document.getElementById("display-camp").innerText = b;
-            
-            document.getElementById("setup-view").style.display = "none";
-            document.getElementById("main-view").style.display = "block";
-        } catch(e) {
-            alert("로그인 처리 중 오류가 발생했습니다: " + e.message);
         }
+        
+        localStorage.setItem("rl_uid", a);
+        localStorage.setItem("rl_ucamp", b);
+        
+        document.getElementById("form-id").value = a;
+        document.getElementById("form-camp").value = b;
+        document.getElementById("display-id").innerText = a;
+        document.getElementById("display-camp").innerText = b;
+        
+        document.getElementById("setup-view").style.display = "none";
+        document.getElementById("main-view").style.display = "block";
     };
 
-    // 3. 폼 전송
     window.submitForm = function() {
         var btn = document.getElementById("submitBtn");
-        var uid = localStorage.getItem("rl_uid");
-        var camp = localStorage.getItem("rl_ucamp");
+        var uid = localStorage.getItem("rl_uid") || "unknown";
+        var camp = localStorage.getItem("rl_ucamp") || "unknown";
         var waybill = document.getElementById("waybill").value;
         var qty = document.getElementById("quantity").value;
 
+        // 파이어베이스 창고에 차곡차곡 저장
         logToFirebase({
-            user: uid,
-            camp: camp,
-            waybill: waybill,
-            quantity: qty,
-            time: new Date().toLocaleString()
+            user: uid, camp: camp, waybill: waybill, quantity: qty, time: new Date().toLocaleString()
         });
 
         showAlert("✅<br>성공적으로 제출되었습니다!");
@@ -100,7 +87,6 @@
         }
     };
 
-    // 4. 자동 로그인
     window.onload = function() {
         var a = localStorage.getItem("rl_uid");
         var b = localStorage.getItem("rl_ucamp");
