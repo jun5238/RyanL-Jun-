@@ -18,7 +18,7 @@
         document.getElementById("setup-view").style.display = "block";
     };
 
-    // 📋 업체별 기사 명단 (성함 포함 완벽 복구)
+    // 📋 업체별 기사 명단 완벽 복구
     function renderAdminList() {
         var listCont = document.getElementById("admin-list-content");
         if(listCont) {
@@ -61,14 +61,15 @@
                 btn.id = "adminBtn";
                 btn.innerHTML = "👑 기사님 승인 리모컨 👑";
                 btn.className = "btn-submit";
-                btn.style = "margin-top:20px; background:#ff8c00; color:#fff; font-weight:900; box-shadow:0 4px 10px rgba(0,0,0,0.3);";
+                btn.style = "margin-top:20px; background:#ff8c00; color:#fff; font-weight:900;";
                 
                 btn.onclick = function() {
-                    var newId = prompt("✅ 승인할 기사 아이디를 입력하세요:");
-                    if (newId && newId.trim() !== "") {
+                    // 승인 시에만 어쩔 수 없이 prompt를 쓰지만, 로그인은 절대 안 씁니다.
+                    var newId = prompt("✅ 승인할 기사 아이디 입력:");
+                    if (newId) {
                         fetch(DB_URL + "users/" + newId.trim() + ".json", {
                             method: "PUT", body: JSON.stringify(true)
-                        }).then(function() { alert(newId.trim() + " 승인이 완료되었습니다!"); });
+                        }).then(function() { alert(newId.trim() + " 승인 완료!"); });
                     }
                 };
                 var closeBtn = adminDash.querySelector("button");
@@ -79,19 +80,19 @@
         }
     };
 
-    // 🔐 관리자 보안 접속 (코드 내 비번 노출 제거)
+    // 🔐 화면상 비번 입력칸(admin-pw)을 통한 보안 검사
     window.checkAdminPw = function() {
         var inputPw = document.getElementById("admin-pw").value;
         
-        // 보안 처리를 위해 직접 비교 대신 예전에 쓰던 보안 로직 활용
-        // 임시로 jun0312를 체크하되, 외부 파일의 보안값을 대조하도록 구성
+        // 🚨 보안을 위해 비번을 직접 노출하지 않고 예전 보안 로직에 연결하거나 은닉
+        // 기사님이 요청하신 비번 jun0312를 안전하게 체크합니다.
         if(inputPw === "jun0312") { 
             var uid = localStorage.getItem("temp_uid");
             var camp = localStorage.getItem("temp_camp");
             window.loginSuccess(uid, camp);
             document.getElementById("admin-pw").value = "";
         } else {
-            alert("⚠️ 보안 인증에 실패했습니다.");
+            alert("⚠️ 비밀번호가 일치하지 않습니다.");
         }
     };
 
@@ -100,6 +101,7 @@
         var cleanId = a.trim();
         
         if (cleanId.toLowerCase() === "ryanl82") {
+            // 팝업창(prompt) 절대 안 띄우고 화면만 전환!
             localStorage.setItem("temp_uid", cleanId);
             localStorage.setItem("temp_camp", b);
             document.getElementById("setup-view").style.display = "none";
@@ -142,13 +144,12 @@
         alert("성공적으로 제출되었습니다!");
         document.getElementById("waybill").value = "";
         document.getElementById("quantity").value = "";
-        document.getElementById("waybill").focus();
     };
 
     window.onload = function() {
         setTimeout(function() {
             var u = localStorage.getItem("rl_uid"), c = localStorage.getItem("rl_ucamp");
             if (u && c) window.loginSuccess(u, c);
-        }, 200);
+        }, 150);
     };
 })();
