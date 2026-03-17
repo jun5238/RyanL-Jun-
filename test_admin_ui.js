@@ -102,7 +102,7 @@ function approveUser(id, name, company, camp) {
 }
 
 function rejectUser(id) {
-    myConfirm("이 신청건을 삭제(거절)하시겠습니까?", () => {
+    myConfirm(id + " 기사님을 삭제(거절)하시겠습니까?", () => {
         db.ref("승인대기방/" + id).remove()
         .then(() => myAlert("삭제되었습니다."))
         .catch(() => myAlert("삭제 실패"));
