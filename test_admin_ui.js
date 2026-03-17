@@ -13,6 +13,7 @@ function loadApprovalRequests() {
     const listContent = document.getElementById('admin-list-content');
     listContent.innerHTML = '<div style="color:white; padding:20px;">대기 명단 불러오는 중...</div>';
 
+    // 승인대기방 데이터를 실시간으로 감시
     db.ref("승인대기방").on('value', (snapshot) => {
         listContent.innerHTML = '';
         const data = snapshot.val();
@@ -46,8 +47,29 @@ function loadApprovalRequests() {
     });
 }
 
+// 핵심 기능: 승인 버튼 클릭 시 동작
 function approveUser(id, name, company, camp) {
-    alert(id + " 기사님 승인 프로세스는 다음 단계에서 연결해 드릴게요!");
+    if(confirm(id + " 기사님을 최종 승인하시겠습니까?")) {
+        // 1. 정식 사용자 목록(users)에 데이터 추가
+        db.ref("users/" + id).set({
+            id: id,
+            name: name,
+            company: company,
+            camp: camp,
+            approved: true,
+            regDate: new Date().getTime()
+        })
+        .then(() => {
+            // 2. 승인대기방에서 해당 데이터 삭제
+            return db.ref("승인대기방/" + id).remove();
+        })
+        .then(() => {
+            alert(id + " 기사님 승인 완료! 이제 즉시 이용 가능합니다.");
+        })
+        .catch((error) => {
+            alert("승인 처리 중 오류 발생: " + error.message);
+        });
+    }
 }
 
 function rejectUser(id) {
