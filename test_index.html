@@ -5,7 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>라이언엘 채번 시스템</title>
     
+    <link rel="manifest" href="test_manifest.json">
+    <link rel="apple-touch-icon" href="icon.jpg">
+    <link rel="icon" sizes="192x192" href="icon.jpg">
+
     <link rel="stylesheet" href="test_style.css?v=0317_test">
+
     <script src="vip_list.js?v=2"></script>
     <script src="test_core.js?v=0317_test"></script> 
     <script src="test_admin_ui.js"></script>
@@ -17,9 +22,15 @@
             apiKey: "AIzaSyDIA5MGfvoHQvrgCm1Wf1d7XcgC13b_D9Q",
             authDomain: "ryanl-test.firebaseapp.com",
             projectId: "ryanl-test",
+            storageBucket: "ryanl-test.appspot.com",
+            messagingSenderId: "818440188305",
+            appId: "1:818440188305:web:b5f89513e57eab942c2a30",
             databaseURL: "https://ryanl-test-default-rtdb.firebaseio.com"
         };
-        if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+        
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
         const db = firebase.database();
 
         function sendApprovalRequest() {
@@ -29,79 +40,13 @@
             var reqCompany = document.getElementById('req-company').value.trim();
 
             if(!reqId || !reqName || !reqCompany) {
-                alert("정보를 모두 입력해주세요!");
+                alert("아이디, 성함, 업체명을 모두 입력해주세요!");
                 return;
             }
 
             db.ref("승인대기방/" + reqId).set({
-                id: reqId, camp: reqCamp, name: reqName, company: reqCompany, status: "대기중"
-            }).then(() => {
-                document.getElementById('custom-alert-overlay').style.display = 'none';
-                document.getElementById('approval-success-overlay').style.display = 'flex';
-            });
-        }
-
-        db.ref("승인대기방").on('value', (snapshot) => {
-            const badge = document.getElementById('admin-badge');
-            const count = snapshot.val() ? Object.keys(snapshot.val()).length : 0;
-            badge.innerText = count;
-            badge.style.display = count > 0 ? 'block' : 'none';
-        });
-    </script>
-</head>
-<body>
-    <div id="splash-screen"><img src="loading.jpg" class="splash-logo"></div>
-
-    <div id="custom-alert-overlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); z-index:99999; justify-content:center; align-items:center;">
-        <div style="background:#fff; width:85%; border-radius:15px; padding:20px; text-align:center;">
-            <h3>🚨 미승인 아이디</h3>
-            <input type="text" id="req-id" placeholder="아이디" style="width:90%; padding:10px; margin-bottom:10px;">
-            <input type="text" id="req-name" placeholder="성함" style="width:90%; padding:10px; margin-bottom:10px;">
-            <input type="text" id="req-company" placeholder="업체명" style="width:90%; padding:10px; margin-bottom:10px;">
-            <button onclick="sendApprovalRequest()" style="width:100%; padding:15px; background:#ff8c00; color:#fff; border:none; border-radius:10px; font-weight:bold;">승인 요청하기</button>
-            <button onclick="document.getElementById('custom-alert-overlay').style.display='none'" style="margin-top:10px; background:none; border:none; color:#888;">취소</button>
-        </div>
-    </div>
-
-    <div id="approval-success-overlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); z-index:99999; justify-content:center; align-items:center;">
-        <div style="background:#fff; width:80%; border-radius:15px; padding:30px; text-align:center;">
-            <h2>✅ 신청 완료!</h2>
-            <p>관리자 승인 후 이용 가능합니다.</p>
-            <button onclick="document.getElementById('approval-success-overlay').style.display='none'" style="width:100%; padding:15px; background:#ff8c00; color:#fff; border:none; border-radius:10px; font-weight:bold;">확인</button>
-        </div>
-    </div>
-
-    <div class="wrapper">
-        <div class="header">
-            <div style="position: relative; display: inline-block;" onclick="document.getElementById('setup-view').style.display='none'; document.getElementById('admin-login-view').style.display='block';">
-                <img src="mlogo.jpg" class="logo-img" style="cursor:pointer;">
-                <div id="admin-badge" style="display:none; position:absolute; top:-5px; right:-5px; background:red; color:white; font-size:10px; padding:2px 6px; border-radius:10px;">0</div>
-            </div>
-            <h2>🚀 채번 요청 1초컷</h2>
-        </div>
-
-        <div id="setup-view">
-            <input type="text" id="user-id" placeholder="아이디 입력">
-            <select id="user-camp"><option value="음봉MB">음봉MB</option><option value="송촌MB">송촌MB</option></select>
-            <button class="btn-submit" onclick="saveInfo()">로그인</button>
-        </div>
-
-        <div id="admin-login-view" style="display:none;">
-            <h3>🔒 관리자 접속</h3>
-            <input type="password" id="admin-pw" placeholder="비밀번호">
-            <button class="btn-submit" onclick="checkAdminPw()">접속하기</button>
-            <button onclick="document.getElementById('admin-login-view').style.display='none'; document.getElementById('setup-view').style.display='block';">돌아가기</button>
-        </div>
-
-        <div id="admin-dashboard-view" style="display:none;">
-            <div id="admin-list-content"></div>
-            <button onclick="location.reload()">로그아웃</button>
-        </div>
-
-        <div id="main-view" style="display:none;">
-            <div id="display-id"></div>
-            <button onclick="showSetup()">정보 변경</button>
-            </div>
-    </div>
-</body>
-</html>
+                id: reqId,
+                camp: reqCamp,
+                name: reqName,
+                company: reqCompany,
+                status:
