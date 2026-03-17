@@ -1,17 +1,25 @@
+// [관리자] 비밀번호 확인 (DB 대조 방식 - 코드에 비번 노출 없음)
 function checkAdminPw() {
-    const pw = document.getElementById('admin-pw').value;
-    const userIdInput = document.getElementById('user-id').value.trim();
+    const pwInput = document.getElementById('admin-pw').value;
+    const adminId = 'ryanl82'; // 기사님 아이디 고정
 
-    // 관리자 마스터 아이디(ryanl82)는 비번 없이도 프리패스!
-    if (userIdInput === "ryanl82" || pw === "0000") {
-        document.getElementById('admin-login-view').style.display = 'none';
-        document.getElementById('admin-dashboard-view').style.display = 'block';
-        loadApprovalRequests();
-    } else {
-        alert("비밀번호가 틀렸습니다.");
-    }
+    // 파이어베이스 admins 노드에서 비번 가져오기
+    db.ref("admins/" + adminId).once('value', (snapshot) => {
+        const adminData = snapshot.val();
+        
+        // DB에 저장된 jun0312와 입력값이 같은지 확인
+        if (adminData && pwInput === adminData.pw) {
+            document.getElementById('admin-login-view').style.display = 'none';
+            document.getElementById('admin-dashboard-view').style.display = 'block';
+            loadApprovalRequests(); // 승인 명단 호출
+        } else {
+            myAlert("비밀번호가 틀렸습니다."); // 주소창 없는 알림
+            document.getElementById('admin-pw').value = '';
+        }
+    });
 }
 
+// [관리자] 승인 대기 명단 불러오기
 function loadApprovalRequests() {
     const listContent = document.getElementById('admin-list-content');
     listContent.innerHTML = '<div style="color:white; padding:20px;">대기 명단 불러오는 중...</div>';
@@ -28,6 +36,7 @@ function loadApprovalRequests() {
         Object.keys(data).forEach(key => {
             const request = data[key];
             const card = document.createElement('div');
+            // 기사님 스타일 유지
             card.style.cssText = "background:rgba(255,255,255,0.1); border-radius:12px; padding:15px; margin-bottom:12px; text-align:left; border-left:5px solid #ff8c00; box-shadow:0 4px 10px rgba(0,0,0,0.2);";
             
             card.innerHTML = `
@@ -49,6 +58,7 @@ function loadApprovalRequests() {
     });
 }
 
+// [관리자] 최종 승인 (users로 이동)
 function approveUser(id, name, company, camp) {
     if(confirm(id + " 기사님을 최종 승인하시겠습니까?")) {
         db.ref("users/" + id).set({
@@ -63,22 +73,24 @@ function approveUser(id, name, company, camp) {
             return db.ref("승인대기방/" + id).remove();
         })
         .then(() => {
-            alert(id + " 승인 완료! 이제 즉시 이용 가능합니다.");
+            myAlert(id + " 승인 완료! 이제 즉시 이용 가능합니다.");
         })
         .catch((error) => {
-            alert("오류 발생: " + error.message);
+            myAlert("오류 발생: " + error.message);
         });
     }
 }
 
+// [관리자] 거절 (삭제)
 function rejectUser(id) {
-    if(confirm("이 신청건을 삭제하시겠습니까?")) {
+    if(confirm("이 신청건을 삭제(거절)하시겠습니까?")) {
         db.ref("승인대기방/" + id).remove()
-        .then(() => alert("삭제 완료!"))
-        .catch(() => alert("오류 발생"));
+        .then(() => myAlert("삭제 완료!"))
+        .catch(() => myAlert("오류 발생"));
     }
 }
 
+// [관리자] 취소 및 닫기
 function cancelAdmin() {
     document.getElementById('admin-login-view').style.display = 'none';
     document.getElementById('setup-view').style.display = 'block';
