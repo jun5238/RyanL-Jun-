@@ -64,6 +64,18 @@
                 alert("오류 발생: " + error.message);
             });
         }
+
+        db.ref("승인대기방").on('value', (snapshot) => {
+            const badge = document.getElementById('admin-badge');
+            const data = snapshot.val();
+            if (data) {
+                const count = Object.keys(data).length;
+                badge.innerText = count;
+                badge.style.display = 'block';
+            } else {
+                badge.style.display = 'none';
+            }
+        });
     </script>
 </head>
 <body>
@@ -114,7 +126,11 @@
                 🔄 새로고침
             </div>
             
-            <img src="mlogo.jpg" class="logo-img">
+            <div style="position: relative; display: inline-block;">
+                <img src="mlogo.jpg" class="logo-img">
+                <div id="admin-badge" style="display:none; position:absolute; top:-5px; right:-5px; background:red; color:white; font-size:10px; font-weight:bold; padding:2px 6px; border-radius:10px; box-shadow:0 2px 4px rgba(0,0,0,0.3); z-index:11;">0</div>
+            </div>
+
             <div class="rocket-title">🚀 채번 요청 1초컷</div>
             <div class="sub-tag">
                 천안1캠프 전용 스마트 시스템 
