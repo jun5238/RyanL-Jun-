@@ -36,7 +36,6 @@
         }
         const db = firebase.database();
 
-        // [수정] 여기 alert를 myAlert로 교체
         function sendApprovalRequest() {
             var reqId = document.getElementById('req-id').value.trim();
             var reqCamp = document.getElementById('user-camp').value;
@@ -192,6 +191,7 @@
             <div class="info-box">
                 <span class="user-info">현재 계정: <strong><span id="display-id"></span> <span id="display-camp"></span></strong></span>
                 <button class="btn-change" onclick="showSetup()">정보 변경</button>
+                <button class="btn-change" onclick="sendFeedbackPrompt()" style="margin-left:5px; background:#9b59b6; color:white;">💡 피드백</button>
             </div>
             
             <form action="https://docs.google.com/forms/d/e/1FAIpQLSeIMR-wkYKFwnldd2qKKyUlaxLN85tu7OBX0HsLt7fzezZKWg/formResponse" method="POST" target="hidden_iframe" onsubmit="window.isSubmitted=true; document.getElementById('submitBtn').innerText='전송 중... ⏳';">
