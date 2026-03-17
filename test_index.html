@@ -18,6 +18,29 @@
     <script src="firebase_node_check.js"></script>
     
     <script src="admin_ui.js"></script>
+
+        <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+
+    <script>
+        // 기사님 전용 파이어베이스 보안 키 및 주소
+        const firebaseConfig = {
+            apiKey: "AIzaSyDIA5MGfvoHQvrgCm1Wf1d7XcgC13b_D9Q",
+            authDomain: "ryanl-test.firebaseapp.com",
+            projectId: "ryanl-test",
+            storageBucket: "ryanl-test.appspot.com",
+            messagingSenderId: "818440188305",
+            appId: "1:818440188305:web:b5f89513e57eab942c2a30",
+            databaseURL: "https://ryanl-test-default-rtdb.firebaseio.com"
+        };
+        
+        // 파이어베이스 시동 켜기!
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
+        const db = firebase.database();
+    </script>
+
 </head>
 <body>
     <div id="splash-screen">
