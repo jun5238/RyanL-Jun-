@@ -55,13 +55,13 @@
                 status: "대기중",
                 timestamp: new Date().getTime()
             }).then(() => {
-                alert("승인 요청이 완료되었습니다! 관리자 승인 후 이용 가능합니다.");
-                document.getElementById('custom-alert-overlay').style.display='none';
+                document.getElementById('custom-alert-overlay').style.display = 'none';
+                document.getElementById('approval-success-overlay').style.display = 'flex';
                 document.getElementById('req-id').value = '';
                 document.getElementById('req-name').value = '';
                 document.getElementById('req-company').value = '';
             }).catch((error) => {
-                alert("오류가 발생했습니다. 다시 시도해주세요.");
+                alert("오류 발생: " + error.message);
             });
         }
     </script>
@@ -87,6 +87,15 @@
                 <button onclick="document.getElementById('custom-alert-overlay').style.display='none'" style="width:40%; padding:14px; background:#ccc; color:#333; border:none; border-radius:10px; font-size:15px; font-weight:bold; cursor:pointer;">취소</button>
                 <button onclick="sendApprovalRequest()" style="width:60%; padding:14px; background:#ff8c00; color:#fff; border:none; border-radius:10px; font-size:15px; font-weight:900; cursor:pointer;">승인 요청하기</button>
             </div>
+        </div>
+    </div>
+
+    <div id="approval-success-overlay" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.6); z-index:100000; justify-content:center; align-items:center;">
+        <div style="background:#fff; width:80%; max-width:300px; border-radius:15px; padding:30px 20px; text-align:center; box-shadow:0 10px 25px rgba(0,0,0,0.2);">
+            <div style="font-size:45px; margin-bottom:15px;">✅</div>
+            <div style="font-size:20px; font-weight:900; color:#152b52; margin-bottom:10px;">신청 완료!</div>
+            <div style="font-size:14px; color:#555; margin-bottom:20px; line-height:1.5;">승인 요청이 접수되었습니다.<br>관리자 승인 후 이용 가능합니다.</div>
+            <button onclick="document.getElementById('approval-success-overlay').style.display='none'" style="width:100%; padding:14px; background:#ff8c00; color:#fff; border:none; border-radius:10px; font-size:16px; font-weight:900; cursor:pointer;">확인</button>
         </div>
     </div>
 
