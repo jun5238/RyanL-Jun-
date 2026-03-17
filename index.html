@@ -43,15 +43,18 @@
     </div>
 
     <div class="wrapper">
-        <div class="header">
-    <img src="mlogo.jpg" class="logo-img">
-    <div class="rocket-title">🚀 채번 요청 1초컷</div>
-    <div class="sub-tag">
-        천안1캠프 전용 스마트 시스템 
-        <span style="background:#e74c3c; color:white; font-size:11px; font-weight:900; padding:3px 6px; border-radius:5px; vertical-align:middle; margin-left:5px; box-shadow:0 2px 4px rgba(0,0,0,0.2);">테스트 버전</span>
-    </div>
-</div>
-
+        <div class="header" style="position: relative;">
+            <div onclick="window.location.reload(true);" style="position: absolute; top: 10px; right: 10px; padding: 6px 12px; background-color: #ff8c00; color: white; border-radius: 15px; font-weight: 900; font-size: 13px; box-shadow: 0 3px 6px rgba(0,0,0,0.15); cursor: pointer;">
+                🔄 새로고침
+            </div>
+            
+            <img src="mlogo.jpg" class="logo-img">
+            <div class="rocket-title">🚀 채번 요청 1초컷</div>
+            <div class="sub-tag">
+                천안1캠프 전용 스마트 시스템 
+                <span style="background:#e74c3c; color:white; font-size:11px; font-weight:900; padding:3px 6px; border-radius:5px; vertical-align:middle; margin-left:5px; box-shadow:0 2px 4px rgba(0,0,0,0.2);">테스트 버전</span>
+            </div>
+        </div>
         <div id="setup-view">
             <label class="setup-label">👤 기사님 아이디</label>
             <input type="text" id="user-id" placeholder="예: RyanL">
@@ -125,9 +128,5 @@
             <span class="warning-text">무단 복제 및 도용 시 법적 처벌을 받을 수 있습니다.</span>
         </div>
     </div>
-        <div onclick="window.location.reload(true);" style="position: fixed; bottom: 25px; right: 25px; width: 55px; height: 55px; background-color: #ff8c00; color: white; border-radius: 50%; display: flex; justify-content: center; align-items: center; box-shadow: 0 5px 15px rgba(0,0,0,0.3); cursor: pointer; z-index: 99999; font-size: 26px; transition: transform 0.1s;">
-        🔄
-    </div>
-
 </body>
 </html>
