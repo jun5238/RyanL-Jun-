@@ -22,18 +22,12 @@ window.onload = function() {
     }
 };
 
-// 주소창 없는 커스텀 알림 함수
-function myAlert(msg) {
-    document.getElementById('custom-alert-msg').innerText = msg;
-    document.getElementById('custom-alert-box').style.display = 'flex';
-}
-
 function saveInfo() {
     const userId = document.getElementById('user-id').value.trim();
     const userCamp = document.getElementById('user-camp').value;
 
     if (!userId || !userCamp) {
-        myAlert("아이디와 캠프를 입력해주세요."); // 주소창 없는 팝업
+        alert("아이디와 캠프를 입력해주세요.");
         return;
     }
 
@@ -66,11 +60,16 @@ function showSetup() {
     document.getElementById('setup-view').style.display = 'block';
 }
 
+function toggleGuide() {
+    const content = document.getElementById('guide-content');
+    content.style.display = (content.style.display === 'block') ? 'none' : 'block';
+}
+
 function pasteClipboard() {
     navigator.clipboard.readText().then(text => {
         document.getElementById('waybill').value = text;
     }).catch(err => {
-        myAlert("붙여넣기 권한이 필요합니다.");
+        alert("붙여넣기 권한이 필요합니다.");
     });
 }
 
@@ -79,14 +78,17 @@ const headerLogo = document.querySelector('.logo-img');
 let pressTimer;
 
 if (headerLogo) {
+    // 꾹 누르기 시작
     headerLogo.addEventListener('touchstart', function(e) {
         pressTimer = setTimeout(() => {
+            // 모든 뷰 숨기고 관리자 로그인 뷰만 보이기
             document.getElementById('setup-view').style.display = 'none';
             document.getElementById('main-view').style.display = 'none';
             document.getElementById('admin-login-view').style.display = 'block';
-        }, 1500); 
+        }, 1500); // 1.5초 동안 누르면 작동
     });
 
+    // 떼거나 움직이면 타이머 취소
     headerLogo.addEventListener('touchend', function() {
         clearTimeout(pressTimer);
     });
