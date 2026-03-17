@@ -103,7 +103,7 @@
                 <button class="btn-change" onclick="showSetup()">정보 변경</button>
             </div>
             
-            <form action="https://docs.google.com/forms/d/e/1FAIpQLSeIMR-wkYKFwnldd2qKKyUlaxLN85tu7OBX0HsLt7fzezZKWg/formResponse" method="POST" target="hidden_iframe" onsubmit="var b=document.getElementById('submitBtn'); b.style.pointerEvents='none'; b.style.backgroundColor='#888'; b.innerText='전송 중... ⏳'; setTimeout(function(){b.style.pointerEvents='auto'; b.style.backgroundColor=''; b.innerText='바로 제출하기';}, 3000); submitForm();">
+            <form action="https://docs.google.com/forms/d/e/1FAIpQLSeIMR-wkYKFwnldd2qKKyUlaxLN85tu7OBX0HsLt7fzezZKWg/formResponse" method="POST" target="hidden_iframe" onsubmit="submitForm()">
                 <input type="hidden" name="pageHistory" value="0,1">
                 <input type="hidden" name="entry.1315166815" id="form-id">
                 <input type="hidden" name="entry.1573740217" id="form-camp">
