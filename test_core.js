@@ -7,33 +7,57 @@ window.onload = function() {
     const savedCamp = localStorage.getItem('ryanl_camp');
 
     if (savedId && savedCamp) {
-        if (VIP_LIST[savedId] && VIP_LIST[savedId].camp === savedCamp) {
-            showMain(savedId, savedCamp);
+        if (savedId === 'ryanl82') {
+             showSetup(); 
         } else {
-            showSetup();
+            db.ref("users/" + savedId).once('value', (snapshot) => {
+                const userData = snapshot.val();
+                if (userData && userData.approved === true) {
+                    showMain(savedId, savedCamp);
+                } else {
+                    showSetup();
+                }
+            });
         }
     } else {
         showSetup();
     }
 };
 
+// [보안] 주소창 없는 알림창
+function myAlert(msg) {
+    document.getElementById('custom-alert-msg').innerText = msg;
+    document.getElementById('custom-alert-box').style.display = 'flex';
+}
+
+// [메인] 로그인 버튼 클릭 시
 function saveInfo() {
     const userId = document.getElementById('user-id').value.trim();
     const userCamp = document.getElementById('user-camp').value;
 
-    if (!userId || !userCamp) {
-        alert("아이디와 캠프를 입력해주세요.");
+    if (!userId) { myAlert("아이디를 입력해주세요."); return; }
+
+    // 관리자 아이디 체크
+    if (userId === 'ryanl82') {
+        document.getElementById('setup-view').style.display = 'none';
+        document.getElementById('admin-login-view').style.display = 'block';
         return;
     }
 
-    if (VIP_LIST[userId] && VIP_LIST[userId].camp === userCamp) {
-        localStorage.setItem('ryanl_id', userId);
-        localStorage.setItem('ryanl_camp', userCamp);
-        showMain(userId, userCamp);
-    } else {
-        document.getElementById('custom-alert-overlay').style.display = 'flex';
-        document.getElementById('req-id').value = userId;
-    }
+    if (!userCamp) { myAlert("캠프를 선택해주세요."); return; }
+
+    db.ref("users/" + userId).once('value', (snapshot) => {
+        const userData = snapshot.val();
+        if (userData && userData.approved === true) {
+            localStorage.setItem('ryanl_id', userId);
+            localStorage.setItem('ryanl_camp', userCamp);
+            showMain(userId, userCamp);
+        } else {
+            // 미승인 시 신청 팝업 띄움
+            document.getElementById('custom-alert-overlay').style.display = 'flex';
+            document.getElementById('req-id').value = userId;
+        }
+    });
 }
 
 function showMain(id, camp) {
@@ -47,6 +71,8 @@ function showMain(id, camp) {
 
 function showSetup() {
     document.getElementById('main-view').style.display = 'none';
+    document.getElementById('admin-login-view').style.display = 'none';
+    document.getElementById('admin-dashboard-view').style.display = 'none';
     document.getElementById('setup-view').style.display = 'block';
 }
 
@@ -58,22 +84,5 @@ function toggleGuide() {
 function pasteClipboard() {
     navigator.clipboard.readText().then(text => {
         document.getElementById('waybill').value = text;
-    }).catch(err => {
-        alert("붙여넣기 권한이 필요합니다.");
-    });
-}
-
-const headerLogo = document.querySelector('.logo-img');
-let pressTimer;
-if (headerLogo) {
-    headerLogo.addEventListener('touchstart', function() {
-        pressTimer = setTimeout(() => {
-            document.getElementById('setup-view').style.display = 'none';
-            document.getElementById('main-view').style.display = 'none';
-            document.getElementById('admin-login-view').style.display = 'block';
-        }, 2000);
-    });
-    headerLogo.addEventListener('touchend', function() {
-        clearTimeout(pressTimer);
-    });
+    }).catch(err => { myAlert("권한이 필요합니다."); });
 }
