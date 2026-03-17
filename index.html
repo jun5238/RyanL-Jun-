@@ -44,7 +44,7 @@
 
     <div class="wrapper">
         <div class="header" style="position: relative;">
-            <div onclick="window.location.reload(true);" style="position: absolute; top: 10px; right: 10px; padding: 6px 12px; background-color: #ff8c00; color: white; border-radius: 15px; font-weight: 900; font-size: 13px; box-shadow: 0 3px 6px rgba(0,0,0,0.15); cursor: pointer;">
+            <div onclick="window.location.reload(true);" style="position: absolute; top: 10px; right: 10px; padding: 6px 12px; background-color: #ff8c00; color: white; border-radius: 15px; font-weight: 900; font-size: 13px; box-shadow: 0 3px 6px rgba(0,0,0,0.15); cursor: pointer; z-index: 10;">
                 🔄 새로고침
             </div>
             
@@ -103,7 +103,7 @@
                 <button class="btn-change" onclick="showSetup()">정보 변경</button>
             </div>
             
-            <form action="https://docs.google.com/forms/d/e/1FAIpQLSeIMR-wkYKFwnldd2qKKyUlaxLN85tu7OBX0HsLt7fzezZKWg/formResponse" method="POST" target="hidden_iframe" onsubmit="submitForm()">
+            <form action="https://docs.google.com/forms/d/e/1FAIpQLSeIMR-wkYKFwnldd2qKKyUlaxLN85tu7OBX0HsLt7fzezZKWg/formResponse" method="POST" target="hidden_iframe" onsubmit="window.isSubmitted=true; document.getElementById('submitBtn').innerText='전송 중... ⏳';">
                 <input type="hidden" name="pageHistory" value="0,1">
                 <input type="hidden" name="entry.1315166815" id="form-id">
                 <input type="hidden" name="entry.1573740217" id="form-camp">
@@ -118,8 +118,8 @@
                 <input type="number" name="entry.1437474928" id="quantity" placeholder="숫자만 입력" required>
                 <button type="submit" class="btn-submit" id="submitBtn">바로 제출하기</button>
             </form>
-            <iframe name="hidden_iframe" id="hidden_iframe" style="display:none;"></iframe>
-        </div>
+            <iframe name="hidden_iframe" id="hidden_iframe" style="display:none;" onload="if(window.isSubmitted){ alert('✅ 채번 요청이 완료되었습니다!'); document.getElementById('waybill').value=''; document.getElementById('quantity').value=''; document.getElementById('submitBtn').innerText='바로 제출하기'; window.isSubmitted=false; }"></iframe>
+            </div>
 
         <div class="footer">
             <span class="contact-info">버그 및 오류 문의 : cndrone@naver.com</span>
