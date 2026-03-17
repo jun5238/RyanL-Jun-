@@ -4,9 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>라이언엘 채번 시스템</title>
-    
     <link rel="stylesheet" href="test_style.css?v=0317_final">
-
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
     <script>
@@ -22,72 +20,42 @@
         if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
     </script>
-
     <script src="test_core.js?v=0317_final"></script> 
     <script src="test_admin.js?v=0317_final"></script>
 </head>
 <body>
-    <div id="splash-screen">
-        <img src="loading.jpg" class="splash-logo">
-        <div class="splash-text">Loading.....</div>
-    </div>
-
+    <div id="splash-screen"><img src="loading.jpg" class="splash-logo"></div>
     <div id="custom-alert-box" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); z-index:999999; justify-content:center; align-items:center;">
         <div style="background:#fff; width:80%; max-width:300px; border-radius:15px; padding:25px; text-align:center;">
             <div id="custom-alert-msg" style="font-size:15px; font-weight:bold; color:#333; margin-bottom:20px;"></div>
-            <button onclick="document.getElementById('custom-alert-box').style.display='none'" style="width:100%; padding:12px; background:#ff8c00; color:#fff; border:none; border-radius:10px; font-weight:900;">확인</button>
+            <button onclick="document.getElementById('custom-alert-box').style.display='none'" style="width:100%; padding:12px; background:#ff8c00; color:#fff; border:none; border-radius:10px;">확인</button>
         </div>
     </div>
-
-    <div id="custom-alert-overlay" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.6); z-index:100000; justify-content:center; align-items:center;">
-        <div style="background:#fff; width:85%; max-width:320px; border-radius:15px; padding:25px; text-align:center;">
-            <div style="font-size:14px; color:#444; text-align:left; background:#f4f4f4; padding:15px; border-radius:10px;">
-                <input type="text" id="req-id" placeholder="아이디" style="width:100%; padding:10px; margin-bottom:10px; border:1px solid #ccc;">
-                <input type="text" id="req-name" placeholder="성함" style="width:100%; padding:10px; margin-bottom:10px; border:1px solid #ccc;">
-                <input type="text" id="req-company" placeholder="업체명" style="width:100%; padding:10px; margin-bottom:10px; border:1px solid #ccc;">
-            </div>
-            <div style="display:flex; gap:10px; margin-top:20px;">
-                <button onclick="document.getElementById('custom-alert-overlay').style.display='none'" style="width:40%; padding:14px; background:#ccc; border-radius:10px;">취소</button>
-                <button onclick="sendApprovalRequest()" style="width:60%; padding:14px; background:#ff8c00; color:#fff; border-radius:10px; font-weight:900;">승인 요청</button>
-            </div>
-        </div>
-    </div>
-
     <div class="wrapper">
         <div class="header">
-            <div onclick="window.location.reload(true);" style="position: absolute; top: 10px; right: 10px; padding: 6px 12px; background: #ff8c00; color: white; border-radius: 15px; font-weight: 900; font-size: 13px;">🔄 새로고침</div>
             <img src="mlogo.jpg" class="logo-img">
             <div id="admin-badge" style="display:none; position:absolute; top:40px; right:10px; background:red; color:white; font-size:10px; padding:2px 6px; border-radius:10px;">0</div>
             <div class="rocket-title">🚀 채번 요청 1초컷</div>
         </div>
-
         <div id="setup-view">
             <input type="text" id="user-id" placeholder="아이디 입력">
-            <select id="user-camp">
-                <option value="">캠프 선택</option>
-                <option value="음봉MB">음봉MB</option>
-                <option value="송촌MB">송촌MB</option>
-            </select>
+            <select id="user-camp"><option value="음봉MB">음봉MB</option><option value="송촌MB">송촌MB</option></select>
             <button class="btn-submit" onclick="saveInfo()">로그인</button>
         </div>
-
         <div id="admin-login-view" style="display:none; text-align:center;">
             <input type="password" id="admin-pw" placeholder="관리자 비번">
             <button class="btn-submit" onclick="checkAdminPw()">접속</button>
-            <button class="btn-change" onclick="showSetup()">뒤로</button>
         </div>
-
         <div id="admin-dashboard-view" style="display:none;" class="main-card">
             <div id="admin-list-content"></div>
             <button class="btn-change" onclick="showSetup()">나가기</button>
         </div>
-
         <div id="main-view" style="display:none;" class="main-card">
             <div class="info-box"><span id="display-id"></span> <span id="display-camp"></span> <button onclick="showSetup()">변경</button></div>
             <form action="https://docs.google.com/forms/d/e/1FAIpQLSeIMR-wkYKFwnldd2qKKyUlaxLN85tu7OBX0HsLt7fzezZKWg/formResponse" method="POST" target="hidden_iframe" onsubmit="window.isSubmitted=true;">
                 <input type="hidden" name="entry.1315166815" id="form-id">
                 <input type="hidden" name="entry.1573740217" id="form-camp">
-                <input type="text" name="entry.359305263" id="waybill" placeholder="운송장 번호">
+                <input type="text" name="entry.359305263" id="waybill" placeholder="운송장">
                 <input type="number" name="entry.1437474928" id="quantity" placeholder="수량">
                 <button type="submit" class="btn-submit">제출</button>
             </form>
