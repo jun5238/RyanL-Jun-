@@ -1,4 +1,4 @@
-function myConfirm(message, onConfirm) {
+function myConfirm(message, onConfirm, color) {
     const modal = document.createElement('div');
     modal.style = "position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);display:flex;align-items:center;justify-content:center;z-index:999999;";
 
@@ -14,7 +14,7 @@ function myConfirm(message, onConfirm) {
 
     const okBtn = document.createElement('button');
     okBtn.innerText = "확인";
-    okBtn.style = "width:50%;padding:12px;background:#ff8c00;color:#fff;border:none;border-radius:10px;font-weight:900;cursor:pointer;";
+    okBtn.style = "width:50%;padding:12px;background:" + color + ";color:#fff;border:none;border-radius:10px;font-weight:900;cursor:pointer;";
 
     const cancelBtn = document.createElement('button');
     cancelBtn.innerText = "취소";
@@ -98,7 +98,7 @@ function approveUser(id, name, company, camp) {
         .then(() => db.ref("승인대기방/" + id).remove())
         .then(() => myAlert(id + " 기사님 승인 완료!"))
         .catch(() => myAlert("승인 중 오류 발생"));
-    });
+    }, "#2ecc71");
 }
 
 function rejectUser(id) {
@@ -106,7 +106,7 @@ function rejectUser(id) {
         db.ref("승인대기방/" + id).remove()
         .then(() => myAlert("삭제되었습니다."))
         .catch(() => myAlert("삭제 실패"));
-    });
+    }, "#e74c3c");
 }
 
 function cancelAdmin() { showSetup(); }
