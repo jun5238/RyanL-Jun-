@@ -50,13 +50,19 @@ function saveInfo() {
             localStorage.setItem('ryanl_camp', userCamp);
             showMain(userId, userCamp);
         } else {
-            db.ref("승인거절방/" + userId).once('value', (rejectSnap) => {
-                const rejectData = rejectSnap.val();
-                if (rejectData) {
-                    myAlert("❌ 승인이 반려되었습니다.\n\n사유: " + rejectData.reason + "\n\n정보를 수정하여 다시 신청해주세요!");
+            db.ref("승인대기방/" + userId).once('value', (pendingSnap) => {
+                if (pendingSnap.exists()) {
+                    myAlert("⏳ 현재 관리자 승인 대기 중입니다!\n처리가 완료될 때까지 조금만 기다려주세요.");
+                } else {
+                    db.ref("승인거절방/" + userId).once('value', (rejectSnap) => {
+                        const rejectData = rejectSnap.val();
+                        if (rejectData) {
+                            myAlert("❌ 승인이 반려되었습니다.\n\n사유: " + rejectData.reason + "\n\n정보를 수정하여 다시 신청해주세요!");
+                        }
+                        document.getElementById('custom-alert-overlay').style.display = 'flex';
+                        document.getElementById('req-id').value = userId;
+                    });
                 }
-                document.getElementById('custom-alert-overlay').style.display = 'flex';
-                document.getElementById('req-id').value = userId;
             });
         }
     });
