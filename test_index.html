@@ -37,13 +37,13 @@
         const db = firebase.database();
 
         function sendApprovalRequest() {
-            var reqId = document.getElementById('user-id').value.trim();
+            var reqId = document.getElementById('req-id').value.trim();
             var reqCamp = document.getElementById('user-camp').value;
             var reqName = document.getElementById('req-name').value.trim();
             var reqCompany = document.getElementById('req-company').value.trim();
 
-            if(!reqName || !reqCompany) {
-                alert("성함과 업체명을 모두 입력해주세요!");
+            if(!reqId || !reqName || !reqCompany) {
+                alert("아이디, 성함, 업체명을 모두 입력해주세요!");
                 return;
             }
 
@@ -57,6 +57,7 @@
             }).then(() => {
                 alert("승인 요청이 완료되었습니다! 관리자 승인 후 이용 가능합니다.");
                 document.getElementById('custom-alert-overlay').style.display='none';
+                document.getElementById('req-id').value = '';
                 document.getElementById('req-name').value = '';
                 document.getElementById('req-company').value = '';
             }).catch((error) => {
@@ -77,6 +78,7 @@
             <div style="font-size:18px; font-weight:900; color:#152b52; margin-bottom:15px;">미승인 아이디입니다</div>
             <div style="font-size:14px; color:#444; line-height:1.6; text-align:left; background:#f4f4f4; padding:15px; border-radius:10px; margin-bottom:20px;">
                 관리자에게 승인을 요청하세요.<br><br>
+                <input type="text" id="req-id" placeholder="아이디 (예: RyanL)" style="width:100%; padding:10px; margin-bottom:10px; border:1px solid #ccc; border-radius:5px; box-sizing:border-box;">
                 <input type="text" id="req-name" placeholder="성함 (예: 홍길동)" style="width:100%; padding:10px; margin-bottom:10px; border:1px solid #ccc; border-radius:5px; box-sizing:border-box;">
                 <input type="text" id="req-company" placeholder="업체명 (예: 쿠팡)" style="width:100%; padding:10px; margin-bottom:10px; border:1px solid #ccc; border-radius:5px; box-sizing:border-box;">
                 <span style="color:#ff3b30; font-size:12px; font-weight:bold;">※ 허위 정보로 신청 시 승인이 거절될 수 있습니다.</span>
