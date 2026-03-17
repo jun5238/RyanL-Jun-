@@ -1,4 +1,42 @@
-// [관리자] 비밀번호 검증 (DB 대조)
+function myConfirm(message, onConfirm) {
+    const modal = document.createElement('div');
+    modal.style = "position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);display:flex;align-items:center;justify-content:center;z-index:999999;";
+
+    const box = document.createElement('div');
+    box.style = "background:#fff;width:80%;max-width:300px;border-radius:15px;padding:25px;text-align:center;box-shadow:0 10px 25px rgba(0,0,0,0.3);";
+
+    const text = document.createElement('div');
+    text.innerText = message;
+    text.style = "font-size:15px;font-weight:bold;color:#333;line-height:1.5;margin-bottom:20px;";
+
+    const btnGroup = document.createElement('div');
+    btnGroup.style = "display:flex;gap:10px;";
+
+    const okBtn = document.createElement('button');
+    okBtn.innerText = "확인";
+    okBtn.style = "width:50%;padding:12px;background:#ff8c00;color:#fff;border:none;border-radius:10px;font-weight:900;cursor:pointer;";
+
+    const cancelBtn = document.createElement('button');
+    cancelBtn.innerText = "취소";
+    cancelBtn.style = "width:50%;padding:12px;background:#ccc;color:#333;border:none;border-radius:10px;font-weight:bold;cursor:pointer;";
+
+    okBtn.onclick = () => {
+        document.body.removeChild(modal);
+        if (onConfirm) onConfirm();
+    };
+
+    cancelBtn.onclick = () => {
+        document.body.removeChild(modal);
+    };
+
+    btnGroup.appendChild(okBtn);
+    btnGroup.appendChild(cancelBtn);
+    box.appendChild(text);
+    box.appendChild(btnGroup);
+    modal.appendChild(box);
+    document.body.appendChild(modal);
+}
+
 function checkAdminPw() {
     const pwInput = document.getElementById('admin-pw').value;
     const adminId = 'ryanl82';
@@ -16,7 +54,6 @@ function checkAdminPw() {
     });
 }
 
-// [관리자] 대기 명단 불러오기 (거절 버튼 포함)
 function loadApprovalRequests() {
     const listContent = document.getElementById('admin-list-content');
     listContent.innerHTML = '<div style="color:white; padding:20px;">데이터 확인 중...</div>';
@@ -53,25 +90,23 @@ function loadApprovalRequests() {
     });
 }
 
-// [관리자] 최종 승인
 function approveUser(id, name, company, camp) {
-    if(confirm(id + " 기사님을 승인하시겠습니까?")) {
+    myConfirm(id + " 기사님을 승인하시겠습니까?", () => {
         db.ref("users/" + id).set({
             id: id, name: name, company: company, camp: camp, approved: true, regDate: new Date().getTime()
         })
         .then(() => db.ref("승인대기방/" + id).remove())
         .then(() => myAlert(id + " 기사님 승인 완료!"))
         .catch(() => myAlert("승인 중 오류 발생"));
-    }
+    });
 }
 
-// [관리자] 거절 및 삭제
 function rejectUser(id) {
-    if(confirm("이 신청건을 삭제(거절)하시겠습니까?")) {
+    myConfirm("이 신청건을 삭제(거절)하시겠습니까?", () => {
         db.ref("승인대기방/" + id).remove()
         .then(() => myAlert("삭제되었습니다."))
         .catch(() => myAlert("삭제 실패"));
-    }
+    });
 }
 
 function cancelAdmin() { showSetup(); }
