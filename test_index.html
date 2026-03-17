@@ -5,17 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>라이언엘 채번 시스템</title>
     
-    <link rel="manifest" href="test_manifest.json">
-    <link rel="apple-touch-icon" href="icon.jpg">
-    <link rel="icon" sizes="192x192" href="icon.jpg">
-
     <link rel="stylesheet" href="test_style.css?v=0317_test">
-
-    <script src="security_protocol.js"></script>
-    <script src="auth_gate_v1.js"></script>
     <script src="vip_list.js?v=2"></script>
     <script src="test_core.js?v=0317_test"></script> 
-    <script src="firebase_node_check.js"></script>
     <script src="test_admin_ui.js"></script>
 
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
@@ -25,15 +17,9 @@
             apiKey: "AIzaSyDIA5MGfvoHQvrgCm1Wf1d7XcgC13b_D9Q",
             authDomain: "ryanl-test.firebaseapp.com",
             projectId: "ryanl-test",
-            storageBucket: "ryanl-test.appspot.com",
-            messagingSenderId: "818440188305",
-            appId: "1:818440188305:web:b5f89513e57eab942c2a30",
             databaseURL: "https://ryanl-test-default-rtdb.firebaseio.com"
         };
-        
-        if (!firebase.apps.length) {
-            firebase.initializeApp(firebaseConfig);
-        }
+        if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
         function sendApprovalRequest() {
@@ -43,145 +29,79 @@
             var reqCompany = document.getElementById('req-company').value.trim();
 
             if(!reqId || !reqName || !reqCompany) {
-                alert("아이디, 성함, 업체명을 모두 입력해주세요!");
+                alert("정보를 모두 입력해주세요!");
                 return;
             }
 
             db.ref("승인대기방/" + reqId).set({
-                id: reqId,
-                camp: reqCamp,
-                name: reqName,
-                company: reqCompany,
-                status: "대기중",
-                timestamp: new Date().getTime()
+                id: reqId, camp: reqCamp, name: reqName, company: reqCompany, status: "대기중"
             }).then(() => {
                 document.getElementById('custom-alert-overlay').style.display = 'none';
                 document.getElementById('approval-success-overlay').style.display = 'flex';
-                document.getElementById('req-id').value = '';
-                document.getElementById('req-name').value = '';
-                document.getElementById('req-company').value = '';
-            }).catch((error) => {
-                alert("오류 발생: " + error.message);
             });
         }
 
         db.ref("승인대기방").on('value', (snapshot) => {
             const badge = document.getElementById('admin-badge');
-            const data = snapshot.val();
-            if (data) {
-                const count = Object.keys(data).length;
-                badge.innerText = count;
-                badge.style.display = 'block';
-            } else {
-                badge.style.display = 'none';
-            }
+            const count = snapshot.val() ? Object.keys(snapshot.val()).length : 0;
+            badge.innerText = count;
+            badge.style.display = count > 0 ? 'block' : 'none';
         });
     </script>
 </head>
 <body>
-    <div id="splash-screen">
-        <img src="loading.jpg" class="splash-logo" alt="RyanL Loading">
-        <div class="splash-text">Loading.....</div>
-    </div>
+    <div id="splash-screen"><img src="loading.jpg" class="splash-logo"></div>
 
-    <div id="custom-alert-overlay" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.6); z-index:100000; justify-content:center; align-items:center;">
-        <div style="background:#fff; width:85%; max-width:320px; border-radius:15px; padding:25px 20px; text-align:center; box-shadow:0 10px 25px rgba(0,0,0,0.2);">
-            <div style="font-size:35px; margin-bottom:10px;">🚨</div>
-            <div style="font-size:18px; font-weight:900; color:#152b52; margin-bottom:15px;">미승인 아이디입니다</div>
-            <div style="font-size:14px; color:#444; line-height:1.6; text-align:left; background:#f4f4f4; padding:15px; border-radius:10px; margin-bottom:20px;">
-                관리자에게 승인을 요청하세요.<br><br>
-                <input type="text" id="req-id" placeholder="아이디 (예: RyanL)" style="width:100%; padding:10px; margin-bottom:10px; border:1px solid #ccc; border-radius:5px; box-sizing:border-box;">
-                <input type="text" id="req-name" placeholder="성함 (예: 홍길동)" style="width:100%; padding:10px; margin-bottom:10px; border:1px solid #ccc; border-radius:5px; box-sizing:border-box;">
-                <input type="text" id="req-company" placeholder="업체명 (예: 라이언엘)" style="width:100%; padding:10px; margin-bottom:10px; border:1px solid #ccc; border-radius:5px; box-sizing:border-box;">
-            </div>
-            <div style="display:flex; gap:10px;">
-                <button onclick="document.getElementById('custom-alert-overlay').style.display='none'" style="width:40%; padding:14px; background:#ccc; color:#333; border:none; border-radius:10px; font-size:15px; font-weight:bold; cursor:pointer;">취소</button>
-                <button onclick="sendApprovalRequest()" style="width:60%; padding:14px; background:#ff8c00; color:#fff; border:none; border-radius:10px; font-size:15px; font-weight:900; cursor:pointer;">승인 요청하기</button>
-            </div>
+    <div id="custom-alert-overlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); z-index:99999; justify-content:center; align-items:center;">
+        <div style="background:#fff; width:85%; border-radius:15px; padding:20px; text-align:center;">
+            <h3>🚨 미승인 아이디</h3>
+            <input type="text" id="req-id" placeholder="아이디" style="width:90%; padding:10px; margin-bottom:10px;">
+            <input type="text" id="req-name" placeholder="성함" style="width:90%; padding:10px; margin-bottom:10px;">
+            <input type="text" id="req-company" placeholder="업체명" style="width:90%; padding:10px; margin-bottom:10px;">
+            <button onclick="sendApprovalRequest()" style="width:100%; padding:15px; background:#ff8c00; color:#fff; border:none; border-radius:10px; font-weight:bold;">승인 요청하기</button>
+            <button onclick="document.getElementById('custom-alert-overlay').style.display='none'" style="margin-top:10px; background:none; border:none; color:#888;">취소</button>
         </div>
     </div>
 
-    <div id="approval-success-overlay" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.6); z-index:100000; justify-content:center; align-items:center;">
-        <div style="background:#fff; width:80%; max-width:300px; border-radius:15px; padding:30px 20px; text-align:center; box-shadow:0 10px 25px rgba(0,0,0,0.2);">
-            <div style="font-size:45px; margin-bottom:15px;">✅</div>
-            <div style="font-size:20px; font-weight:900; color:#152b52; margin-bottom:10px;">신청 완료!</div>
-            <div style="font-size:14px; color:#555; margin-bottom:20px; line-height:1.5;">관리자 승인 후 이용 가능합니다.</div>
-            <button onclick="document.getElementById('approval-success-overlay').style.display='none'" style="width:100%; padding:14px; background:#ff8c00; color:#fff; border:none; border-radius:10px; font-size:16px; font-weight:900; cursor:pointer;">확인</button>
-        </div>
-    </div>
-
-    <div id="success-overlay" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.6); z-index:100000; justify-content:center; align-items:center;">
-        <div style="background:#fff; width:80%; max-width:300px; border-radius:15px; padding:30px 20px; text-align:center; box-shadow:0 10px 25px rgba(0,0,0,0.2);">
-            <div style="font-size:45px; margin-bottom:15px;">✅</div>
-            <div style="font-size:20px; font-weight:900; color:#152b52; margin-bottom:10px;">전송 완료!</div>
-            <button onclick="document.getElementById('success-overlay').style.display='none'" style="width:100%; padding:14px; background:#ff8c00; color:#fff; border:none; border-radius:10px; font-size:16px; font-weight:900; cursor:pointer;">확인</button>
+    <div id="approval-success-overlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); z-index:99999; justify-content:center; align-items:center;">
+        <div style="background:#fff; width:80%; border-radius:15px; padding:30px; text-align:center;">
+            <h2>✅ 신청 완료!</h2>
+            <p>관리자 승인 후 이용 가능합니다.</p>
+            <button onclick="document.getElementById('approval-success-overlay').style.display='none'" style="width:100%; padding:15px; background:#ff8c00; color:#fff; border:none; border-radius:10px; font-weight:bold;">확인</button>
         </div>
     </div>
 
     <div class="wrapper">
         <div class="header">
-            <div onclick="window.location.reload(true);" style="position: absolute; top: 10px; right: 10px; padding: 6px 12px; background-color: #ff8c00; color: white; border-radius: 15px; font-weight: 900; font-size: 13px; cursor: pointer; z-index: 10;">🔄 새로고침</div>
-            
-            <div style="position: relative; display: inline-block; cursor: pointer;">
-                <img src="mlogo.jpg" class="logo-img">
-                <div id="admin-badge" style="display:none; position:absolute; top:-5px; right:-5px; background:red; color:white; font-size:10px; font-weight:bold; padding:2px 6px; border-radius:10px;">0</div>
+            <div style="position: relative; display: inline-block;" onclick="document.getElementById('setup-view').style.display='none'; document.getElementById('admin-login-view').style.display='block';">
+                <img src="mlogo.jpg" class="logo-img" style="cursor:pointer;">
+                <div id="admin-badge" style="display:none; position:absolute; top:-5px; right:-5px; background:red; color:white; font-size:10px; padding:2px 6px; border-radius:10px;">0</div>
             </div>
-
-            <div class="rocket-title">🚀 채번 요청 1초컷</div>
-            <div class="sub-tag">천안1캠프 전용 스마트 시스템 <span style="background:#e74c3c; color:white; font-size:11px; font-weight:900; padding:3px 6px; border-radius:5px;">테스트 버전</span></div>
+            <h2>🚀 채번 요청 1초컷</h2>
         </div>
 
         <div id="setup-view">
-            <label class="setup-label">👤 기사님 아이디</label>
-            <input type="text" id="user-id" placeholder="예: RyanL">
-            <label class="setup-label">📍 소속 캠프</label>
-            <select id="user-camp">
-                <option value="">선택하세요</option>
-                <option value="음봉MB">음봉MB</option>
-                <option value="송촌MB">송촌MB</option>
-            </select>
-            <button class="btn-submit" onclick="saveInfo()" style="margin-top: 20px;">로그인</button>
+            <input type="text" id="user-id" placeholder="아이디 입력">
+            <select id="user-camp"><option value="음봉MB">음봉MB</option><option value="송촌MB">송촌MB</option></select>
+            <button class="btn-submit" onclick="saveInfo()">로그인</button>
         </div>
 
-        <div id="admin-login-view" style="display:none; width: 92%; max-width: 380px; text-align: center;">
-            <label class="setup-label" style="color:#ff8c00;">🔒 관리자 보안 접속</label>
+        <div id="admin-login-view" style="display:none;">
+            <h3>🔒 관리자 접속</h3>
             <input type="password" id="admin-pw" placeholder="비밀번호">
-            <button class="btn-submit" onclick="checkAdminPw()" style="margin-top: 20px;">접속하기</button>
-            <button class="btn-change" onclick="cancelAdmin()" style="margin-top: 10px; background:#f0f0f0;">돌아가기</button>
+            <button class="btn-submit" onclick="checkAdminPw()">접속하기</button>
+            <button onclick="document.getElementById('admin-login-view').style.display='none'; document.getElementById('setup-view').style.display='block';">돌아가기</button>
         </div>
 
-        <div id="admin-dashboard-view" style="display:none;" class="main-card">
-            <div style="text-align: center; border-bottom: 2px dashed rgba(255,255,255,0.3); padding-bottom: 10px; margin-bottom: 15px;">
-                <h3 style="color:#ff8c00; margin:0;">📊 업체별 기사 명단</h3>
+        <div id="admin-dashboard-view" style="display:none;">
+            <div id="admin-list-content"></div>
+            <button onclick="location.reload()">로그아웃</button>
+        </div>
+
+        <div id="main-view" style="display:none;">
+            <div id="display-id"></div>
+            <button onclick="showSetup()">정보 변경</button>
             </div>
-            <div id="admin-list-content" style="max-height: 400px; overflow-y: auto;"></div>
-            <button class="btn-change" onclick="closeAdmin()" style="margin-top: 20px;">로그인 화면으로</button>
-        </div>
-
-        <div id="main-view" style="display:none;" class="main-card">
-            <div class="info-box">
-                <span class="user-info">현재 계정: <strong><span id="display-id"></span> <span id="display-camp"></span></strong></span>
-                <button class="btn-change" onclick="showSetup()">정보 변경</button>
-            </div>
-            <form action="https://docs.google.com/forms/d/e/1FAIpQLSeIMR-wkYKFwnldd2qKKyUlaxLN85tu7OBX0HsLt7fzezZKWg/formResponse" method="POST" target="hidden_iframe" onsubmit="window.isSubmitted=true;">
-                <input type="hidden" name="entry.1315166815" id="form-id">
-                <input type="hidden" name="entry.1573740217" id="form-camp">
-                <input type="hidden" name="entry.697011792" value="채번 요청">
-                <div class="label-area">📦<span>운송장 번호</span></div>
-                <div class="input-group">
-                    <input type="text" name="entry.359305263" id="waybill" placeholder="붙여넣으세요" required>
-                    <button type="button" class="btn-paste" onclick="pasteClipboard()">붙여넣기</button>
-                </div>
-                <div class="label-area">🔢<span>채번 수량</span></div>
-                <input type="number" name="entry.1437474928" id="quantity" required>
-                <button type="submit" class="btn-submit" id="submitBtn">바로 제출하기</button>
-            </form>
-            <iframe name="hidden_iframe" style="display:none;" onload="if(window.isSubmitted){ document.getElementById('success-overlay').style.display='flex'; window.isSubmitted=false; }"></iframe>
-        </div>
-
-        <div class="footer">
-            © 2026 RyanL Logistics.
-        </div>
     </div>
 </body>
 </html>
