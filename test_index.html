@@ -133,6 +133,9 @@
             <div onclick="window.location.reload(true);" style="position: absolute; top: 10px; right: 10px; padding: 6px 12px; background-color: #ff8c00; color: white; border-radius: 15px; font-weight: 900; font-size: 13px; box-shadow: 0 3px 6px rgba(0,0,0,0.15); cursor: pointer; z-index: 10;">
                 🔄 새로고침
             </div>
+            <div onclick="sendFeedbackPrompt()" style="position: absolute; top: 45px; right: 10px; padding: 6px 12px; background-color: #9b59b6; color: white; border-radius: 15px; font-weight: 900; font-size: 13px; box-shadow: 0 3px 6px rgba(0,0,0,0.15); cursor: pointer; z-index: 10;">
+                💡 피드백
+            </div>
             
             <div style="position: relative; display: inline-block;">
                 <img src="mlogo.jpg" class="logo-img">
@@ -191,7 +194,6 @@
             <div class="info-box">
                 <span class="user-info">현재 계정: <strong><span id="display-id"></span> <span id="display-camp"></span></strong></span>
                 <button class="btn-change" onclick="showSetup()">정보 변경</button>
-                <button class="btn-change" onclick="sendFeedbackPrompt()" style="margin-left:5px; background:#9b59b6; color:white;">💡 피드백</button>
             </div>
             
             <form action="https://docs.google.com/forms/d/e/1FAIpQLSeIMR-wkYKFwnldd2qKKyUlaxLN85tu7OBX0HsLt7fzezZKWg/formResponse" method="POST" target="hidden_iframe" onsubmit="window.isSubmitted=true; document.getElementById('submitBtn').innerText='전송 중... ⏳';">
