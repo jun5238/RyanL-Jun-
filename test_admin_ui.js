@@ -1,6 +1,9 @@
 function checkAdminPw() {
     const pw = document.getElementById('admin-pw').value;
-    if (pw === "0000") {
+    const userIdInput = document.getElementById('user-id').value.trim();
+
+    // 관리자 마스터 아이디(ryanl82)는 비번 없이도 프리패스!
+    if (userIdInput === "ryanl82" || pw === "0000") {
         document.getElementById('admin-login-view').style.display = 'none';
         document.getElementById('admin-dashboard-view').style.display = 'block';
         loadApprovalRequests();
@@ -13,7 +16,6 @@ function loadApprovalRequests() {
     const listContent = document.getElementById('admin-list-content');
     listContent.innerHTML = '<div style="color:white; padding:20px;">대기 명단 불러오는 중...</div>';
 
-    // 승인대기방 데이터를 실시간으로 감시
     db.ref("승인대기방").on('value', (snapshot) => {
         listContent.innerHTML = '';
         const data = snapshot.val();
@@ -47,10 +49,8 @@ function loadApprovalRequests() {
     });
 }
 
-// 핵심 기능: 승인 버튼 클릭 시 동작
 function approveUser(id, name, company, camp) {
     if(confirm(id + " 기사님을 최종 승인하시겠습니까?")) {
-        // 1. 정식 사용자 목록(users)에 데이터 추가
         db.ref("users/" + id).set({
             id: id,
             name: name,
@@ -60,14 +60,13 @@ function approveUser(id, name, company, camp) {
             regDate: new Date().getTime()
         })
         .then(() => {
-            // 2. 승인대기방에서 해당 데이터 삭제
             return db.ref("승인대기방/" + id).remove();
         })
         .then(() => {
-            alert(id + " 기사님 승인 완료! 이제 즉시 이용 가능합니다.");
+            alert(id + " 승인 완료! 이제 즉시 이용 가능합니다.");
         })
         .catch((error) => {
-            alert("승인 처리 중 오류 발생: " + error.message);
+            alert("오류 발생: " + error.message);
         });
     }
 }
