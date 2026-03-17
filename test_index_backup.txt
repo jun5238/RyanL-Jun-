@@ -9,14 +9,14 @@
     <link rel="apple-touch-icon" href="icon.jpg">
     <link rel="icon" sizes="192x192" href="icon.jpg">
 
-    <link rel="stylesheet" href="test_style.css?v=0317_test">
+    <link rel="stylesheet" href="test_style.css?v=0318_test">
 
     <script src="security_protocol.js"></script>
     <script src="auth_gate_v1.js"></script>
     <script src="vip_list.js?v=2"></script>
-    <script src="test_core.js?v=0317_test"></script> 
+    <script src="test_core.js?v=0318_test"></script> 
     <script src="firebase_node_check.js"></script>
-    <script src="test_admin_ui.js?v=0318"></script>
+    <script src="test_admin_ui.js?v=0318_v2"></script>
 
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
@@ -36,7 +36,6 @@
         }
         const db = firebase.database();
 
-        // [수정] 여기 alert를 myAlert로 교체
         function sendApprovalRequest() {
             var reqId = document.getElementById('req-id').value.trim();
             var reqCamp = document.getElementById('user-camp').value;
@@ -131,8 +130,11 @@
 
     <div class="wrapper">
         <div class="header" style="position: relative;">
-            <div onclick="window.location.reload(true);" style="position: absolute; top: 10px; right: 10px; padding: 6px 12px; background-color: #ff8c00; color: white; border-radius: 15px; font-weight: 900; font-size: 13px; box-shadow: 0 3px 6px rgba(0,0,0,0.15); cursor: pointer; z-index: 10;">
+            <div onclick="window.location.reload(true);" style="position: absolute; top: 10px; right: 10px; width: 90px; padding: 6px 0; text-align: center; background-color: #ff8c00; color: white; border-radius: 15px; font-weight: 900; font-size: 13px; box-shadow: 0 3px 6px rgba(0,0,0,0.15); cursor: pointer; z-index: 10;">
                 🔄 새로고침
+            </div>
+            <div onclick="sendFeedbackPrompt()" style="position: absolute; top: 45px; right: 10px; width: 90px; padding: 6px 0; text-align: center; background-color: #9b59b6; color: white; border-radius: 15px; font-weight: 900; font-size: 13px; box-shadow: 0 3px 6px rgba(0,0,0,0.15); cursor: pointer; z-index: 10;">
+                💡 피드백
             </div>
             
             <div style="position: relative; display: inline-block;">
@@ -184,7 +186,7 @@
             <div style="text-align: center; border-bottom: 2px dashed rgba(255,255,255,0.3); padding-bottom: 10px; margin-bottom: 15px;">
                 <h3 style="color:var(--orange); margin:0;">📊 업체별 기사 명단</h3>
             </div>
-            <div id="admin-list-content" style="max-height: 400px; overflow-y: auto;"></div>
+            <div id="admin-list-content"></div>
             <button class="btn-change" onclick="closeAdmin()" style="margin-top: 20px;">로그인 화면으로</button>
         </div>
 
