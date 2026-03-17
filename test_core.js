@@ -24,20 +24,17 @@ window.onload = function() {
     }
 };
 
-// [보안] 주소창 없는 알림창
 function myAlert(msg) {
     document.getElementById('custom-alert-msg').innerText = msg;
     document.getElementById('custom-alert-box').style.display = 'flex';
 }
 
-// [메인] 로그인 버튼 클릭 시
 function saveInfo() {
     const userId = document.getElementById('user-id').value.trim();
     const userCamp = document.getElementById('user-camp').value;
 
     if (!userId) { myAlert("아이디를 입력해주세요."); return; }
 
-    // 관리자 아이디 체크
     if (userId === 'ryanl82') {
         document.getElementById('setup-view').style.display = 'none';
         document.getElementById('admin-login-view').style.display = 'block';
@@ -53,9 +50,14 @@ function saveInfo() {
             localStorage.setItem('ryanl_camp', userCamp);
             showMain(userId, userCamp);
         } else {
-            // 미승인 시 신청 팝업 띄움
-            document.getElementById('custom-alert-overlay').style.display = 'flex';
-            document.getElementById('req-id').value = userId;
+            db.ref("승인거절방/" + userId).once('value', (rejectSnap) => {
+                const rejectData = rejectSnap.val();
+                if (rejectData) {
+                    myAlert("❌ 승인이 반려되었습니다.\n\n사유: " + rejectData.reason + "\n\n정보를 수정하여 다시 신청해주세요!");
+                }
+                document.getElementById('custom-alert-overlay').style.display = 'flex';
+                document.getElementById('req-id').value = userId;
+            });
         }
     });
 }
