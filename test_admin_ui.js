@@ -1,4 +1,5 @@
-function myConfirm(message, onConfirm, color) {
+function myConfirm(message, onConfirm, okColor) {
+    if (!okColor) okColor = "#ff8c00";
     const modal = document.createElement('div');
     modal.style = "position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);display:flex;align-items:center;justify-content:center;z-index:999999;";
 
@@ -14,7 +15,7 @@ function myConfirm(message, onConfirm, color) {
 
     const okBtn = document.createElement('button');
     okBtn.innerText = "확인";
-    okBtn.style = "width:50%;padding:12px;background:" + color + ";color:#fff;border:none;border-radius:10px;font-weight:900;cursor:pointer;";
+    okBtn.style = "width:50%;padding:12px;background:" + okColor + ";color:#fff;border:none;border-radius:10px;font-weight:900;cursor:pointer;";
 
     const cancelBtn = document.createElement('button');
     cancelBtn.innerText = "취소";
@@ -56,37 +57,85 @@ function checkAdminPw() {
 
 function loadApprovalRequests() {
     const listContent = document.getElementById('admin-list-content');
-    listContent.innerHTML = '<div style="color:white; padding:20px;">데이터 확인 중...</div>';
+    listContent.innerHTML = `
+        <div id="pending-section"></div>
+        <div id="approved-section" style="margin-top:20px;"></div>
+    `;
 
     db.ref("승인대기방").on('value', (snapshot) => {
-        listContent.innerHTML = '';
+        const pendingSec = document.getElementById('pending-section');
+        if (!pendingSec) return;
+        
+        pendingSec.innerHTML = '<div style="color:#ff8c00; font-weight:bold; font-size:16px; margin-bottom:10px; text-align:left;">⏳ 대기 중인 신청건</div>';
         const data = snapshot.val();
 
         if (!data) {
-            listContent.innerHTML = '<div style="color:#ccc; padding:20px;">대기 중인 신청건이 없습니다.</div>';
-            return;
+            pendingSec.innerHTML += '<div style="color:#ccc; padding:10px; text-align:center;">대기 중인 신청건이 없습니다.</div>';
+        } else {
+            Object.keys(data).forEach(key => {
+                const request = data[key];
+                const card = document.createElement('div');
+                card.style.cssText = "background:rgba(255,255,255,0.1); border-radius:12px; padding:15px; margin-bottom:12px; text-align:left; border-left:5px solid #ff8c00;";
+                
+                card.innerHTML = `
+                    <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:8px;">
+                        <div style="color:#ff8c00; font-weight:900; font-size:16px;">👤 ID: ${request.id}</div>
+                        <div style="background:#ff8c00; color:white; font-size:10px; padding:2px 6px; border-radius:4px;">대기중</div>
+                    </div>
+                    <div style="color:#eee; font-size:14px; margin-bottom:4px;"><b>성함:</b> ${request.name}</div>
+                    <div style="color:#eee; font-size:14px; margin-bottom:4px;"><b>업체:</b> ${request.company}</div>
+                    <div style="color:#aaa; font-size:12px;"><b>캠프:</b> ${request.camp}</div>
+                    <div style="display:flex; gap:8px; margin-top:12px;">
+                        <button onclick="approveUser('${request.id}', '${request.name}', '${request.company}', '${request.camp}')" style="flex:1.2; padding:12px; background:#2ecc71; color:white; border:none; border-radius:8px; font-weight:900; cursor:pointer;">최종 승인</button>
+                        <button onclick="rejectUser('${request.id}')" style="flex:0.8; padding:12px; background:#e74c3c; color:white; border:none; border-radius:8px; font-weight:900; cursor:pointer;">거절</button>
+                    </div>
+                `;
+                pendingSec.appendChild(card);
+            });
         }
+    });
 
-        Object.keys(data).forEach(key => {
-            const request = data[key];
-            const card = document.createElement('div');
-            card.style.cssText = "background:rgba(255,255,255,0.1); border-radius:12px; padding:15px; margin-bottom:12px; text-align:left; border-left:5px solid #ff8c00;";
-            
-            card.innerHTML = `
-                <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:8px;">
-                    <div style="color:#ff8c00; font-weight:900; font-size:16px;">👤 ID: ${request.id}</div>
-                    <div style="background:#ff8c00; color:white; font-size:10px; padding:2px 6px; border-radius:4px;">대기중</div>
-                </div>
-                <div style="color:#eee; font-size:14px; margin-bottom:4px;"><b>성함:</b> ${request.name}</div>
-                <div style="color:#eee; font-size:14px; margin-bottom:4px;"><b>업체:</b> ${request.company}</div>
-                <div style="color:#aaa; font-size:12px;"><b>캠프:</b> ${request.camp}</div>
-                <div style="display:flex; gap:8px; margin-top:12px;">
-                    <button onclick="approveUser('${request.id}', '${request.name}', '${request.company}', '${request.camp}')" style="flex:1.2; padding:12px; background:#2ecc71; color:white; border:none; border-radius:8px; font-weight:900; cursor:pointer;">최종 승인</button>
-                    <button onclick="rejectUser('${request.id}')" style="flex:0.8; padding:12px; background:#e74c3c; color:white; border:none; border-radius:8px; font-weight:900; cursor:pointer;">거절</button>
-                </div>
-            `;
-            listContent.appendChild(card);
-        });
+    db.ref("users").on('value', (snapshot) => {
+        const appSec = document.getElementById('approved-section');
+        if (!appSec) return;
+        
+        appSec.innerHTML = '<div style="color:#2ecc71; font-weight:bold; font-size:16px; margin-bottom:10px; text-align:left; border-top:1px dashed rgba(255,255,255,0.2); padding-top:15px;">✅ 업체별 승인 완료 명단</div>';
+        const data = snapshot.val();
+
+        if (!data) {
+            appSec.innerHTML += '<div style="color:#ccc; padding:10px; text-align:center;">등록된 기사님이 없습니다.</div>';
+        } else {
+            const grouped = {};
+            Object.keys(data).forEach(key => {
+                const user = data[key];
+                if (user.approved) {
+                    const comp = user.company || '기타';
+                    if (!grouped[comp]) grouped[comp] = [];
+                    grouped[comp].push(user);
+                }
+            });
+
+            if (Object.keys(grouped).length === 0) {
+                appSec.innerHTML += '<div style="color:#ccc; padding:10px; text-align:center;">등록된 기사님이 없습니다.</div>';
+                return;
+            }
+
+            for (const comp in grouped) {
+                const compDiv = document.createElement('div');
+                compDiv.style.cssText = "background:rgba(255,255,255,0.05); border-radius:8px; padding:12px; margin-bottom:10px; text-align:left;";
+                compDiv.innerHTML = `<div style="color:#f1c40f; font-weight:bold; font-size:15px; margin-bottom:10px;">🏢 ${comp} <span style="font-size:12px; color:#aaa;">(${grouped[comp].length}명)</span></div>`;
+                
+                grouped[comp].forEach(u => {
+                    compDiv.innerHTML += `
+                        <div style="display:flex; justify-content:space-between; align-items:center; color:#eee; font-size:13px; padding:6px 0; border-bottom:1px solid rgba(255,255,255,0.05);">
+                            <div><strong style="color:white;">${u.name}</strong> <span style="color:#aaa;">(${u.id})</span></div>
+                            <div style="color:#aaa; font-size:11px;">${u.camp}</div>
+                        </div>
+                    `;
+                });
+                appSec.appendChild(compDiv);
+            }
+        }
     });
 }
 
