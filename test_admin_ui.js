@@ -1,4 +1,4 @@
-let globalUsersData = {}; // 명단 데이터를 기억해두는 변수!
+let globalUsersData = {}; 
 
 function myConfirm(message, onConfirm, okColor) {
     if (!okColor) okColor = "#ff8c00";
@@ -112,7 +112,6 @@ function loadApprovalRequests() {
         <div id="feedback-section" style="margin-top:20px;"></div>
     `;
 
-    // 📢 1. 공지사항 불러오기
     db.ref("공지사항").once('value', snap => {
         const val = snap.val();
         if(val && val.text) document.getElementById('admin-notice-input').value = val.text;
@@ -153,8 +152,8 @@ function loadApprovalRequests() {
     });
 
     db.ref("users").on('value', (snapshot) => {
-        globalUsersData = snapshot.val() || {}; // 전역 변수에 저장!
-        renderApprovedList(); // 화면 그리기!
+        globalUsersData = snapshot.val() || {}; 
+        renderApprovedList(); 
     });
 
     db.ref("피드백방").on('value', (snapshot) => {
@@ -182,7 +181,6 @@ function loadApprovalRequests() {
     });
 }
 
-// 🔍 2. 검색 기능 연동해서 명단 그리기
 function renderApprovedList() {
     const appSec = document.getElementById('approved-section');
     if (!appSec) return;
@@ -198,11 +196,16 @@ function renderApprovedList() {
     Object.keys(globalUsersData).forEach(key => {
         const user = globalUsersData[key];
         if (user.approved) {
-            const comp = user.company || '기타';
-            const name = user.name || '';
+            // 숫자가 들어와도 절대 파업하지 않도록 String()으로 꽁꽁 묶어줬습니다!
+            const comp = String(user.company || '기타');
+            const name = String(user.name || '');
+            const uid = String(user.id || ''); 
             
-            // 검색어랑 일치하는지 확인!
-            if (comp.toLowerCase().includes(keyword) || name.toLowerCase().includes(keyword)) {
+            // 이름, 업체명, 아이디 중 하나라도 일치하면 검색 완료!
+            if (comp.toLowerCase().includes(keyword) || 
+                name.toLowerCase().includes(keyword) || 
+                uid.toLowerCase().includes(keyword)) {
+                
                 if (!grouped[comp]) grouped[comp] = [];
                 grouped[comp].push(user);
                 count++;
@@ -232,7 +235,6 @@ function renderApprovedList() {
     }
 }
 
-// 📢 공지사항 저장 함수
 function saveNotice() {
     const txt = document.getElementById('admin-notice-input').value.trim();
     db.ref("공지사항").set({ text: txt })
@@ -243,13 +245,11 @@ function saveNotice() {
     .catch(() => myAlert("오류가 발생했습니다."));
 }
 
-// 📥 엑셀 다운로드 함수
 function downloadExcel() {
     if(Object.keys(globalUsersData).length === 0) {
         myAlert("다운로드할 데이터가 없습니다."); return;
     }
     
-    // 엑셀에서 한글 안 깨지게 하는 마법의 코드 (\uFEFF)
     let csv = '\uFEFF'; 
     csv += "아이디,성함,업체명,캠프,가입일시\n";
     
