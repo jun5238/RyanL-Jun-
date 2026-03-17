@@ -9,14 +9,14 @@
     <link rel="apple-touch-icon" href="icon.jpg">
     <link rel="icon" sizes="192x192" href="icon.jpg">
 
-    <link rel="stylesheet" href="test_style.css?v=0317_test">
+    <link rel="stylesheet" href="test_style.css?v=0318_test">
 
     <script src="security_protocol.js"></script>
     <script src="auth_gate_v1.js"></script>
     <script src="vip_list.js?v=2"></script>
-    <script src="test_core.js?v=0317_test"></script> 
+    <script src="test_core.js?v=0318_test"></script> 
     <script src="firebase_node_check.js"></script>
-    <script src="test_admin_ui.js?v=0318"></script>
+    <script src="test_admin_ui.js?v=0318_v2"></script>
 
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
@@ -186,7 +186,9 @@
             <div style="text-align: center; border-bottom: 2px dashed rgba(255,255,255,0.3); padding-bottom: 10px; margin-bottom: 15px;">
                 <h3 style="color:var(--orange); margin:0;">📊 업체별 기사 명단</h3>
             </div>
-            <div id="admin-list-content" style="max-height: 400px; overflow-y: auto;"></div>
+            
+            <div id="admin-list-content"></div>
+            
             <button class="btn-change" onclick="closeAdmin()" style="margin-top: 20px;">로그인 화면으로</button>
         </div>
 
