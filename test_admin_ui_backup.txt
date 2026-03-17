@@ -107,6 +107,7 @@ function loadApprovalRequests() {
     listContent.innerHTML = `
         <div id="pending-section"></div>
         <div id="approved-section" style="margin-top:20px;"></div>
+        <div id="feedback-section" style="margin-top:20px;"></div>
     `;
 
     db.ref("승인대기방").on('value', (snapshot) => {
@@ -184,6 +185,30 @@ function loadApprovalRequests() {
             }
         }
     });
+
+    db.ref("피드백방").on('value', (snapshot) => {
+        const feedSec = document.getElementById('feedback-section');
+        if (!feedSec) return;
+
+        feedSec.innerHTML = '<div style="color:#9b59b6; font-weight:bold; font-size:16px; margin-bottom:10px; text-align:left; border-top:1px dashed rgba(255,255,255,0.2); padding-top:15px;">💡 도착한 피드백</div>';
+        const data = snapshot.val();
+
+        if (!data) {
+            feedSec.innerHTML += '<div style="color:#ccc; padding:10px; text-align:center;">도착한 피드백이 없습니다.</div>';
+        } else {
+            Object.keys(data).forEach(key => {
+                const fb = data[key];
+                const card = document.createElement('div');
+                card.style.cssText = "background:rgba(255,255,255,0.05); border-radius:8px; padding:15px; margin-bottom:10px; text-align:left; border-left:5px solid #9b59b6;";
+                card.innerHTML = `
+                    <div style="color:#f1c40f; font-size:12px; margin-bottom:5px; font-weight:bold;">보낸 기사님: ${fb.id}</div>
+                    <div style="color:#eee; font-size:14px; line-height:1.5; margin-bottom:10px;">${fb.text}</div>
+                    <button onclick="deleteFeedback('${key}')" style="padding:8px 15px; background:#e74c3c; color:white; border:none; border-radius:6px; font-size:12px; font-weight:bold; cursor:pointer;">확인 및 삭제</button>
+                `;
+                feedSec.appendChild(card);
+            });
+        }
+    });
 }
 
 function approveUser(id, name, company, camp) {
@@ -209,6 +234,14 @@ function rejectUser(id) {
         .then(() => myAlert("거절 처리 및 사유가 전송되었습니다!"))
         .catch(() => myAlert("처리 중 오류가 발생했습니다."));
     });
+}
+
+function deleteFeedback(key) {
+    myConfirm("이 피드백을 삭제하시겠습니까?", () => {
+        db.ref("피드백방/" + key).remove()
+        .then(() => myAlert("피드백이 삭제되었습니다."))
+        .catch(() => myAlert("삭제 실패"));
+    }, "#e74c3c");
 }
 
 function cancelAdmin() { showSetup(); }
