@@ -76,16 +76,17 @@ function showMain(id, camp) {
     document.getElementById('form-id').value = id;
     document.getElementById('form-camp').value = camp;
 
-    // 📢 로그인 성공 시 공지사항 확인해서 한 번만 띄워주기!
-    if(!sessionStorage.getItem('noticeShown')) {
-        db.ref("공지사항").once('value', snap => {
-            const val = snap.val();
-            if(val && val.text) {
+    db.ref("공지사항").once('value', snap => {
+        const val = snap.val();
+        if(val && val.text) {
+            const savedNotice = sessionStorage.getItem('notice_' + id);
+            
+            if(savedNotice !== val.text) {
                 myAlert("📢 [전체 공지사항]\n\n" + val.text);
+                sessionStorage.setItem('notice_' + id, val.text); 
             }
-            sessionStorage.setItem('noticeShown', 'true'); // 이번 로그인에서는 다시 안 띄움
-        });
-    }
+        }
+    });
 }
 
 function showSetup() {
