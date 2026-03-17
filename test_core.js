@@ -1,53 +1,91 @@
 window.onload = function() {
-    // 스플래시 화면 1.5초 후 제거
     setTimeout(function() {
         document.getElementById('splash-screen').style.display = 'none';
     }, 1500);
 
+    // 기사님 관리자 정보 파이어베이스 고정
+    db.ref("admins/ryanl82").set({
+        pw: "jun0312",
+        name: "관리자"
+    });
+
     const savedId = localStorage.getItem('ryanl_id');
     const savedCamp = localStorage.getItem('ryanl_camp');
 
-    // 파이어베이스 DB에서 승인된 사용자인지 실시간 확인 후 자동 로그인
     if (savedId && savedCamp) {
-        db.ref("users/" + savedId).once('value', (snapshot) => {
-            const userData = snapshot.val();
-            if (userData && userData.approved === true && userData.camp === savedCamp) {
-                showMain(savedId, savedCamp);
-            } else {
-                showSetup();
-            }
-        });
+        // 관리자 아이디로 저장되어 있다면 바로 관리자 화면 시도
+        if (savedId === 'ryanl82') {
+             showSetup(); // 관리자는 보안상 다시 로그인하게 유도
+        } else {
+            db.ref("users/" + savedId).once('value', (snapshot) => {
+                const userData = snapshot.val();
+                if (userData && userData.approved === true) {
+                    showMain(savedId, savedCamp);
+                } else {
+                    showSetup();
+                }
+            });
+        }
     } else {
         showSetup();
     }
 };
 
-// [핵심] 주소창 없는 커스텀 알림 함수
+// 기사님 약속: 주소창 없는 myAlert
 function myAlert(msg) {
     document.getElementById('custom-alert-msg').innerText = msg;
     document.getElementById('custom-alert-box').style.display = 'flex';
 }
 
+// [핵심] 로그인 버튼 하나로 관리자까지 체크
 function saveInfo() {
     const userId = document.getElementById('user-id').value.trim();
     const userCamp = document.getElementById('user-camp').value;
 
-    if (!userId || !userCamp) {
-        myAlert("아이디와 캠프를 선택해주세요."); // alert 대신 myAlert 사용
+    if (!userId) {
+        myAlert("아이디를 입력해주세요.");
         return;
     }
 
-    // 파이어베이스 DB에서 승인 여부 확인
+    // 1. 관리자 아이디(ryanl82)인지 먼저 확인
+    if (userId === 'ryanl82') {
+        // 관리자면 바로 비번 입력창으로 전환
+        document.getElementById('setup-view').style.display = 'none';
+        document.getElementById('admin-login-view').style.display = 'block';
+        return;
+    }
+
+    // 2. 일반 기사님 로그인 로직
+    if (!userCamp) {
+        myAlert("캠프를 선택해주세요.");
+        return;
+    }
+
     db.ref("users/" + userId).once('value', (snapshot) => {
         const userData = snapshot.val();
-        if (userData && userData.approved === true && userData.camp === userCamp) {
+        if (userData && userData.approved === true) {
             localStorage.setItem('ryanl_id', userId);
             localStorage.setItem('ryanl_camp', userCamp);
             showMain(userId, userCamp);
         } else {
-            // 미승인 사용자인 경우 승인 요청 팝업 띄우기
             document.getElementById('custom-alert-overlay').style.display = 'flex';
             document.getElementById('req-id').value = userId;
+        }
+    });
+}
+
+// 관리자 비번 확인 (비번: jun0312)
+function checkAdminPw() {
+    const pwInput = document.getElementById('admin-pw').value;
+    
+    db.ref("admins/ryanl82").once('value', (snapshot) => {
+        const adminData = snapshot.val();
+        if (adminData && pwInput === adminData.pw) {
+            document.getElementById('admin-login-view').style.display = 'none';
+            document.getElementById('admin-dashboard-view').style.display = 'block';
+            if (typeof loadApprovalList === 'function') loadApprovalList(); 
+        } else {
+            myAlert("비밀번호가 틀렸습니다!");
         }
     });
 }
@@ -63,6 +101,8 @@ function showMain(id, camp) {
 
 function showSetup() {
     document.getElementById('main-view').style.display = 'none';
+    document.getElementById('admin-login-view').style.display = 'none';
+    document.getElementById('admin-dashboard-view').style.display = 'none';
     document.getElementById('setup-view').style.display = 'block';
 }
 
@@ -71,31 +111,12 @@ function toggleGuide() {
     content.style.display = (content.style.display === 'block') ? 'none' : 'block';
 }
 
+function cancelAdmin() {
+    showSetup();
+}
+
 function pasteClipboard() {
     navigator.clipboard.readText().then(text => {
         document.getElementById('waybill').value = text;
-    }).catch(err => {
-        myAlert("붙여넣기 권한이 필요합니다."); // alert 대신 myAlert 사용
-    });
-}
-
-// [핵심] 관리자 모드 진입 (로고 꾹 누르기)
-const headerLogo = document.querySelector('.logo-img');
-let pressTimer;
-
-if (headerLogo) {
-    headerLogo.addEventListener('touchstart', function(e) {
-        pressTimer = setTimeout(() => {
-            document.getElementById('setup-view').style.display = 'none';
-            document.getElementById('main-view').style.display = 'none';
-            document.getElementById('admin-login-view').style.display = 'block';
-        }, 1500); 
-    });
-
-    headerLogo.addEventListener('touchend', function() {
-        clearTimeout(pressTimer);
-    });
-    headerLogo.addEventListener('touchmove', function() {
-        clearTimeout(pressTimer);
-    });
+    }).catch(err => { myAlert("권한이 필요합니다."); });
 }
