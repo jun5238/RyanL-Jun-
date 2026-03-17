@@ -93,48 +93,40 @@
     </div>
 
     <div id="custom-alert-overlay" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.6); z-index:100000; justify-content:center; align-items:center;">
-        <div style="background:#fff; width:85%; max-width:320px; border-radius:15px; padding:25px 20px; text-align:center; box-shadow:0 10px 25px rgba(0,0,0,0.2);">
+        <div style="background:#fff; width:85%; max-width:320px; border-radius:15px; padding:25px 20px; text-align:center;">
             <div style="font-size:35px; margin-bottom:10px;">🚨</div>
             <div style="font-size:18px; font-weight:900; color:#152b52; margin-bottom:15px;">미승인 아이디입니다</div>
             <div style="font-size:14px; color:#444; line-height:1.6; text-align:left; background:#f4f4f4; padding:15px; border-radius:10px; margin-bottom:20px;">
-                관리자에게 승인을 요청하세요.<br><br>
-                <input type="text" id="req-id" placeholder="아이디 (예: RyanL)" style="width:100%; padding:10px; margin-bottom:10px; border:1px solid #ccc; border-radius:5px; box-sizing:border-box;">
-                <input type="text" id="req-name" placeholder="성함 (예: 홍길동)" style="width:100%; padding:10px; margin-bottom:10px; border:1px solid #ccc; border-radius:5px; box-sizing:border-box;">
-                <input type="text" id="req-company" placeholder="업체명 (예: 라이언엘)" style="width:100%; padding:10px; margin-bottom:10px; border:1px solid #ccc; border-radius:5px; box-sizing:border-box;">
-                <span style="color:#ff3b30; font-size:12px; font-weight:bold;">※ 허위 정보로 신청 시 승인이 거절될 수 있습니다.</span>
+                <input type="text" id="req-id" placeholder="아이디" style="width:100%; padding:10px; margin-bottom:10px; border:1px solid #ccc; border-radius:5px; box-sizing:border-box;">
+                <input type="text" id="req-name" placeholder="성함" style="width:100%; padding:10px; margin-bottom:10px; border:1px solid #ccc; border-radius:5px; box-sizing:border-box;">
+                <input type="text" id="req-company" placeholder="업체명" style="width:100%; padding:10px; margin-bottom:10px; border:1px solid #ccc; border-radius:5px; box-sizing:border-box;">
             </div>
             <div style="display:flex; gap:10px;">
-                <button onclick="document.getElementById('custom-alert-overlay').style.display='none'" style="width:40%; padding:14px; background:#ccc; color:#333; border:none; border-radius:10px; font-size:15px; font-weight:bold; cursor:pointer;">취소</button>
-                <button onclick="sendApprovalRequest()" style="width:60%; padding:14px; background:#ff8c00; color:#fff; border:none; border-radius:10px; font-size:15px; font-weight:900; cursor:pointer;">승인 요청하기</button>
+                <button onclick="document.getElementById('custom-alert-overlay').style.display='none'" style="width:40%; padding:14px; background:#ccc; color:#333; border:none; border-radius:10px; font-weight:bold;">취소</button>
+                <button onclick="sendApprovalRequest()" style="width:60%; padding:14px; background:#ff8c00; color:#fff; border:none; border-radius:10px; font-weight:900;">승인 요청</button>
             </div>
         </div>
     </div>
 
     <div id="approval-success-overlay" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.6); z-index:100000; justify-content:center; align-items:center;">
-        <div style="background:#fff; width:80%; max-width:300px; border-radius:15px; padding:30px 20px; text-align:center; box-shadow:0 10px 25px rgba(0,0,0,0.2);">
+        <div style="background:#fff; width:80%; max-width:300px; border-radius:15px; padding:30px 20px; text-align:center;">
             <div style="font-size:45px; margin-bottom:15px;">✅</div>
             <div style="font-size:20px; font-weight:900; color:#152b52; margin-bottom:10px;">신청 완료!</div>
-            <div style="font-size:14px; color:#555; margin-bottom:20px; line-height:1.5;">승인 요청이 접수되었습니다.<br>관리자 승인 후 이용 가능합니다.</div>
-            <button onclick="document.getElementById('approval-success-overlay').style.display='none'" style="width:100%; padding:14px; background:#ff8c00; color:#fff; border:none; border-radius:10px; font-size:16px; font-weight:900; cursor:pointer;">확인</button>
+            <button onclick="document.getElementById('approval-success-overlay').style.display='none'" style="width:100%; padding:14px; background:#ff8c00; color:#fff; border:none; border-radius:10px; font-weight:900;">확인</button>
         </div>
     </div>
 
     <div class="wrapper">
         <div class="header" style="position: relative;">
-            <div onclick="window.location.reload(true);" style="position: absolute; top: 10px; right: 10px; padding: 6px 12px; background-color: #ff8c00; color: white; border-radius: 15px; font-weight: 900; font-size: 13px; box-shadow: 0 3px 6px rgba(0,0,0,0.15); cursor: pointer; z-index: 10;">
-                🔄 새로고침
-            </div>
+            <div onclick="window.location.reload(true);" style="position: absolute; top: 10px; right: 10px; padding: 6px 12px; background-color: #ff8c00; color: white; border-radius: 15px; font-weight: 900; font-size: 13px; z-index: 10; cursor:pointer;">🔄 새로고침</div>
             
-            <div style="position: relative; display: inline-block; -webkit-touch-callout: none; user-select: none;">
-                <img src="mlogo.jpg" class="logo-img" oncontextmenu="return false;" style="-webkit-touch-callout: none; pointer-events: auto;">
-                <div id="admin-badge" style="display:none; position:absolute; top:-5px; right:-5px; background:red; color:white; font-size:10px; font-weight:bold; padding:2px 6px; border-radius:10px; box-shadow:0 2px 4px rgba(0,0,0,0.3); z-index:11;">0</div>
+            <div style="position: relative; display: inline-block;">
+                <img src="mlogo.jpg" class="logo-img" oncontextmenu="return false;">
+                <div id="admin-badge" style="display:none; position:absolute; top:-5px; right:-5px; background:red; color:white; font-size:10px; font-weight:bold; padding:2px 6px; border-radius:10px; z-index:11;">0</div>
             </div>
 
             <div class="rocket-title">🚀 채번 요청 1초컷</div>
-            <div class="sub-tag">
-                천안1캠프 전용 스마트 시스템 
-                <span style="background:#e74c3c; color:white; font-size:11px; font-weight:900; padding:3px 6px; border-radius:5px; vertical-align:middle; margin-left:5px; box-shadow:0 2px 4px rgba(0,0,0,0.2);">테스트 버전</span>
-            </div>
+            <div class="sub-tag">천안1캠프 전용 스마트 시스템 <span style="background:#e74c3c; color:white; font-size:11px; font-weight:900; padding:3px 6px; border-radius:5px;">테스트 버전</span></div>
         </div>
         
         <div id="setup-view">
@@ -148,45 +140,47 @@
             </select>
             
             <button class="btn-submit" onclick="saveInfo()" style="margin-top: 20px;">로그인</button>
+
+            <button class="btn-guide" onclick="toggleGuide()" style="margin-top:15px;">❓ 설치 방법 및 오류 해결 가이드</button>
+            <div id="guide-content" style="display:none;">
+                <div class="guide-box">
+                    <span class="guide-title">📱 바탕화면 바로가기 설치</span><br>
+                    • 갤럭시: 점3개 -> 홈 화면에 추가<br>
+                    • 아이폰: 공유 -> 홈 화면에 추가
+                </div>
+            </div>
         </div>
 
-        <div id="admin-login-view" style="display:none; width: 92%; max-width: 380px; text-align: center;">
-            <label class="setup-label" style="color:var(--orange);">🔒 관리자 보안 접속</label>
-            <input type="password" id="admin-pw" placeholder="비밀번호를 입력하세요">
-            <button class="btn-submit" onclick="checkAdminPw()" style="margin-top: 20px;">접속하기</button>
-            <button class="btn-change" onclick="cancelAdmin()" style="margin-top: 10px; background:#f0f0f0;">돌아가기</button>
+        <div id="admin-login-view" style="display:none; text-align: center;">
+            <label class="setup-label">🔒 관리자 보안 접속</label>
+            <input type="password" id="admin-pw">
+            <button class="btn-submit" onclick="checkAdminPw()">접속하기</button>
         </div>
 
         <div id="admin-dashboard-view" style="display:none;" class="main-card">
-            <div id="admin-list-content" style="max-height: 400px; overflow-y: auto;"></div>
-            <button class="btn-change" onclick="closeAdmin()" style="margin-top: 20px;">로그인 화면으로</button>
+            <div id="admin-list-content"></div>
+            <button class="btn-change" onclick="closeAdmin()">나가기</button>
         </div>
 
         <div id="main-view" style="display:none;" class="main-card">
             <div class="info-box">
-                <span class="user-info">현재 계정: <strong><span id="display-id"></span> <span id="display-camp"></span></strong></span>
-                <button class="btn-change" onclick="showSetup()">정보 변경</button>
+                <span class="user-info">현재 계정: <strong><span id="display-id"></span></strong></span>
+                <button class="btn-change" onclick="showSetup()">변경</button>
             </div>
-            
-            <form action="https://docs.google.com/forms/d/e/1FAIpQLSeIMR-wkYKFwnldd2qKKyUlaxLN85tu7OBX0HsLt7fzezZKWg/formResponse" method="POST" target="hidden_iframe" onsubmit="window.isSubmitted=true; document.getElementById('submitBtn').innerText='전송 중... ⏳';">
+            <form action="https://docs.google.com/forms/d/e/1FAIpQLSeIMR-wkYKFwnldd2qKKyUlaxLN85tu7OBX0HsLt7fzezZKWg/formResponse" method="POST" target="hidden_iframe" onsubmit="window.isSubmitted=true;">
                 <input type="hidden" name="entry.1315166815" id="form-id">
                 <input type="hidden" name="entry.1573740217" id="form-camp">
-                <input type="hidden" name="entry.697011792" value="채번 요청">
-                
-                <div class="label-area">📦<span>운송장 번호</span></div>
-                <div class="input-group">
-                    <input type="text" name="entry.359305263" id="waybill" placeholder="우측 버튼을 누르세요 👉" required>
-                    <button type="button" class="btn-paste" onclick="pasteClipboard()">👆 붙여넣기 클릭</button>
-                </div>
-                <div class="label-area">🔢<span>채번 수량</span></div>
-                <input type="number" name="entry.1437474928" id="quantity" placeholder="숫자만 입력" required>
+                <input type="text" name="entry.359305263" id="waybill" placeholder="송장번호" required>
+                <input type="number" name="entry.1437474928" id="quantity" placeholder="수량" required>
                 <button type="submit" class="btn-submit" id="submitBtn">바로 제출하기</button>
             </form>
-            <iframe name="hidden_iframe" id="hidden_iframe" style="display:none;" onload="if(window.isSubmitted){ myAlert('전송이 성공적으로 완료되었습니다!'); document.getElementById('waybill').value=''; document.getElementById('quantity').value=''; document.getElementById('submitBtn').innerText='바로 제출하기'; window.isSubmitted=false; }"></iframe>
+            <iframe name="hidden_iframe" style="display:none;" onload="if(window.isSubmitted){ myAlert('전송 완료!'); window.isSubmitted=false; }"></iframe>
         </div>
 
         <div class="footer">
-            © 2026 RyanL Logistics.
+            <span class="contact-info">버그 및 오류 문의 : cndrone@naver.com</span><br>
+            © 2026 RyanL Logistics. <br>
+            Created by LJH <span style="font-size:10px; color:#ddd;">이준희</span>
         </div>
     </div>
 </body>
