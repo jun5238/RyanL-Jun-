@@ -1,0 +1,15 @@
+{
+  "name": "라이언엘 테스트",  // 이름 뒤에 '테스트' 추가
+  "short_name": "RyanL_T",   // 짧은 이름도 구분되게 변경
+  "start_url": "test_index.html", // ⭐ 이게 제일 중요! 테스트 페이지로 연결
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#152b52",
+  "icons": [
+    {
+      "src": "icon.jpg",
+      "sizes": "192x192",
+      "type": "image/jpeg"
+    }
+  ]
+}
