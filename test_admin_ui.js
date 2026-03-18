@@ -227,7 +227,10 @@ function renderApprovedList() {
         grouped[comp].forEach(u => {
             compDiv.innerHTML += `
                 <div style="display:flex; justify-content:space-between; align-items:center; color:#eee; font-size:13px; padding:8px 0; border-bottom:1px solid rgba(255,255,255,0.05);">
-                    <div><strong style="color:white; font-size:14px;">${u.name}</strong> <span style="color:#aaa;">(${u.id})</span></div>
+                    <div style="display:flex; flex-direction:column; gap:5px;">
+                        <div><strong style="color:white; font-size:14px;">${u.name}</strong> <span style="color:#aaa;">(${u.id})</span></div>
+                        <div style="color:#3498db; font-size:12px; font-weight:bold;">📞 ${u.phone || '미입력'}</div>
+                    </div>
                     <div style="display:flex; align-items:center; gap:10px;">
                         <div style="color:#aaa; font-size:11px;">${u.camp}</div>
                         <button onclick="editUserInfo('${u.id}', '${u.name}', '${u.company}', '${u.camp}', '${u.phone || ''}')" style="padding:5px 10px; background:#3498db; color:white; border:none; border-radius:5px; font-size:11px; font-weight:bold; cursor:pointer; box-shadow:0 2px 4px rgba(0,0,0,0.2);">✏️ 수정</button>
@@ -255,7 +258,7 @@ function editUserInfo(id, oldName, oldComp, oldCamp, oldPhone) {
         <label style="font-size:12px; font-weight:bold; color:#555; display:block; margin-bottom:5px;">📞 연락처</label>
         <input type="text" id="edit-phone" value="${oldPhone === 'undefined' ? '' : oldPhone}" style="width:100%;padding:12px;margin-bottom:15px;border:1px solid #ccc;border-radius:8px;box-sizing:border-box;font-size:14px;font-family:inherit;">
         
-        <label style="font-size:12px; font-weight:bold; color:#555; display:block; margin-bottom:5px;">🏢 업체명 <span style="color:#e74c3c;">(명단 그룹핑을 위해 띄어쓰기 주의!)</span></label>
+        <label style="font-size:12px; font-weight:bold; color:#555; display:block; margin-bottom:5px;">🏢 업체명</label>
         <input type="text" id="edit-comp" value="${oldComp}" style="width:100%;padding:12px;margin-bottom:15px;border:1px solid #ccc;border-radius:8px;box-sizing:border-box;font-size:14px;font-family:inherit;">
         
         <label style="font-size:12px; font-weight:bold; color:#555; display:block; margin-bottom:5px;">📍 소속 캠프</label>
