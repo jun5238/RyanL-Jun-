@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>라이언엘 채번 시스템</title>
+    <title>천안1캠프 채번시스템</title>
     
     <link rel="manifest" href="test_manifest.json">
     <link rel="apple-touch-icon" href="icon.jpg">
     <link rel="icon" sizes="192x192" href="icon.jpg">
 
-    <link rel="stylesheet" href="test_style.css?v=0318_test">
+    <link rel="stylesheet" href="test_style.css?v=0319_final">
 
     <style>
         body.dark-mode { background-color: #121212; color: #f1f1f1; }
@@ -28,9 +28,10 @@
     <script src="security_protocol.js"></script>
     <script src="auth_gate_v1.js"></script>
     <script src="vip_list.js?v=2"></script>
-    <script src="test_core.js?v=0318_v6"></script> 
+    
+    <script src="test_core.js?v=0319_final"></script> 
     <script src="firebase_node_check.js"></script>
-    <script src="test_admin_ui.js?v=0318_v4"></script>
+    <script src="test_admin_ui.js?v=0319_sms"></script>
 
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
@@ -187,6 +188,7 @@
             <div onclick="window.location.reload(true);" style="position: absolute; top: 10px; right: 10px; width: 90px; padding: 6px 0; text-align: center; background-color: #ff8c00; color: white; border-radius: 15px; font-weight: 900; font-size: 13px; box-shadow: 0 3px 6px rgba(0,0,0,0.15); cursor: pointer; z-index: 10;">
                 🔄 새로고침
             </div>
+            
             <div onclick="sendFeedbackPrompt()" style="position: absolute; top: 45px; right: 10px; width: 90px; padding: 6px 0; text-align: center; background-color: #9b59b6; color: white; border-radius: 15px; font-weight: 900; font-size: 13px; box-shadow: 0 3px 6px rgba(0,0,0,0.15); cursor: pointer; z-index: 10;">
                 💡 피드백
             </div>
@@ -197,9 +199,9 @@
             </div>
 
             <div class="rocket-title">🚀 채번 요청 1초컷</div>
+            
             <div class="sub-tag">
                 천안1캠프 전용 스마트 시스템 
-                <span style="background:#e74c3c; color:white; font-size:11px; font-weight:900; padding:3px 6px; border-radius:5px; vertical-align:middle; margin-left:5px; box-shadow:0 2px 4px rgba(0,0,0,0.2);">테스트 버전</span>
             </div>
         </div>
         <div id="setup-view">
