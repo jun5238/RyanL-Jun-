@@ -36,6 +36,16 @@
         }
         const db = firebase.database();
 
+        function formatPhoneNumber(input) {
+            let val = input.value.replace(/[^0-9]/g, '');
+            if (val.length > 3 && val.length <= 7) {
+                val = val.substring(0,3) + '-' + val.substring(3);
+            } else if (val.length > 7) {
+                val = val.substring(0,3) + '-' + val.substring(3,7) + '-' + val.substring(7,11);
+            }
+            input.value = val;
+        }
+
         function sendApprovalRequest() {
             var reqId = document.getElementById('req-id').value.trim();
             var reqCamp = document.getElementById('user-camp').value;
@@ -111,7 +121,7 @@
                 <input type="text" id="req-name" placeholder="성함 (예: 홍길동)" style="width:100%; padding:10px; margin-bottom:10px; border:1px solid #ccc; border-radius:5px; box-sizing:border-box;">
                 <input type="text" id="req-company" placeholder="업체명 (예: 라이언엘)" style="width:100%; padding:10px; margin-bottom:10px; border:1px solid #ccc; border-radius:5px; box-sizing:border-box;">
                 
-                <input type="tel" id="req-phone" placeholder="연락처 (예: 010-1234-5678)" style="width:100%; padding:10px; margin-bottom:10px; border:1px solid #ccc; border-radius:5px; box-sizing:border-box;">
+                <input type="tel" id="req-phone" oninput="formatPhoneNumber(this)" maxlength="13" placeholder="연락처 (예: 010-1234-5678)" style="width:100%; padding:10px; margin-bottom:10px; border:1px solid #ccc; border-radius:5px; box-sizing:border-box;">
                 <label style="display:flex; align-items:flex-start; gap:5px; font-size:11px; color:#555; margin-bottom:10px; text-align:left; line-height:1.4;">
                     <input type="checkbox" id="privacy-consent" style="margin-top:2px;">
                     <span>[필수] 시스템 이용 및 업무 연락을 위한 개인정보(연락처) 수집 및 이용에 동의합니다.</span>
