@@ -3,6 +3,11 @@ window.onload = function() {
         document.getElementById('splash-screen').style.display = 'none';
     }, 1500);
 
+    // 🌙 다크모드 기억 살려내기!
+    if(localStorage.getItem('ryanl_darkmode') === 'on') {
+        document.body.classList.add('dark-mode');
+    }
+
     const savedId = localStorage.getItem('ryanl_id');
     const savedCamp = localStorage.getItem('ryanl_camp');
 
@@ -23,6 +28,104 @@ window.onload = function() {
         showSetup();
     }
 };
+
+// 🌙 다크모드 껐다 켰다 하는 스위치!
+function toggleDarkMode() {
+    const isDark = document.body.classList.toggle('dark-mode');
+    localStorage.setItem('ryanl_darkmode', isDark ? 'on' : 'off');
+}
+
+// 🎵 성공하면 기분 좋은 띠링! 소리 나게 하는 마법 (Web Audio API)
+function playSuccessSound() {
+    try {
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        if (!AudioContext) return;
+        const ctx = new AudioContext();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.type = 'sine'; // 부드러운 소리
+        osc.frequency.setValueAtTime(800, ctx.currentTime); // 약간 높은 음에서
+        osc.frequency.exponentialRampToValueAtTime(1200, ctx.currentTime + 0.1); // 더 높은 음으로 슝!
+        gain.gain.setValueAtTime(0.5, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.3); // 소리 서서히 줄어들기
+        osc.start();
+        osc.stop(ctx.currentTime + 0.3);
+    } catch(e) {
+        // 소리 지원 안 하는 옛날 폰은 그냥 조용히 넘어가기!
+    }
+}
+
+// 📋 전송 찰떡 성공 시 3가지를 한 방에 처리하는 컨트롤 타워!
+function handleFormSuccess() {
+    window.isSubmitted = false;
+    
+    // 1. 소리 울리고!
+    playSuccessSound();
+    
+    const waybill = document.getElementById('waybill').value;
+    const qty = document.getElementById('quantity').value;
+    
+    // 2. 기록장에 쓱 적어두고!
+    saveHistory(waybill, qty);
+    
+    // 3. 예쁜 성공 알림창 띄우고 초기화!
+    document.getElementById('success-overlay').style.display = 'flex';
+    document.getElementById('waybill').value = '';
+    document.getElementById('quantity').value = '';
+    document.getElementById('submitBtn').innerText = '바로 제출하기';
+}
+
+// 📋 방금 보낸 거 폰에 기억(저장)하는 기능! (최근 20개까지만)
+function saveHistory(waybill, qty) {
+    if(!waybill) return;
+    const id = localStorage.getItem('ryanl_id') || 'unknown';
+    let history = JSON.parse(localStorage.getItem('ryanl_history_' + id) || '[]');
+    
+    history.unshift({ // 맨 위에 새 기록 꽂아넣기!
+        time: new Date().getTime(),
+        waybill: waybill,
+        qty: qty
+    });
+    
+    if(history.length > 20) history.pop(); // 20개 넘으면 제일 오래된 거 버리기!
+    localStorage.setItem('ryanl_history_' + id, JSON.stringify(history));
+}
+
+// 📋 내 기록 팝업창 예쁘게 띄워주는 기능!
+function showHistory() {
+    const id = localStorage.getItem('ryanl_id') || 'unknown';
+    let history = JSON.parse(localStorage.getItem('ryanl_history_' + id) || '[]');
+    let html = '<div style="font-size:18px;font-weight:900;margin-bottom:15px; color:#152b52;">📋 내 채번 기록 <span style="font-size:12px; color:#777;">(최근 20건)</span></div>';
+    
+    if(history.length === 0) {
+        html += '<div style="color:#777; font-size:14px; margin-bottom:20px; padding:20px; background:#f4f4f4; border-radius:10px;">아직 채번 요청 기록이 없습니다!</div>';
+    } else {
+        html += '<div style="max-height:250px; overflow-y:auto; margin-bottom:15px; text-align:left; padding-right:5px;">';
+        history.forEach(h => {
+            const d = new Date(h.time);
+            const timeStr = `${d.getMonth()+1}/${d.getDate()} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
+            html += `
+                <div class="history-item" style="background:#f9f9f9; padding:12px; border-radius:8px; margin-bottom:8px; border-left:4px solid #3498db; box-shadow:0 2px 4px rgba(0,0,0,0.05);">
+                    <div style="font-size:11px; color:#888; margin-bottom:4px;">⏱️ ${timeStr}</div>
+                    <div class="history-waybill" style="font-size:14px; font-weight:bold; color:#333;">📦 ${h.waybill} <span style="color:#e74c3c;">(${h.qty}개)</span></div>
+                </div>
+            `;
+        });
+        html += '</div>';
+    }
+    
+    html += '<button onclick="document.getElementById(\'history-overlay\').style.display=\'none\'" style="width:100%; padding:12px; background:#152b52; color:white; border:none; border-radius:10px; font-weight:bold; cursor:pointer;">닫기</button>';
+    
+    // 다크모드일 때 글자색 하얗게 바꿔주는 센스!
+    if(document.body.classList.contains('dark-mode')) {
+        html = html.replace('color:#152b52;', 'color:#fff;').replace('color:#333;', 'color:#fff;');
+    }
+    
+    document.getElementById('history-content').innerHTML = html;
+    document.getElementById('history-overlay').style.display = 'flex';
+}
 
 function myAlert(msg) {
     document.getElementById('custom-alert-msg').innerText = msg;
