@@ -135,7 +135,6 @@ function loadApprovalRequests() {
                 const card = document.createElement('div');
                 card.style.cssText = "background:rgba(255,255,255,0.1); border-radius:12px; padding:15px; margin-bottom:12px; text-align:left; border-left:5px solid #ff8c00;";
                 
-                // 번호 보이게 추가하고 승인 버튼에 번호 데이터 같이 넘기기!
                 card.innerHTML = `
                     <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:8px;">
                         <div style="color:#ff8c00; font-weight:900; font-size:16px;">👤 ID: ${request.id}</div>
@@ -247,7 +246,6 @@ function editUserInfo(id, oldName, oldComp, oldCamp, oldPhone) {
     const box = document.createElement('div');
     box.style = "background:#fff;width:85%;max-width:320px;border-radius:15px;padding:25px;text-align:left;box-shadow:0 10px 30px rgba(0,0,0,0.4);";
 
-    // 연락처 수정 칸 추가!
     box.innerHTML = `
         <div style="font-size:18px;font-weight:900;color:#152b52;margin-bottom:20px;text-align:center;">✏️ 기사님 정보 수정</div>
         
@@ -315,7 +313,6 @@ function downloadExcel() {
     }
     
     let csv = '\uFEFF'; 
-    // 연락처 칼럼 추가!
     csv += "아이디,성함,연락처,업체명,캠프,가입일시\n";
     
     Object.keys(globalUsersData).forEach(key => {
@@ -335,7 +332,6 @@ function downloadExcel() {
 
 function approveUser(id, name, company, camp, phone) {
     myConfirm(id + " 기사님을 승인하시겠습니까?", () => {
-        // 승인할 때 번호도 같이 유저 DB로 쏙!
         db.ref("users/" + id).set({
             id: id, name: name, company: company, camp: camp, phone: phone || '', approved: true, regDate: new Date().getTime()
         })
