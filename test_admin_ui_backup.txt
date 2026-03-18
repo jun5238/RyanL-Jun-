@@ -114,8 +114,10 @@ function loadApprovalRequests() {
 
     db.ref("공지사항").once('value', snap => {
         const val = snap.val();
-        if(val && val.text) document.getElementById('admin-notice-input').value = val.text;
-        else document.getElementById('admin-notice-input').value = '';
+        if(val && val.text) {
+            const noticeInput = document.getElementById('admin-notice-input');
+            if(noticeInput) noticeInput.value = val.text;
+        }
     });
 
     db.ref("승인대기방").on('value', (snapshot) => {
@@ -196,12 +198,10 @@ function renderApprovedList() {
     Object.keys(globalUsersData).forEach(key => {
         const user = globalUsersData[key];
         if (user.approved) {
-            // 숫자가 들어와도 절대 파업하지 않도록 String()으로 꽁꽁 묶어줬습니다!
             const comp = String(user.company || '기타');
             const name = String(user.name || '');
             const uid = String(user.id || ''); 
             
-            // 이름, 업체명, 아이디 중 하나라도 일치하면 검색 완료!
             if (comp.toLowerCase().includes(keyword) || 
                 name.toLowerCase().includes(keyword) || 
                 uid.toLowerCase().includes(keyword)) {
@@ -224,15 +224,73 @@ function renderApprovedList() {
         compDiv.innerHTML = `<div style="color:#f1c40f; font-weight:bold; font-size:15px; margin-bottom:10px;">🏢 ${comp} <span style="font-size:12px; color:#aaa;">(${grouped[comp].length}명)</span></div>`;
         
         grouped[comp].forEach(u => {
+            // 여기에 마법의 ✏️ 수정 버튼을 추가했습니다!
             compDiv.innerHTML += `
-                <div style="display:flex; justify-content:space-between; align-items:center; color:#eee; font-size:13px; padding:6px 0; border-bottom:1px solid rgba(255,255,255,0.05);">
-                    <div><strong style="color:white;">${u.name}</strong> <span style="color:#aaa;">(${u.id})</span></div>
-                    <div style="color:#aaa; font-size:11px;">${u.camp}</div>
+                <div style="display:flex; justify-content:space-between; align-items:center; color:#eee; font-size:13px; padding:8px 0; border-bottom:1px solid rgba(255,255,255,0.05);">
+                    <div><strong style="color:white; font-size:14px;">${u.name}</strong> <span style="color:#aaa;">(${u.id})</span></div>
+                    <div style="display:flex; align-items:center; gap:10px;">
+                        <div style="color:#aaa; font-size:11px;">${u.camp}</div>
+                        <button onclick="editUserInfo('${u.id}', '${u.name}', '${u.company}', '${u.camp}')" style="padding:5px 10px; background:#3498db; color:white; border:none; border-radius:5px; font-size:11px; font-weight:bold; cursor:pointer; box-shadow:0 2px 4px rgba(0,0,0,0.2);">✏️ 수정</button>
+                    </div>
                 </div>
             `;
         });
         appSec.appendChild(compDiv);
     }
+}
+
+// 🚀 신규 추가된 마법의 회원 정보 수정 기능!
+function editUserInfo(id, oldName, oldComp, oldCamp) {
+    const modal = document.createElement('div');
+    modal.style = "position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.7);display:flex;align-items:center;justify-content:center;z-index:999999;";
+
+    const box = document.createElement('div');
+    box.style = "background:#fff;width:85%;max-width:320px;border-radius:15px;padding:25px;text-align:left;box-shadow:0 10px 30px rgba(0,0,0,0.4);";
+
+    box.innerHTML = `
+        <div style="font-size:18px;font-weight:900;color:#152b52;margin-bottom:20px;text-align:center;">✏️ 기사님 정보 수정</div>
+        
+        <label style="font-size:12px; font-weight:bold; color:#555; display:block; margin-bottom:5px;">👤 성함</label>
+        <input type="text" id="edit-name" value="${oldName}" style="width:100%;padding:12px;margin-bottom:15px;border:1px solid #ccc;border-radius:8px;box-sizing:border-box;font-size:14px;font-family:inherit;">
+        
+        <label style="font-size:12px; font-weight:bold; color:#555; display:block; margin-bottom:5px;">🏢 업체명 <span style="color:#e74c3c;">(명단 그룹핑을 위해 띄어쓰기 주의!)</span></label>
+        <input type="text" id="edit-comp" value="${oldComp}" style="width:100%;padding:12px;margin-bottom:15px;border:1px solid #ccc;border-radius:8px;box-sizing:border-box;font-size:14px;font-family:inherit;">
+        
+        <label style="font-size:12px; font-weight:bold; color:#555; display:block; margin-bottom:5px;">📍 소속 캠프</label>
+        <select id="edit-camp" style="width:100%;padding:12px;margin-bottom:25px;border:1px solid #ccc;border-radius:8px;box-sizing:border-box;font-size:14px;font-family:inherit;">
+            <option value="음봉MB" ${oldCamp === '음봉MB' ? 'selected' : ''}>음봉MB</option>
+            <option value="송촌MB" ${oldCamp === '송촌MB' ? 'selected' : ''}>송촌MB</option>
+        </select>
+        
+        <div style="display:flex;gap:10px;">
+            <button id="btn-save-edit" style="width:50%;padding:14px;background:#3498db;color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:900;cursor:pointer;">저장</button>
+            <button id="btn-cancel-edit" style="width:50%;padding:14px;background:#ccc;color:#333;border:none;border-radius:10px;font-size:15px;font-weight:bold;cursor:pointer;">취소</button>
+        </div>
+    `;
+
+    modal.appendChild(box);
+    document.body.appendChild(modal);
+
+    document.getElementById('btn-save-edit').onclick = () => {
+        const nName = document.getElementById('edit-name').value.trim();
+        const nComp = document.getElementById('edit-comp').value.trim();
+        const nCamp = document.getElementById('edit-camp').value;
+
+        if(!nName || !nComp) { myAlert("성함과 업체명을 모두 비워둘 수 없습니다!"); return; }
+
+        db.ref("users/" + id).update({
+            name: nName,
+            company: nComp,
+            camp: nCamp
+        }).then(() => {
+            document.body.removeChild(modal);
+            myAlert("✨ 정보가 깔끔하게 수정되었습니다!");
+        }).catch(() => myAlert("수정 중 오류가 발생했습니다."));
+    };
+
+    document.getElementById('btn-cancel-edit').onclick = () => {
+        document.body.removeChild(modal);
+    };
 }
 
 function saveNotice() {
