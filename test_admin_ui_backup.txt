@@ -1,3 +1,5 @@
+let globalUsersData = {}; 
+
 function myConfirm(message, onConfirm, okColor) {
     if (!okColor) okColor = "#ff8c00";
     const modal = document.createElement('div');
@@ -110,6 +112,12 @@ function loadApprovalRequests() {
         <div id="feedback-section" style="margin-top:20px;"></div>
     `;
 
+    db.ref("공지사항").once('value', snap => {
+        const val = snap.val();
+        if(val && val.text) document.getElementById('admin-notice-input').value = val.text;
+        else document.getElementById('admin-notice-input').value = '';
+    });
+
     db.ref("승인대기방").on('value', (snapshot) => {
         const pendingSec = document.getElementById('pending-section');
         if (!pendingSec) return;
@@ -144,46 +152,8 @@ function loadApprovalRequests() {
     });
 
     db.ref("users").on('value', (snapshot) => {
-        const appSec = document.getElementById('approved-section');
-        if (!appSec) return;
-        
-        appSec.innerHTML = '<div style="color:#2ecc71; font-weight:bold; font-size:16px; margin-bottom:10px; text-align:left; border-top:1px dashed rgba(255,255,255,0.2); padding-top:15px;">✅ 업체별 승인 완료 명단</div>';
-        const data = snapshot.val();
-
-        if (!data) {
-            appSec.innerHTML += '<div style="color:#ccc; padding:10px; text-align:center;">등록된 기사님이 없습니다.</div>';
-        } else {
-            const grouped = {};
-            Object.keys(data).forEach(key => {
-                const user = data[key];
-                if (user.approved) {
-                    const comp = user.company || '기타';
-                    if (!grouped[comp]) grouped[comp] = [];
-                    grouped[comp].push(user);
-                }
-            });
-
-            if (Object.keys(grouped).length === 0) {
-                appSec.innerHTML += '<div style="color:#ccc; padding:10px; text-align:center;">등록된 기사님이 없습니다.</div>';
-                return;
-            }
-
-            for (const comp in grouped) {
-                const compDiv = document.createElement('div');
-                compDiv.style.cssText = "background:rgba(255,255,255,0.05); border-radius:8px; padding:12px; margin-bottom:10px; text-align:left;";
-                compDiv.innerHTML = `<div style="color:#f1c40f; font-weight:bold; font-size:15px; margin-bottom:10px;">🏢 ${comp} <span style="font-size:12px; color:#aaa;">(${grouped[comp].length}명)</span></div>`;
-                
-                grouped[comp].forEach(u => {
-                    compDiv.innerHTML += `
-                        <div style="display:flex; justify-content:space-between; align-items:center; color:#eee; font-size:13px; padding:6px 0; border-bottom:1px solid rgba(255,255,255,0.05);">
-                            <div><strong style="color:white;">${u.name}</strong> <span style="color:#aaa;">(${u.id})</span></div>
-                            <div style="color:#aaa; font-size:11px;">${u.camp}</div>
-                        </div>
-                    `;
-                });
-                appSec.appendChild(compDiv);
-            }
-        }
+        globalUsersData = snapshot.val() || {}; 
+        renderApprovedList(); 
     });
 
     db.ref("피드백방").on('value', (snapshot) => {
@@ -209,6 +179,93 @@ function loadApprovalRequests() {
             });
         }
     });
+}
+
+function renderApprovedList() {
+    const appSec = document.getElementById('approved-section');
+    if (!appSec) return;
+    
+    appSec.innerHTML = '<div style="color:#2ecc71; font-weight:bold; font-size:16px; margin-bottom:10px; text-align:left; border-top:1px dashed rgba(255,255,255,0.2); padding-top:15px;">✅ 업체별 승인 완료 명단</div>';
+    
+    const searchInput = document.getElementById('admin-search-input');
+    const keyword = searchInput ? searchInput.value.toLowerCase().trim() : '';
+    
+    const grouped = {};
+    let count = 0;
+
+    Object.keys(globalUsersData).forEach(key => {
+        const user = globalUsersData[key];
+        if (user.approved) {
+            // 숫자가 들어와도 절대 파업하지 않도록 String()으로 꽁꽁 묶어줬습니다!
+            const comp = String(user.company || '기타');
+            const name = String(user.name || '');
+            const uid = String(user.id || ''); 
+            
+            // 이름, 업체명, 아이디 중 하나라도 일치하면 검색 완료!
+            if (comp.toLowerCase().includes(keyword) || 
+                name.toLowerCase().includes(keyword) || 
+                uid.toLowerCase().includes(keyword)) {
+                
+                if (!grouped[comp]) grouped[comp] = [];
+                grouped[comp].push(user);
+                count++;
+            }
+        }
+    });
+
+    if (count === 0) {
+        appSec.innerHTML += '<div style="color:#ccc; padding:10px; text-align:center;">검색 결과가 없습니다.</div>';
+        return;
+    }
+
+    for (const comp in grouped) {
+        const compDiv = document.createElement('div');
+        compDiv.style.cssText = "background:rgba(255,255,255,0.05); border-radius:8px; padding:12px; margin-bottom:10px; text-align:left;";
+        compDiv.innerHTML = `<div style="color:#f1c40f; font-weight:bold; font-size:15px; margin-bottom:10px;">🏢 ${comp} <span style="font-size:12px; color:#aaa;">(${grouped[comp].length}명)</span></div>`;
+        
+        grouped[comp].forEach(u => {
+            compDiv.innerHTML += `
+                <div style="display:flex; justify-content:space-between; align-items:center; color:#eee; font-size:13px; padding:6px 0; border-bottom:1px solid rgba(255,255,255,0.05);">
+                    <div><strong style="color:white;">${u.name}</strong> <span style="color:#aaa;">(${u.id})</span></div>
+                    <div style="color:#aaa; font-size:11px;">${u.camp}</div>
+                </div>
+            `;
+        });
+        appSec.appendChild(compDiv);
+    }
+}
+
+function saveNotice() {
+    const txt = document.getElementById('admin-notice-input').value.trim();
+    db.ref("공지사항").set({ text: txt })
+    .then(() => {
+        if(txt === '') myAlert("공지사항이 삭제되었습니다!");
+        else myAlert("공지사항이 성공적으로 등록되었습니다!");
+    })
+    .catch(() => myAlert("오류가 발생했습니다."));
+}
+
+function downloadExcel() {
+    if(Object.keys(globalUsersData).length === 0) {
+        myAlert("다운로드할 데이터가 없습니다."); return;
+    }
+    
+    let csv = '\uFEFF'; 
+    csv += "아이디,성함,업체명,캠프,가입일시\n";
+    
+    Object.keys(globalUsersData).forEach(key => {
+        const u = globalUsersData[key];
+        if(u.approved) {
+            const dateStr = u.regDate ? new Date(u.regDate).toLocaleString() : '정보없음';
+            csv += `${u.id},${u.name},${u.company},${u.camp},${dateStr}\n`;
+        }
+    });
+
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = "라이언엘_기사명단.csv";
+    link.click();
 }
 
 function approveUser(id, name, company, camp) {
