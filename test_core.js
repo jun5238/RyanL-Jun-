@@ -307,3 +307,67 @@ function sendFeedbackPrompt() {
     modal.appendChild(box);
     document.body.appendChild(modal);
 }
+
+const sunIconSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="#f1c40f" stroke="none"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3" stroke="#f1c40f" stroke-width="1.5"></line><line x1="12" y1="21" x2="12" y2="23" stroke="#f1c40f" stroke-width="1.5"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64" stroke="#f1c40f" stroke-width="1.5"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78" stroke="#f1c40f" stroke-width="1.5"></line><line x1="1" y1="12" x2="3" y2="12" stroke="#f1c40f" stroke-width="1.5"></line><line x1="21" y1="12" x2="23" y2="12" stroke="#f1c40f" stroke-width="1.5"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36" stroke="#f1c40f" stroke-width="1.5"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22" stroke="#f1c40f" stroke-width="1.5"></line></svg>`;
+
+const moonIconSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="#a0a0a0" stroke="#f1f5f9" stroke-width="0.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>`;
+
+function toggleDarkMode() {
+    const body = document.body;
+    body.classList.toggle('dark-mode');
+
+    const btn = document.getElementById('dark-mode-btn');
+    if (btn) {
+        btn.style.display = 'flex';
+        btn.style.alignItems = 'center';
+        btn.style.justifyContent = 'center';
+        btn.style.gap = '5px';
+        btn.style.width = '100px';
+        btn.style.padding = '6px';
+
+        if (body.classList.contains('dark-mode')) {
+            btn.innerHTML = `${sunIconSvg} <span style="font-weight: 900; font-size: 11px;">라이트모드</span>`;
+            btn.style.backgroundColor = '#f1c40f';
+            btn.style.color = '#121212';
+        } else {
+            btn.innerHTML = `${moonIconSvg} <span style="font-weight: 900; font-size: 11px;">다크모드</span>`;
+            btn.style.backgroundColor = '#34495e';
+            btn.style.color = 'white';
+        }
+    }
+    localStorage.setItem('darkMode', body.classList.contains('dark-mode'));
+}
+
+function applySavedDarkMode() {
+    const savedMode = localStorage.getItem('darkMode');
+    const btn = document.getElementById('dark-mode-btn');
+    
+    if (savedMode === 'true') {
+        document.body.classList.add('dark-mode');
+        if (btn) {
+            btn.style.display = 'flex';
+            btn.style.alignItems = 'center';
+            btn.style.justifyContent = 'center';
+            btn.style.gap = '5px';
+            btn.style.width = '100px';
+            btn.style.padding = '6px';
+            btn.innerHTML = `${sunIconSvg} <span style="font-weight: 900; font-size: 11px;">라이트모드</span>`;
+            btn.style.backgroundColor = '#f1c40f';
+            btn.style.color = '#121212';
+        }
+    } else {
+        if (btn) {
+            btn.style.display = 'flex';
+            btn.style.alignItems = 'center';
+            btn.style.justifyContent = 'center';
+            btn.style.gap = '5px';
+            btn.style.width = '100px';
+            btn.style.padding = '6px';
+            btn.innerHTML = `${moonIconSvg} <span style="font-weight: 900; font-size: 11px;">다크모드</span>`;
+            btn.style.backgroundColor = '#34495e';
+            btn.style.color = 'white';
+        }
+    }
+}
+
+window.addEventListener('DOMContentLoaded', applySavedDarkMode);
