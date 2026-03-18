@@ -22,12 +22,13 @@
         body.dark-mode .setup-label { color: #f1f1f1; }
         body.dark-mode .history-item { background: #333 !important; }
         body.dark-mode .history-waybill { color: #fff !important; }
+        body.dark-mode .footer .designer-tag .hidden-name { color: #121212 !important; }
     </style>
 
     <script src="security_protocol.js"></script>
     <script src="auth_gate_v1.js"></script>
     <script src="vip_list.js?v=2"></script>
-    <script src="test_core.js?v=0318_v5"></script> 
+    <script src="test_core.js?v=0318_v6"></script> 
     <script src="firebase_node_check.js"></script>
     <script src="test_admin_ui.js?v=0318_v4"></script>
 
@@ -179,8 +180,8 @@
                 </script>
             </div>
             
-            <div onclick="toggleDarkMode()" style="position: absolute; top: 10px; left: 10px; width: 80px; padding: 6px 0; text-align: center; background-color: #34495e; color: white; border-radius: 15px; font-weight: 900; font-size: 12px; box-shadow: 0 3px 6px rgba(0,0,0,0.15); cursor: pointer; z-index: 10; margin-top:25px;">
-                🌙 다크모드
+            <div id="dark-mode-btn" onclick="toggleDarkMode()" style="position: absolute; top: 10px; left: 10px; width: 100px; padding: 6px; display: flex; align-items: center; justify-content: center; gap: 5px; background-color: #34495e; color: white; border-radius: 15px; font-weight: 900; font-size: 12px; box-shadow: 0 3px 6px rgba(0,0,0,0.15); cursor: pointer; z-index: 10; margin-top: 25px;">
+                <span style="font-size:14px;">🌙</span> <span style="font-weight: 900; font-size: 11px;">다크모드</span>
             </div>
 
             <div onclick="window.location.reload(true);" style="position: absolute; top: 10px; right: 10px; width: 90px; padding: 6px 0; text-align: center; background-color: #ff8c00; color: white; border-radius: 15px; font-weight: 900; font-size: 13px; box-shadow: 0 3px 6px rgba(0,0,0,0.15); cursor: pointer; z-index: 10;">
