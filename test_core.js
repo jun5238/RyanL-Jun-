@@ -79,11 +79,11 @@ function showMain(id, camp) {
     db.ref("공지사항").once('value', snap => {
         const val = snap.val();
         if(val && val.text) {
-            const savedNotice = sessionStorage.getItem('notice_' + id);
+            const savedNotice = localStorage.getItem('notice_' + id);
             
             if(savedNotice !== val.text) {
                 myAlert("📢 [전체 공지사항]\n\n" + val.text);
-                sessionStorage.setItem('notice_' + id, val.text); 
+                localStorage.setItem('notice_' + id, val.text); 
             }
         }
     });
