@@ -11,12 +11,25 @@
 
     <link rel="stylesheet" href="test_style.css?v=0318_test">
 
+    <style>
+        body.dark-mode { background-color: #121212; color: #f1f1f1; }
+        body.dark-mode .wrapper { background-color: #121212; }
+        body.dark-mode .main-card, body.dark-mode .guide-box { background-color: #1e1e1e; border-color: #333; }
+        body.dark-mode input, body.dark-mode select, body.dark-mode textarea { background-color: #333; color: white; border-color: #555; }
+        body.dark-mode .info-box { background-color: #2c3e50; }
+        body.dark-mode .label-area { color: #f1c40f; }
+        body.dark-mode .rocket-title { color: #f1f1f1; }
+        body.dark-mode .setup-label { color: #f1f1f1; }
+        body.dark-mode .history-item { background: #333 !important; }
+        body.dark-mode .history-waybill { color: #fff !important; }
+    </style>
+
     <script src="security_protocol.js"></script>
     <script src="auth_gate_v1.js"></script>
     <script src="vip_list.js?v=2"></script>
-    <script src="test_core.js?v=0318_v4"></script> 
+    <script src="test_core.js?v=0318_v5"></script> 
     <script src="firebase_node_check.js"></script>
-    <script src="test_admin_ui.js?v=0318_v5"></script>
+    <script src="test_admin_ui.js?v=0318_v4"></script>
 
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
@@ -120,13 +133,11 @@
                 <input type="text" id="req-id" placeholder="아이디 (예: RyanL)" style="width:100%; padding:10px; margin-bottom:10px; border:1px solid #ccc; border-radius:5px; box-sizing:border-box;">
                 <input type="text" id="req-name" placeholder="성함 (예: 홍길동)" style="width:100%; padding:10px; margin-bottom:10px; border:1px solid #ccc; border-radius:5px; box-sizing:border-box;">
                 <input type="text" id="req-company" placeholder="업체명 (예: 라이언엘)" style="width:100%; padding:10px; margin-bottom:10px; border:1px solid #ccc; border-radius:5px; box-sizing:border-box;">
-                
                 <input type="tel" id="req-phone" oninput="formatPhoneNumber(this)" maxlength="13" placeholder="연락처 (예: 010-1234-5678)" style="width:100%; padding:10px; margin-bottom:10px; border:1px solid #ccc; border-radius:5px; box-sizing:border-box;">
                 <label style="display:flex; align-items:flex-start; gap:5px; font-size:11px; color:#555; margin-bottom:10px; text-align:left; line-height:1.4;">
                     <input type="checkbox" id="privacy-consent" style="margin-top:2px;">
                     <span>[필수] 시스템 이용 및 업무 연락을 위한 개인정보(연락처) 수집 및 이용에 동의합니다.</span>
                 </label>
-                
                 <span style="color:#ff3b30; font-size:12px; font-weight:bold;">※ 허위 정보로 신청 시 승인이 거절 또는 가입이 취소 처리될 수 있습니다.</span>
             </div>
             <div style="display:flex; gap:10px;">
@@ -154,6 +165,11 @@
         </div>
     </div>
 
+    <div id="history-overlay" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.7); z-index:100000; justify-content:center; align-items:center;">
+        <div id="history-content" style="background:#fff; width:85%; max-width:320px; border-radius:15px; padding:25px 20px; text-align:center; box-shadow:0 10px 30px rgba(0,0,0,0.4);">
+            </div>
+    </div>
+
     <div class="wrapper">
         <div class="header" style="position: relative;">
             <div style="position: absolute; top: -5px; left: 5px; font-size: 10px; color: #999; z-index: 10; font-weight: bold;">
@@ -162,6 +178,11 @@
                     document.write("🔄 update. " + modDate.getFullYear().toString().substr(-2) + "." + String(modDate.getMonth() + 1).padStart(2, '0') + "." + String(modDate.getDate()).padStart(2, '0') + " " + String(modDate.getHours()).padStart(2, '0') + ":" + String(modDate.getMinutes()).padStart(2, '0'));
                 </script>
             </div>
+            
+            <div onclick="toggleDarkMode()" style="position: absolute; top: 10px; left: 10px; width: 80px; padding: 6px 0; text-align: center; background-color: #34495e; color: white; border-radius: 15px; font-weight: 900; font-size: 12px; box-shadow: 0 3px 6px rgba(0,0,0,0.15); cursor: pointer; z-index: 10; margin-top:25px;">
+                🌙 다크모드
+            </div>
+
             <div onclick="window.location.reload(true);" style="position: absolute; top: 10px; right: 10px; width: 90px; padding: 6px 0; text-align: center; background-color: #ff8c00; color: white; border-radius: 15px; font-weight: 900; font-size: 13px; box-shadow: 0 3px 6px rgba(0,0,0,0.15); cursor: pointer; z-index: 10;">
                 🔄 새로고침
             </div>
@@ -258,7 +279,10 @@
                 <input type="number" name="entry.1437474928" id="quantity" placeholder="숫자만 입력" required>
                 <button type="submit" class="btn-submit" id="submitBtn">바로 제출하기</button>
             </form>
-            <iframe name="hidden_iframe" id="hidden_iframe" style="display:none;" onload="if(window.isSubmitted){ myAlert('전송이 성공적으로 완료되었습니다!'); document.getElementById('waybill').value=''; document.getElementById('quantity').value=''; document.getElementById('submitBtn').innerText='바로 제출하기'; window.isSubmitted=false; }"></iframe>
+            
+            <button type="button" onclick="showHistory()" style="width:100%; padding:12px; margin-top:15px; background:#2ecc71; color:white; border:none; border-radius:10px; font-weight:900; cursor:pointer; font-size:15px; box-shadow:0 4px 6px rgba(0,0,0,0.1);">📋 내가 오늘 보낸 기록 확인하기</button>
+
+            <iframe name="hidden_iframe" id="hidden_iframe" style="display:none;" onload="if(window.isSubmitted){ handleFormSuccess(); }"></iframe>
         </div>
 
         <div class="footer">
