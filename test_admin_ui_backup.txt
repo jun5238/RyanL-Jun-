@@ -146,7 +146,7 @@ function loadApprovalRequests() {
                     <div style="color:#aaa; font-size:12px;"><b>캠프:</b> ${request.camp}</div>
                     <div style="display:flex; gap:8px; margin-top:12px;">
                         <button onclick="approveUser('${request.id}', '${request.name}', '${request.company}', '${request.camp}', '${request.phone || ''}')" style="flex:1.2; padding:12px; background:#2ecc71; color:white; border:none; border-radius:8px; font-weight:900; cursor:pointer;">최종 승인</button>
-                        <button onclick="rejectUser('${request.id}')" style="flex:0.8; padding:12px; background:#e74c3c; color:white; border:none; border-radius:8px; font-weight:900; cursor:pointer;">거절</button>
+                        <button onclick="rejectUser('${request.id}', '${request.phone || ''}')" style="flex:0.8; padding:12px; background:#e74c3c; color:white; border:none; border-radius:8px; font-weight:900; cursor:pointer;">거절</button>
                     </div>
                 `;
                 pendingSec.appendChild(card);
@@ -349,12 +349,18 @@ function approveUser(id, name, company, camp, phone) {
         })
         .then(() => db.ref("승인대기방/" + id).remove())
         .then(() => db.ref("승인거절방/" + id).remove()) 
-        .then(() => myAlert(id + " 기사님 승인 완료!"))
+        .then(() => {
+            myAlert(id + " 기사님 승인 완료!");
+            if (phone) {
+                const msg = "천안1캠프 채번 시스템 가입이 승인 되었습니다.";
+                sendSMS(phone, msg);
+            }
+        })
         .catch(() => myAlert("승인 중 오류 발생"));
     }, "#2ecc71");
 }
 
-function rejectUser(id) {
+function rejectUser(id, phone) {
     myPrompt(id + " 기사님의 거절 사유를 입력해주세요.", (reason) => {
         db.ref("승인거절방/" + id).set({
             id: id,
@@ -362,7 +368,13 @@ function rejectUser(id) {
             timestamp: new Date().getTime()
         })
         .then(() => db.ref("승인대기방/" + id).remove())
-        .then(() => myAlert("거절 처리 및 사유가 전송되었습니다!"))
+        .then(() => {
+            myAlert("거절 처리 및 사유가 전송되었습니다!");
+            if (phone) {
+                const msg = "천안1캠프 채번 시스템 가입이 반려 되었습니다.";
+                sendSMS(phone, msg);
+            }
+        })
         .catch(() => myAlert("처리 중 오류가 발생했습니다."));
     });
 }
@@ -377,3 +389,14 @@ function deleteFeedback(key) {
 
 function cancelAdmin() { showSetup(); }
 function closeAdmin() { showSetup(); }
+
+function sendSMS(phone, msg) {
+    if (!phone) return;
+    const encodedMsg = encodeURIComponent(msg);
+    const ua = navigator.userAgent.toLowerCase();
+    if (ua.indexOf("iphone") > -1 || ua.indexOf("ipad") > -1) {
+        window.location.href = "sms:" + phone + "&body=" + encodedMsg;
+    } else {
+        window.location.href = "sms:" + phone + "?body=" + encodedMsg;
+    }
+}
