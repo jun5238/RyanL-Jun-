@@ -3,12 +3,11 @@ window.onload = function() {
         document.getElementById('splash-screen').style.display = 'none';
     }, 1500);
 
-    // 🌙 다크모드 기억 살려내기!
-    if(localStorage.getItem('ryanl_darkmode') === 'on') {
+    const isDark = localStorage.getItem('ryanl_darkmode') === 'on';
+    if(isDark) {
         document.body.classList.add('dark-mode');
     }
-
-    // 📡 오프라인 감지기 초기 세팅!
+    
     setupNetworkMonitor();
 
     const savedId = localStorage.getItem('ryanl_id');
@@ -30,23 +29,21 @@ window.onload = function() {
     } else {
         showSetup();
     }
+    
+    setTimeout(() => { updateDarkModeButton(isDark); }, 100);
 };
 
-// 📡 인터넷 연결 상태를 감시하는 매의 눈!
 function setupNetworkMonitor() {
-    // 경고창(띠) UI 만들기
     const alertBar = document.createElement('div');
     alertBar.id = "network-alert";
     alertBar.style = "position:fixed; top:0; left:0; width:100%; padding:12px 0; text-align:center; font-weight:bold; font-size:14px; color:white; z-index:9999999; display:none; transition: all 0.3s ease;";
     document.body.appendChild(alertBar);
 
-    // 인터넷 끊겼을 때 (지하 주차장)
     window.addEventListener('offline', () => {
-        alertBar.style.backgroundColor = "#e74c3c"; // 빨간색!
+        alertBar.style.backgroundColor = "#e74c3c";
         alertBar.innerHTML = "📡 현재 인터넷 연결이 끊겼습니다! 지상에서 전송해주세요.";
         alertBar.style.display = "block";
         
-        // 전송 버튼 비활성화 (오류 방지!)
         const btn = document.getElementById('submitBtn');
         if(btn) {
             btn.disabled = true;
@@ -55,17 +52,14 @@ function setupNetworkMonitor() {
         }
     });
 
-    // 인터넷 다시 연결됐을 때 (지상으로 올라옴)
     window.addEventListener('online', () => {
-        alertBar.style.backgroundColor = "#2ecc71"; // 초록색!
+        alertBar.style.backgroundColor = "#2ecc71";
         alertBar.innerHTML = "✅ 인터넷 연결이 복구되었습니다!";
         
-        // 3초 뒤에 경고창 숨기기
         setTimeout(() => {
             alertBar.style.display = "none";
         }, 3000);
         
-        // 전송 버튼 다시 살리기!
         const btn = document.getElementById('submitBtn');
         if(btn) {
             btn.disabled = false;
@@ -75,13 +69,6 @@ function setupNetworkMonitor() {
     });
 }
 
-// 🌙 다크모드 껐다 켰다 하는 스위치!
-function toggleDarkMode() {
-    const isDark = document.body.classList.toggle('dark-mode');
-    localStorage.setItem('ryanl_darkmode', isDark ? 'on' : 'off');
-}
-
-// 🎵 성공하면 기분 좋은 띠링! 소리 나게 하는 마법
 function playSuccessSound() {
     try {
         const AudioContext = window.AudioContext || window.webkitAudioContext;
@@ -98,12 +85,9 @@ function playSuccessSound() {
         gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.3); 
         osc.start();
         osc.stop(ctx.currentTime + 0.3);
-    } catch(e) {
-        // 소리 지원 안 하는 옛날 폰은 그냥 조용히 넘어가기!
-    }
+    } catch(e) {}
 }
 
-// 📋 전송 찰떡 성공 시 3가지를 한 방에 처리하는 컨트롤 타워!
 function handleFormSuccess() {
     window.isSubmitted = false;
     playSuccessSound();
@@ -119,7 +103,6 @@ function handleFormSuccess() {
     document.getElementById('submitBtn').innerText = '바로 제출하기';
 }
 
-// 📋 방금 보낸 거 폰에 기억(저장)하는 기능! (최근 20개까지만)
 function saveHistory(waybill, qty) {
     if(!waybill) return;
     const id = localStorage.getItem('ryanl_id') || 'unknown';
@@ -135,7 +118,6 @@ function saveHistory(waybill, qty) {
     localStorage.setItem('ryanl_history_' + id, JSON.stringify(history));
 }
 
-// 📋 내 기록 팝업창 예쁘게 띄워주는 기능!
 function showHistory() {
     const id = localStorage.getItem('ryanl_id') || 'unknown';
     let history = JSON.parse(localStorage.getItem('ryanl_history_' + id) || '[]');
@@ -308,66 +290,35 @@ function sendFeedbackPrompt() {
     document.body.appendChild(modal);
 }
 
+// 이글이글 노란색 태양으로 원상복구! ☀️
 const sunIconSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="#f1c40f" stroke="none"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3" stroke="#f1c40f" stroke-width="1.5"></line><line x1="12" y1="21" x2="12" y2="23" stroke="#f1c40f" stroke-width="1.5"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64" stroke="#f1c40f" stroke-width="1.5"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78" stroke="#f1c40f" stroke-width="1.5"></line><line x1="1" y1="12" x2="3" y2="12" stroke="#f1c40f" stroke-width="1.5"></line><line x1="21" y1="12" x2="23" y2="12" stroke="#f1c40f" stroke-width="1.5"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36" stroke="#f1c40f" stroke-width="1.5"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22" stroke="#f1c40f" stroke-width="1.5"></line></svg>`;
-
-const moonIconSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="#a0a0a0" stroke="#f1f5f9" stroke-width="0.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>`;
 
 function toggleDarkMode() {
     const body = document.body;
-    body.classList.toggle('dark-mode');
-
-    const btn = document.getElementById('dark-mode-btn');
-    if (btn) {
-        btn.style.display = 'flex';
-        btn.style.alignItems = 'center';
-        btn.style.justifyContent = 'center';
-        btn.style.gap = '5px';
-        btn.style.width = '100px';
-        btn.style.padding = '6px';
-
-        if (body.classList.contains('dark-mode')) {
-            btn.innerHTML = `${sunIconSvg} <span style="font-weight: 900; font-size: 11px;">라이트모드</span>`;
-            btn.style.backgroundColor = '#f1c40f';
-            btn.style.color = '#121212';
-        } else {
-            btn.innerHTML = `${moonIconSvg} <span style="font-weight: 900; font-size: 11px;">다크모드</span>`;
-            btn.style.backgroundColor = '#34495e';
-            btn.style.color = 'white';
-        }
-    }
-    localStorage.setItem('darkMode', body.classList.contains('dark-mode'));
+    const isDark = body.classList.toggle('dark-mode');
+    localStorage.setItem('ryanl_darkmode', isDark ? 'on' : 'off');
+    updateDarkModeButton(isDark);
 }
 
-function applySavedDarkMode() {
-    const savedMode = localStorage.getItem('darkMode');
+function updateDarkModeButton(isDark) {
     const btn = document.getElementById('dark-mode-btn');
-    
-    if (savedMode === 'true') {
-        document.body.classList.add('dark-mode');
-        if (btn) {
-            btn.style.display = 'flex';
-            btn.style.alignItems = 'center';
-            btn.style.justifyContent = 'center';
-            btn.style.gap = '5px';
-            btn.style.width = '100px';
-            btn.style.padding = '6px';
-            btn.innerHTML = `${sunIconSvg} <span style="font-weight: 900; font-size: 11px;">라이트모드</span>`;
-            btn.style.backgroundColor = '#f1c40f';
-            btn.style.color = '#121212';
-        }
+    if (!btn) return;
+
+    btn.style.display = 'flex';
+    btn.style.alignItems = 'center';
+    btn.style.justifyContent = 'center';
+    btn.style.gap = '5px';
+    btn.style.width = '100px';
+    btn.style.padding = '6px';
+
+    if (isDark) {
+        // 하얀색 배경에 이글거리는 노란 해!
+        btn.innerHTML = `${sunIconSvg} <span style="font-weight: 900; font-size: 11px;">라이트모드</span>`;
+        btn.style.backgroundColor = '#ffffff'; 
+        btn.style.color = '#121212';
     } else {
-        if (btn) {
-            btn.style.display = 'flex';
-            btn.style.alignItems = 'center';
-            btn.style.justifyContent = 'center';
-            btn.style.gap = '5px';
-            btn.style.width = '100px';
-            btn.style.padding = '6px';
-            btn.innerHTML = `${moonIconSvg} <span style="font-weight: 900; font-size: 11px;">다크모드</span>`;
-            btn.style.backgroundColor = '#34495e';
-            btn.style.color = 'white';
-        }
+        btn.innerHTML = `<span style="font-size:14px;">🌙</span> <span style="font-weight: 900; font-size: 11px;">다크모드</span>`;
+        btn.style.backgroundColor = '#34495e';
+        btn.style.color = 'white';
     }
 }
-
-window.addEventListener('DOMContentLoaded', applySavedDarkMode);
