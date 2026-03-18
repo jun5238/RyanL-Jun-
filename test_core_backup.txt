@@ -8,6 +8,9 @@ window.onload = function() {
         document.body.classList.add('dark-mode');
     }
 
+    // 📡 오프라인 감지기 초기 세팅!
+    setupNetworkMonitor();
+
     const savedId = localStorage.getItem('ryanl_id');
     const savedCamp = localStorage.getItem('ryanl_camp');
 
@@ -29,13 +32,56 @@ window.onload = function() {
     }
 };
 
+// 📡 인터넷 연결 상태를 감시하는 매의 눈!
+function setupNetworkMonitor() {
+    // 경고창(띠) UI 만들기
+    const alertBar = document.createElement('div');
+    alertBar.id = "network-alert";
+    alertBar.style = "position:fixed; top:0; left:0; width:100%; padding:12px 0; text-align:center; font-weight:bold; font-size:14px; color:white; z-index:9999999; display:none; transition: all 0.3s ease;";
+    document.body.appendChild(alertBar);
+
+    // 인터넷 끊겼을 때 (지하 주차장)
+    window.addEventListener('offline', () => {
+        alertBar.style.backgroundColor = "#e74c3c"; // 빨간색!
+        alertBar.innerHTML = "📡 현재 인터넷 연결이 끊겼습니다! 지상에서 전송해주세요.";
+        alertBar.style.display = "block";
+        
+        // 전송 버튼 비활성화 (오류 방지!)
+        const btn = document.getElementById('submitBtn');
+        if(btn) {
+            btn.disabled = true;
+            btn.style.opacity = "0.5";
+            btn.innerText = "인터넷 연결 대기중...";
+        }
+    });
+
+    // 인터넷 다시 연결됐을 때 (지상으로 올라옴)
+    window.addEventListener('online', () => {
+        alertBar.style.backgroundColor = "#2ecc71"; // 초록색!
+        alertBar.innerHTML = "✅ 인터넷 연결이 복구되었습니다!";
+        
+        // 3초 뒤에 경고창 숨기기
+        setTimeout(() => {
+            alertBar.style.display = "none";
+        }, 3000);
+        
+        // 전송 버튼 다시 살리기!
+        const btn = document.getElementById('submitBtn');
+        if(btn) {
+            btn.disabled = false;
+            btn.style.opacity = "1";
+            btn.innerText = "바로 제출하기";
+        }
+    });
+}
+
 // 🌙 다크모드 껐다 켰다 하는 스위치!
 function toggleDarkMode() {
     const isDark = document.body.classList.toggle('dark-mode');
     localStorage.setItem('ryanl_darkmode', isDark ? 'on' : 'off');
 }
 
-// 🎵 성공하면 기분 좋은 띠링! 소리 나게 하는 마법 (Web Audio API)
+// 🎵 성공하면 기분 좋은 띠링! 소리 나게 하는 마법
 function playSuccessSound() {
     try {
         const AudioContext = window.AudioContext || window.webkitAudioContext;
@@ -45,11 +91,11 @@ function playSuccessSound() {
         const gain = ctx.createGain();
         osc.connect(gain);
         gain.connect(ctx.destination);
-        osc.type = 'sine'; // 부드러운 소리
-        osc.frequency.setValueAtTime(800, ctx.currentTime); // 약간 높은 음에서
-        osc.frequency.exponentialRampToValueAtTime(1200, ctx.currentTime + 0.1); // 더 높은 음으로 슝!
+        osc.type = 'sine'; 
+        osc.frequency.setValueAtTime(800, ctx.currentTime); 
+        osc.frequency.exponentialRampToValueAtTime(1200, ctx.currentTime + 0.1); 
         gain.gain.setValueAtTime(0.5, ctx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.3); // 소리 서서히 줄어들기
+        gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.3); 
         osc.start();
         osc.stop(ctx.currentTime + 0.3);
     } catch(e) {
@@ -60,17 +106,13 @@ function playSuccessSound() {
 // 📋 전송 찰떡 성공 시 3가지를 한 방에 처리하는 컨트롤 타워!
 function handleFormSuccess() {
     window.isSubmitted = false;
-    
-    // 1. 소리 울리고!
     playSuccessSound();
     
     const waybill = document.getElementById('waybill').value;
     const qty = document.getElementById('quantity').value;
     
-    // 2. 기록장에 쓱 적어두고!
     saveHistory(waybill, qty);
     
-    // 3. 예쁜 성공 알림창 띄우고 초기화!
     document.getElementById('success-overlay').style.display = 'flex';
     document.getElementById('waybill').value = '';
     document.getElementById('quantity').value = '';
@@ -83,13 +125,13 @@ function saveHistory(waybill, qty) {
     const id = localStorage.getItem('ryanl_id') || 'unknown';
     let history = JSON.parse(localStorage.getItem('ryanl_history_' + id) || '[]');
     
-    history.unshift({ // 맨 위에 새 기록 꽂아넣기!
+    history.unshift({ 
         time: new Date().getTime(),
         waybill: waybill,
         qty: qty
     });
     
-    if(history.length > 20) history.pop(); // 20개 넘으면 제일 오래된 거 버리기!
+    if(history.length > 20) history.pop(); 
     localStorage.setItem('ryanl_history_' + id, JSON.stringify(history));
 }
 
@@ -118,7 +160,6 @@ function showHistory() {
     
     html += '<button onclick="document.getElementById(\'history-overlay\').style.display=\'none\'" style="width:100%; padding:12px; background:#152b52; color:white; border:none; border-radius:10px; font-weight:bold; cursor:pointer;">닫기</button>';
     
-    // 다크모드일 때 글자색 하얗게 바꿔주는 센스!
     if(document.body.classList.contains('dark-mode')) {
         html = html.replace('color:#152b52;', 'color:#fff;').replace('color:#333;', 'color:#fff;');
     }
