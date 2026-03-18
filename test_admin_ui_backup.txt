@@ -265,7 +265,7 @@ function editUserInfo(id, oldName, oldComp, oldCamp, oldPhone) {
         <input type="text" id="edit-name" value="${oldName}" style="width:100%;padding:12px;margin-bottom:15px;border:1px solid #ccc;border-radius:8px;box-sizing:border-box;font-size:14px;font-family:inherit;">
         
         <label style="font-size:12px; font-weight:bold; color:#555; display:block; margin-bottom:5px;">📞 연락처</label>
-        <input type="text" id="edit-phone" value="${oldPhone === 'undefined' ? '' : oldPhone}" style="width:100%;padding:12px;margin-bottom:15px;border:1px solid #ccc;border-radius:8px;box-sizing:border-box;font-size:14px;font-family:inherit;">
+        <input type="tel" id="edit-phone" oninput="formatPhoneNumber(this)" maxlength="13" value="${oldPhone === 'undefined' ? '' : oldPhone}" style="width:100%;padding:12px;margin-bottom:15px;border:1px solid #ccc;border-radius:8px;box-sizing:border-box;font-size:14px;font-family:inherit;">
         
         <label style="font-size:12px; font-weight:bold; color:#555; display:block; margin-bottom:5px;">🏢 업체명</label>
         <input type="text" id="edit-comp" value="${oldComp}" style="width:100%;padding:12px;margin-bottom:15px;border:1px solid #ccc;border-radius:8px;box-sizing:border-box;font-size:14px;font-family:inherit;">
