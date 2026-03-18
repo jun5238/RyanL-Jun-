@@ -231,15 +231,24 @@ function renderApprovedList() {
                         <div><strong style="color:white; font-size:14px;">${u.name}</strong> <span style="color:#aaa;">(${u.id})</span></div>
                         <div style="color:#3498db; font-size:12px; font-weight:bold;">📞 ${u.phone || '미입력'}</div>
                     </div>
-                    <div style="display:flex; align-items:center; gap:10px;">
+                    <div style="display:flex; align-items:center; gap:6px;">
                         <div style="color:#aaa; font-size:11px;">${u.camp}</div>
-                        <button onclick="editUserInfo('${u.id}', '${u.name}', '${u.company}', '${u.camp}', '${u.phone || ''}')" style="padding:5px 10px; background:#3498db; color:white; border:none; border-radius:5px; font-size:11px; font-weight:bold; cursor:pointer; box-shadow:0 2px 4px rgba(0,0,0,0.2);">✏️ 수정</button>
+                        <button onclick="editUserInfo('${u.id}', '${u.name}', '${u.company}', '${u.camp}', '${u.phone || ''}')" style="padding:5px 8px; background:#3498db; color:white; border:none; border-radius:5px; font-size:11px; font-weight:bold; cursor:pointer; box-shadow:0 2px 4px rgba(0,0,0,0.2);">수정</button>
+                        <button onclick="deleteUser('${u.id}', '${u.name}')" style="padding:5px 8px; background:#e74c3c; color:white; border:none; border-radius:5px; font-size:11px; font-weight:bold; cursor:pointer; box-shadow:0 2px 4px rgba(0,0,0,0.2);">탈퇴</button>
                     </div>
                 </div>
             `;
         });
         appSec.appendChild(compDiv);
     }
+}
+
+function deleteUser(id, name) {
+    myConfirm(name + " 기사님을 정말 강제 탈퇴시키겠습니까?", () => {
+        db.ref("users/" + id).remove()
+        .then(() => myAlert(name + " 기사님이 탈퇴 처리되었습니다."))
+        .catch(() => myAlert("오류가 발생했습니다."));
+    }, "#e74c3c");
 }
 
 function editUserInfo(id, oldName, oldComp, oldCamp, oldPhone) {
