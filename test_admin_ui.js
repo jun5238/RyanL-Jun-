@@ -10,7 +10,7 @@ function myConfirm(message, onConfirm, okColor) {
 
     const text = document.createElement('div');
     text.innerText = message;
-    text.style = "font-size:15px;font-weight:bold;color:#333;line-height:1.5;margin-bottom:20px;white-space:pre-wrap;"; // 줄바꿈 적용되게 수정
+    text.style = "font-size:15px;font-weight:bold;color:#333;line-height:1.5;margin-bottom:20px;white-space:pre-wrap;";
 
     const btnGroup = document.createElement('div');
     btnGroup.style = "display:flex;gap:10px;";
@@ -226,9 +226,8 @@ function renderApprovedList() {
         `;
         
         grouped[comp].forEach(u => {
-            // 🚨 정지 기능 색상 및 상태 세팅!!
             const isSuspended = u.suspended === true;
-            const suspendBtnColor = isSuspended ? "#82e0aa" : "#2ecc71"; // 연두색(정지됨) vs 쨍한초록(활성)
+            const suspendBtnColor = isSuspended ? "#82e0aa" : "#2ecc71";
             const suspendTextColor = isSuspended ? "#333" : "white";
             const suspendBtnText = isSuspended ? "정지됨" : "정지";
             const suspendAction = isSuspended 
@@ -243,9 +242,9 @@ function renderApprovedList() {
                     </div>
                     <div style="display:flex; align-items:center; gap:6px;">
                         <div style="color:#aaa; font-size:11px;">${u.camp}</div>
-                        <button onclick="${suspendAction}" style="padding:5px 8px; background:${suspendBtnColor}; color:${suspendTextColor}; border:none; border-radius:5px; font-size:11px; font-weight:bold; cursor:pointer; box-shadow:0 2px 4px rgba(0,0,0,0.2);">${suspendBtnText}</button>
                         <button onclick="editUserInfo('${u.id}', '${u.name}', '${u.company}', '${u.camp}', '${u.phone || ''}')" style="padding:5px 8px; background:#3498db; color:white; border:none; border-radius:5px; font-size:11px; font-weight:bold; cursor:pointer; box-shadow:0 2px 4px rgba(0,0,0,0.2);">수정</button>
                         <button onclick="deleteUser('${u.id}', '${u.name}')" style="padding:5px 8px; background:#e74c3c; color:white; border:none; border-radius:5px; font-size:11px; font-weight:bold; cursor:pointer; box-shadow:0 2px 4px rgba(0,0,0,0.2);">탈퇴</button>
+                        <button onclick="${suspendAction}" style="padding:5px 8px; background:${suspendBtnColor}; color:${suspendTextColor}; border:none; border-radius:5px; font-size:11px; font-weight:bold; cursor:pointer; box-shadow:0 2px 4px rgba(0,0,0,0.2);">${suspendBtnText}</button>
                     </div>
                 </div>
             `;
@@ -257,7 +256,6 @@ function renderApprovedList() {
     }
 }
 
-// 🚨 신규 추가: 계정 정지 함수
 function suspendUser(id, name) {
     myPrompt(name + " 기사님의 계정을 정지하려는 사유를 입력하세요.", (reason) => {
         db.ref("users/" + id).update({
@@ -269,12 +267,11 @@ function suspendUser(id, name) {
     });
 }
 
-// 🚨 신규 추가: 계정 정지 해제 함수
 function unsuspendUser(id, name, reason) {
     myConfirm(`[과거 정지 사유]\n${reason}\n\n${name} 기사님의 정지를 해제하시겠습니까?`, () => {
         db.ref("users/" + id).update({
-            suspended: null, // 정지 상태 삭제
-            suspendReason: null // 사유도 삭제
+            suspended: null,
+            suspendReason: null
         }).then(() => {
             myAlert(name + " 기사님 계정 정지가 해제되었습니다.");
         }).catch(() => myAlert("오류가 발생했습니다."));
