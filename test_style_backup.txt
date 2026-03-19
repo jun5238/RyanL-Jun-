@@ -74,3 +74,6 @@ input, select { width: 100%; padding: 14px; border-radius: 8px; font-size: 17px;
 body.dark-mode .logo-img {
     background-color: transparent;
 }
+body.dark-mode .sub-tag {
+    color: white;
+}
