@@ -10,7 +10,7 @@ function myConfirm(message, onConfirm, okColor) {
 
     const text = document.createElement('div');
     text.innerText = message;
-    text.style = "font-size:15px;font-weight:bold;color:#333;line-height:1.5;margin-bottom:20px;";
+    text.style = "font-size:15px;font-weight:bold;color:#333;line-height:1.5;margin-bottom:20px;white-space:pre-wrap;";
 
     const btnGroup = document.createElement('div');
     btnGroup.style = "display:flex;gap:10px;";
@@ -53,7 +53,7 @@ function myPrompt(message, onSubmit) {
 
     const input = document.createElement('input');
     input.type = "text";
-    input.placeholder = "거절 사유를 입력해주세요";
+    input.placeholder = "사유를 입력해주세요";
     input.style = "width:100%;padding:12px;margin-bottom:20px;border:1px solid #ccc;border-radius:8px;box-sizing:border-box;font-size:14px;";
 
     const btnGroup = document.createElement('div');
@@ -69,7 +69,7 @@ function myPrompt(message, onSubmit) {
 
     okBtn.onclick = () => {
         const val = input.value.trim();
-        if(!val) { myAlert("사유를 입력해야 거절 처리가 가능합니다!"); return; }
+        if(!val) { myAlert("사유를 입력해야 처리가 가능합니다!"); return; }
         document.body.removeChild(modal);
         if(onSubmit) onSubmit(val);
     };
@@ -195,7 +195,6 @@ function renderApprovedList() {
             const name = String(user.name || '');
             const uid = String(user.id || ''); 
             
-            // 이름이나 아이디로만 검색하도록 복구!
             if (name.toLowerCase().includes(keyword) || uid.toLowerCase().includes(keyword)) {
                 if (!grouped[comp]) grouped[comp] = [];
                 grouped[comp].push(user);
@@ -215,11 +214,9 @@ function renderApprovedList() {
         const compDiv = document.createElement('div');
         compDiv.style.cssText = "background:rgba(255,255,255,0.05); border-radius:8px; padding:12px; margin-bottom:10px; text-align:left;";
         
-        // 검색어가 있으면 펴두고, 없으면 깔끔하게 접어두기
         const displayStyle = keyword ? "block" : "none";
         const iconText = keyword ? "▲ 접기" : "▼ 펴기";
 
-        // 접고 펴기 버튼이 들어간 찰진 헤더 부분!!
         let htmlStr = `
             <div onclick="toggleCompanyList('comp-list-${compIndex}', this)" style="display:flex; justify-content:space-between; align-items:center; cursor:pointer; color:#f1c40f; font-weight:bold; font-size:15px; padding:5px 0;">
                 <div>🏢 ${comp} <span style="font-size:12px; color:#aaa;">(${grouped[comp].length}명)</span></div>
@@ -229,28 +226,56 @@ function renderApprovedList() {
         `;
         
         grouped[comp].forEach(u => {
+            const isSuspended = u.suspended === true;
+            const suspendBtnColor = isSuspended ? "#95a5a6" : "#2ecc71";
+            const suspendAction = isSuspended 
+                ? `unsuspendUser('${u.id}', '${u.name}', '${u.suspendReason || '사유 없음'}')` 
+                : `suspendUser('${u.id}', '${u.name}')`;
+
             htmlStr += `
                 <div style="display:flex; justify-content:space-between; align-items:center; color:#eee; font-size:13px; padding:8px 0; border-bottom:1px solid rgba(255,255,255,0.05);">
                     <div style="display:flex; flex-direction:column; gap:5px;">
-                        <div><strong style="color:white; font-size:14px;">${u.name}</strong> <span style="color:#aaa;">(${u.id})</span></div>
-                        <div style="color:#3498db; font-size:12px; font-weight:bold;">📞 ${u.phone || '미입력'}</div>
+                        <div><strong style="color:${isSuspended ? '#888' : 'white'}; font-size:14px;">${u.name}</strong> <span style="color:#aaa;">(${u.id})</span></div>
+                        <div style="color:${isSuspended ? '#888' : '#3498db'}; font-size:12px; font-weight:bold;">📞 ${u.phone || '미입력'}</div>
                     </div>
                     <div style="display:flex; align-items:center; gap:6px;">
                         <div style="color:#aaa; font-size:11px;">${u.camp}</div>
                         <button onclick="editUserInfo('${u.id}', '${u.name}', '${u.company}', '${u.camp}', '${u.phone || ''}')" style="padding:5px 8px; background:#3498db; color:white; border:none; border-radius:5px; font-size:11px; font-weight:bold; cursor:pointer; box-shadow:0 2px 4px rgba(0,0,0,0.2);">수정</button>
                         <button onclick="deleteUser('${u.id}', '${u.name}')" style="padding:5px 8px; background:#e74c3c; color:white; border:none; border-radius:5px; font-size:11px; font-weight:bold; cursor:pointer; box-shadow:0 2px 4px rgba(0,0,0,0.2);">탈퇴</button>
+                        <button onclick="${suspendAction}" style="padding:5px 8px; background:${suspendBtnColor}; color:white; border:none; border-radius:5px; font-size:11px; font-weight:bold; cursor:pointer; box-shadow:0 2px 4px rgba(0,0,0,0.2);">정지</button>
                     </div>
                 </div>
             `;
         });
         
-        htmlStr += `</div>`; // 아코디언 박스 닫기
+        htmlStr += `</div>`; 
         compDiv.innerHTML = htmlStr;
         appSec.appendChild(compDiv);
     }
 }
 
-// 아코디언 접고 펴기 마법 함수!!
+function suspendUser(id, name) {
+    myPrompt(name + " 기사님의 계정을 정지하려는 사유를 입력하세요.", (reason) => {
+        db.ref("users/" + id).update({
+            suspended: true,
+            suspendReason: reason
+        }).then(() => {
+            myAlert(name + " 기사님의 계정이 정지되었습니다.");
+        }).catch(() => myAlert("오류가 발생했습니다."));
+    });
+}
+
+function unsuspendUser(id, name, reason) {
+    myConfirm(`[과거 정지 사유]\n${reason}\n\n${name} 기사님의 정지를 해제하시겠습니까?`, () => {
+        db.ref("users/" + id).update({
+            suspended: null,
+            suspendReason: null
+        }).then(() => {
+            myAlert(name + " 기사님 계정 정지가 해제되었습니다.");
+        }).catch(() => myAlert("오류가 발생했습니다."));
+    }, "#2ecc71");
+}
+
 function toggleCompanyList(listId, headerEl) {
     const listEl = document.getElementById(listId);
     const iconEl = headerEl.querySelector('.toggle-icon');
