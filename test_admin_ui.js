@@ -195,10 +195,8 @@ function renderApprovedList() {
             const name = String(user.name || '');
             const uid = String(user.id || ''); 
             
-            if (comp.toLowerCase().includes(keyword) || 
-                name.toLowerCase().includes(keyword) || 
-                uid.toLowerCase().includes(keyword)) {
-                
+            // 이름이나 아이디로만 검색하도록 복구!
+            if (name.toLowerCase().includes(keyword) || uid.toLowerCase().includes(keyword)) {
                 if (!grouped[comp]) grouped[comp] = [];
                 grouped[comp].push(user);
                 count++;
@@ -211,13 +209,27 @@ function renderApprovedList() {
         return;
     }
 
+    let compIndex = 0;
     for (const comp in grouped) {
+        compIndex++;
         const compDiv = document.createElement('div');
         compDiv.style.cssText = "background:rgba(255,255,255,0.05); border-radius:8px; padding:12px; margin-bottom:10px; text-align:left;";
-        compDiv.innerHTML = `<div style="color:#f1c40f; font-weight:bold; font-size:15px; margin-bottom:10px;">🏢 ${comp} <span style="font-size:12px; color:#aaa;">(${grouped[comp].length}명)</span></div>`;
+        
+        // 검색어가 있으면 펴두고, 없으면 깔끔하게 접어두기
+        const displayStyle = keyword ? "block" : "none";
+        const iconText = keyword ? "▲ 접기" : "▼ 펴기";
+
+        // 접고 펴기 버튼이 들어간 찰진 헤더 부분!!
+        let htmlStr = `
+            <div onclick="toggleCompanyList('comp-list-${compIndex}', this)" style="display:flex; justify-content:space-between; align-items:center; cursor:pointer; color:#f1c40f; font-weight:bold; font-size:15px; padding:5px 0;">
+                <div>🏢 ${comp} <span style="font-size:12px; color:#aaa;">(${grouped[comp].length}명)</span></div>
+                <div class="toggle-icon" style="color:#aaa; font-size:11px; padding:4px 8px; background:rgba(255,255,255,0.1); border-radius:5px;">${iconText}</div>
+            </div>
+            <div id="comp-list-${compIndex}" style="display:${displayStyle}; margin-top:10px; transition:all 0.3s ease;">
+        `;
         
         grouped[comp].forEach(u => {
-            compDiv.innerHTML += `
+            htmlStr += `
                 <div style="display:flex; justify-content:space-between; align-items:center; color:#eee; font-size:13px; padding:8px 0; border-bottom:1px solid rgba(255,255,255,0.05);">
                     <div style="display:flex; flex-direction:column; gap:5px;">
                         <div><strong style="color:white; font-size:14px;">${u.name}</strong> <span style="color:#aaa;">(${u.id})</span></div>
@@ -231,7 +243,24 @@ function renderApprovedList() {
                 </div>
             `;
         });
+        
+        htmlStr += `</div>`; // 아코디언 박스 닫기
+        compDiv.innerHTML = htmlStr;
         appSec.appendChild(compDiv);
+    }
+}
+
+// 아코디언 접고 펴기 마법 함수!!
+function toggleCompanyList(listId, headerEl) {
+    const listEl = document.getElementById(listId);
+    const iconEl = headerEl.querySelector('.toggle-icon');
+
+    if (listEl.style.display === 'none') {
+        listEl.style.display = 'block';
+        iconEl.innerText = '▲ 접기';
+    } else {
+        listEl.style.display = 'none';
+        iconEl.innerText = '▼ 펴기';
     }
 }
 
