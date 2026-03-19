@@ -112,14 +112,6 @@ function loadApprovalRequests() {
         <div id="feedback-section" style="margin-top:20px;"></div>
     `;
 
-    db.ref("공지사항").once('value', snap => {
-        const val = snap.val();
-        if(val && val.text) {
-            const noticeInput = document.getElementById('admin-notice-input');
-            if(noticeInput) noticeInput.value = val.text;
-        }
-    });
-
     db.ref("승인대기방").on('value', (snapshot) => {
         const pendingSec = document.getElementById('pending-section');
         if (!pendingSec) return;
