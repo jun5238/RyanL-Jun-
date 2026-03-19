@@ -62,11 +62,11 @@ input, select { width: 100%; padding: 14px; border-radius: 8px; font-size: 17px;
     .btn-paste { width: 110px; font-size: 11px; }
 }
 .logo-img {
-    width: 120px;
-    height: 120px;
+    width: 160px;
+    height: 160px;
     object-fit: contain;
     background-color: white;
-    border-radius: 15px;
+    border-radius: 8px;
     display: block;
     margin: 0 auto;
 }
