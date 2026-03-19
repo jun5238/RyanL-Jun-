@@ -20,7 +20,15 @@ window.onload = function() {
             db.ref("users/" + savedId).once('value', (snapshot) => {
                 const userData = snapshot.val();
                 if (userData && userData.approved === true) {
-                    showMain(savedId, savedCamp);
+                    // 🚨 앱 켤 때 이미 정지된 유저면 쫓아내기!!
+                    if (userData.suspended === true) {
+                        myAlert("🚨 계정이 정지되었습니다.\n\n관리자에게 문의하세요.");
+                        localStorage.removeItem('ryanl_id');
+                        localStorage.removeItem('ryanl_camp');
+                        showSetup();
+                    } else {
+                        showMain(savedId, savedCamp);
+                    }
                 } else {
                     showSetup();
                 }
@@ -172,9 +180,14 @@ function saveInfo() {
     db.ref("users/" + userId).once('value', (snapshot) => {
         const userData = snapshot.val();
         if (userData && userData.approved === true) {
-            localStorage.setItem('ryanl_id', userId);
-            localStorage.setItem('ryanl_camp', userCamp);
-            showMain(userId, userCamp);
+            // 🚨 로그인 버튼 눌렀을 때 정지된 유저면 철벽 방어!!
+            if (userData.suspended === true) {
+                myAlert("🚨 계정이 정지되었습니다.\n\n관리자에게 문의하세요.");
+            } else {
+                localStorage.setItem('ryanl_id', userId);
+                localStorage.setItem('ryanl_camp', userCamp);
+                showMain(userId, userCamp);
+            }
         } else {
             db.ref("승인대기방/" + userId).once('value', (pendingSnap) => {
                 if (pendingSnap.exists()) {
