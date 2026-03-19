@@ -11,7 +11,8 @@ const VIP_COMPANY_DATA = [
     { id: "parkmjs2", name: "박만준", company: "라이언엘" },
     { id: "lhc3102", name: "이한철", company: "HO" },
     { id: "bear42b2", name: "황인호", company: "일성" },
-    { id: "manoflogistics", name: "이영수", company: "모벤티스" }
+    { id: "manoflogistics", name: "이영수", company: "모벤티스" },
+    { id: "skycbtt", name: "최영환", company: "라이언엘" }
     
     
     // 새로운 기사님은 이 아래에 계속 추가해주세요!
