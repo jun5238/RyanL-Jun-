@@ -77,4 +77,10 @@ body.dark-mode .logo-img {
 body.dark-mode .sub-tag {
     color: white;
 }
+/* 다크모드 시 공지사항 입력칸 스타일 개선 */
+body.dark-mode #notice-input {
+  color: white; /* 글씨 하얗게! */
+  background-color: #2a2a2a; /* 배경색도 조금 더 어둡게! */
+  border-color: #444; /* 테두리도 어둡게! */
+}
 
