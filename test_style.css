@@ -1,3 +1,4 @@
+/* style.css */
 :root { --navy: #152b52; --orange: #ff8c00; --ryanl-blue: #1e4a9e; }
 body { font-family: -apple-system, sans-serif; background: #ffffff; margin: 0; padding: 0; display: flex; flex-direction: column; align-items: center; overflow-x: hidden; }
 
@@ -75,32 +76,4 @@ body.dark-mode .logo-img {
 }
 body.dark-mode .sub-tag {
     color: white;
-}
-
-.premium-btn {
-    position: absolute;
-    width: 90px;
-    height: 32px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-    background-color: #ffffff;
-    color: #152b52;
-    border: 1px solid #e1e5eb;
-    border-radius: 4px; 
-    font-weight: 800;
-    font-size: 11px;
-    letter-spacing: -0.5px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.03);
-    cursor: pointer;
-    z-index: 10;
-    transition: all 0.2s ease-in-out;
-}
-
-body.dark-mode .premium-btn {
-    background-color: #222222;
-    color: #ffffff;
-    border: 1px solid #444444;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.3);
 }
