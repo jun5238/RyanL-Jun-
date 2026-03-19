@@ -290,7 +290,6 @@ function sendFeedbackPrompt() {
     document.body.appendChild(modal);
 }
 
-// 이글이글 노란색 태양으로 원상복구! ☀️
 const sunIconSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="#f1c40f" stroke="none"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3" stroke="#f1c40f" stroke-width="1.5"></line><line x1="12" y1="21" x2="12" y2="23" stroke="#f1c40f" stroke-width="1.5"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64" stroke="#f1c40f" stroke-width="1.5"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78" stroke="#f1c40f" stroke-width="1.5"></line><line x1="1" y1="12" x2="3" y2="12" stroke="#f1c40f" stroke-width="1.5"></line><line x1="21" y1="12" x2="23" y2="12" stroke="#f1c40f" stroke-width="1.5"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36" stroke="#f1c40f" stroke-width="1.5"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22" stroke="#f1c40f" stroke-width="1.5"></line></svg>`;
 
 function toggleDarkMode() {
@@ -302,23 +301,28 @@ function toggleDarkMode() {
 
 function updateDarkModeButton(isDark) {
     const btn = document.getElementById('dark-mode-btn');
-    if (!btn) return;
+    const logo = document.querySelector('.logo-img');
 
-    btn.style.display = 'flex';
-    btn.style.alignItems = 'center';
-    btn.style.justifyContent = 'center';
-    btn.style.gap = '5px';
-    btn.style.width = '100px';
-    btn.style.padding = '6px';
+    if (btn) {
+        btn.style.display = 'flex';
+        btn.style.alignItems = 'center';
+        btn.style.justifyContent = 'center';
+        btn.style.gap = '5px';
+        btn.style.width = '100px';
+        btn.style.padding = '6px';
 
-    if (isDark) {
-        // 하얀색 배경에 이글거리는 노란 해!
-        btn.innerHTML = `${sunIconSvg} <span style="font-weight: 900; font-size: 11px;">라이트모드</span>`;
-        btn.style.backgroundColor = '#ffffff'; 
-        btn.style.color = '#121212';
-    } else {
-        btn.innerHTML = `<span style="font-size:14px;">🌙</span> <span style="font-weight: 900; font-size: 11px;">다크모드</span>`;
-        btn.style.backgroundColor = '#34495e';
-        btn.style.color = 'white';
+        if (isDark) {
+            btn.innerHTML = `${sunIconSvg} <span style="font-weight: 900; font-size: 11px;">라이트모드</span>`;
+            btn.style.backgroundColor = '#ffffff'; 
+            btn.style.color = '#121212';
+        } else {
+            btn.innerHTML = `<span style="font-size:14px;">🌙</span> <span style="font-weight: 900; font-size: 11px;">다크모드</span>`;
+            btn.style.backgroundColor = '#34495e';
+            btn.style.color = 'white';
+        }
+    }
+
+    if (logo) {
+        logo.src = isDark ? 'mlogo_dark.jpg' : 'mlogo.jpg';
     }
 }
