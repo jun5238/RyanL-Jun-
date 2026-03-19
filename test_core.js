@@ -304,21 +304,10 @@ function updateDarkModeButton(isDark) {
     const logo = document.querySelector('.logo-img');
 
     if (btn) {
-        btn.style.display = 'flex';
-        btn.style.alignItems = 'center';
-        btn.style.justifyContent = 'center';
-        btn.style.gap = '5px';
-        btn.style.width = '100px';
-        btn.style.padding = '6px';
-
         if (isDark) {
-            btn.innerHTML = `${sunIconSvg} <span style="font-weight: 900; font-size: 11px;">라이트모드</span>`;
-            btn.style.backgroundColor = '#ffffff'; 
-            btn.style.color = '#121212';
+            btn.innerHTML = `${sunIconSvg} <span>라이트모드</span>`;
         } else {
-            btn.innerHTML = `<span style="font-size:14px;">🌙</span> <span style="font-weight: 900; font-size: 11px;">다크모드</span>`;
-            btn.style.backgroundColor = '#34495e';
-            btn.style.color = 'white';
+            btn.innerHTML = `<span style="font-size:13px;">🌙</span> <span>다크모드</span>`;
         }
     }
 
