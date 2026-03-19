@@ -9,7 +9,7 @@
     <link rel="apple-touch-icon" href="icon.jpg">
     <link rel="icon" sizes="192x192" href="icon.jpg">
 
-    <link rel="stylesheet" href="test_style.css?v=0319_final">
+    <link rel="stylesheet" href="test_style.css?v=6">
 
     <style>
         body.dark-mode { background-color: #121212; color: #f1f1f1; }
