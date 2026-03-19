@@ -227,9 +227,7 @@ function renderApprovedList() {
         
         grouped[comp].forEach(u => {
             const isSuspended = u.suspended === true;
-            const suspendBtnColor = isSuspended ? "#82e0aa" : "#2ecc71";
-            const suspendTextColor = isSuspended ? "#333" : "white";
-            const suspendBtnText = isSuspended ? "정지됨" : "정지";
+            const suspendBtnColor = isSuspended ? "#95a5a6" : "#2ecc71";
             const suspendAction = isSuspended 
                 ? `unsuspendUser('${u.id}', '${u.name}', '${u.suspendReason || '사유 없음'}')` 
                 : `suspendUser('${u.id}', '${u.name}')`;
@@ -244,7 +242,7 @@ function renderApprovedList() {
                         <div style="color:#aaa; font-size:11px;">${u.camp}</div>
                         <button onclick="editUserInfo('${u.id}', '${u.name}', '${u.company}', '${u.camp}', '${u.phone || ''}')" style="padding:5px 8px; background:#3498db; color:white; border:none; border-radius:5px; font-size:11px; font-weight:bold; cursor:pointer; box-shadow:0 2px 4px rgba(0,0,0,0.2);">수정</button>
                         <button onclick="deleteUser('${u.id}', '${u.name}')" style="padding:5px 8px; background:#e74c3c; color:white; border:none; border-radius:5px; font-size:11px; font-weight:bold; cursor:pointer; box-shadow:0 2px 4px rgba(0,0,0,0.2);">탈퇴</button>
-                        <button onclick="${suspendAction}" style="padding:5px 8px; background:${suspendBtnColor}; color:${suspendTextColor}; border:none; border-radius:5px; font-size:11px; font-weight:bold; cursor:pointer; box-shadow:0 2px 4px rgba(0,0,0,0.2);">${suspendBtnText}</button>
+                        <button onclick="${suspendAction}" style="padding:5px 8px; background:${suspendBtnColor}; color:white; border:none; border-radius:5px; font-size:11px; font-weight:bold; cursor:pointer; box-shadow:0 2px 4px rgba(0,0,0,0.2);">정지</button>
                     </div>
                 </div>
             `;
