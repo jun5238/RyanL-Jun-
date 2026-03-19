@@ -23,12 +23,13 @@
         body.dark-mode .history-item { background: #333 !important; }
         body.dark-mode .history-waybill { color: #fff !important; }
         body.dark-mode .footer .designer-tag .hidden-name { color: #121212 !important; }
+        
+        /* 다크모드 시 관리자 입력칸 하얗게 만들기 */
         body.dark-mode #admin-notice-input,
-body.dark-mode #admin-search-input {
-    background-color: #ffffff !important;
-    color: #000000 !important;
-}
-
+        body.dark-mode #admin-search-input {
+            background-color: #ffffff !important;
+            color: #000000 !important;
+        }
     </style>
 
     <script src="security_protocol.js"></script>
@@ -248,17 +249,16 @@ body.dark-mode #admin-search-input {
             
             <div style="background:rgba(255,255,255,0.1); border-radius:10px; padding:15px; margin-bottom:15px; text-align:left;">
                 <div style="color:#f1c40f; font-weight:bold; font-size:14px; margin-bottom:8px;">📢 전체 공지사항 설정</div>
-<div style="display:flex; gap:8px; margin-bottom:10px;">
-    <input type="text" id="admin-notice-input" placeholder="기사님들께 띄울 공지를 입력하세요" style="flex:1; padding:10px; border-radius:8px; border:none; font-size:13px; font-family:inherit;">
-    <button onclick="saveNotice()" style="padding:10px 15px; background:#e74c3c; color:white; border:none; border-radius:8px; font-weight:bold; cursor:pointer;">저장</button>
-</div>
-<div id="notice-history-area" style="background:rgba(0,0,0,0.2); padding:10px; border-radius:8px; margin-bottom:15px; font-size:12px; text-align:left;">
-    <div style="color:#2ecc71; font-weight:bold; margin-bottom:5px;">🕒 최근 등록 공지 (최대 5건)</div>
-    <div id="notice-history-list" style="max-height:80px; overflow-y:auto; color:#ccc;">불러오는 중...</div>
-</div>
-
+                <div style="display:flex; gap:8px; margin-bottom:10px;">
+                    <input type="text" id="admin-notice-input" placeholder="기사님들께 띄울 공지를 입력하세요" style="flex:1; padding:10px; border-radius:8px; border:none; font-size:13px; font-family:inherit;">
+                    <button onclick="saveNotice()" style="padding:10px 15px; background:#e74c3c; color:white; border:none; border-radius:8px; font-weight:bold; cursor:pointer;">저장</button>
                 </div>
                 
+                <div id="notice-history-area" style="background:rgba(0,0,0,0.2); padding:10px; border-radius:8px; margin-bottom:15px; font-size:12px; text-align:left;">
+                    <div style="color:#2ecc71; font-weight:bold; margin-bottom:5px;">🕒 최근 등록 공지 (최대 5건)</div>
+                    <div id="notice-history-list" style="max-height:80px; overflow-y:auto; color:#ccc;">불러오는 중...</div>
+                </div>
+
                 <div style="color:#2ecc71; font-weight:bold; font-size:14px; margin-bottom:8px;">🔍 명단 검색 및 다운로드</div>
                 <div style="display:flex; justify-content:space-between; gap:10px;">
                     <input type="text" id="admin-search-input" oninput="renderApprovedList()" placeholder="이름 또는 업체명 검색" style="flex:1; padding:10px; border-radius:8px; border:none; font-size:13px; font-family:inherit;">
