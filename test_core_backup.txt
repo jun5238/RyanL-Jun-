@@ -20,15 +20,7 @@ window.onload = function() {
             db.ref("users/" + savedId).once('value', (snapshot) => {
                 const userData = snapshot.val();
                 if (userData && userData.approved === true) {
-                    // 🚨 앱 켤 때 이미 정지된 유저면 쫓아내기!!
-                    if (userData.suspended === true) {
-                        myAlert("🚨 계정이 정지되었습니다.\n\n관리자에게 문의하세요.");
-                        localStorage.removeItem('ryanl_id');
-                        localStorage.removeItem('ryanl_camp');
-                        showSetup();
-                    } else {
-                        showMain(savedId, savedCamp);
-                    }
+                    showMain(savedId, savedCamp);
                 } else {
                     showSetup();
                 }
@@ -129,7 +121,7 @@ function saveHistory(waybill, qty) {
 function showHistory() {
     const id = localStorage.getItem('ryanl_id') || 'unknown';
     let history = JSON.parse(localStorage.getItem('ryanl_history_' + id) || '[]');
-    let html = '<div style="font-size:18px;font-weight:900;margin-bottom:15px; color:#152b52;">📋 내 채번 기록 <span style="font-size:12px; color:#777;">(최근 20건)</span></div>';
+    let html = '<div style="font-size:18px;font-weight:900;margin-bottom:15px; color:#152b52;">📋 내 채번 히스토리 <span style="font-size:12px; color:#777;">(최근 20건)</span></div>';
     
     if(history.length === 0) {
         html += '<div style="color:#777; font-size:14px; margin-bottom:20px; padding:20px; background:#f4f4f4; border-radius:10px;">아직 채번 요청 기록이 없습니다!</div>';
@@ -148,7 +140,13 @@ function showHistory() {
         html += '</div>';
     }
     
-    html += '<button onclick="document.getElementById(\'history-overlay\').style.display=\'none\'" style="width:100%; padding:12px; background:#152b52; color:white; border:none; border-radius:10px; font-weight:bold; cursor:pointer;">닫기</button>';
+    // 🗑️ 기록지우기 버튼 추가 및 닫기 버튼 배치 수정!
+    html += `
+        <div style="display:flex; gap:10px; margin-top: 15px;">
+            <button onclick="clearHistory('${id}')" style="width:50%; padding:12px; background:#e74c3c; color:white; border:none; border-radius:10px; font-weight:bold; cursor:pointer;">기록지우기</button>
+            <button onclick="document.getElementById('history-overlay').style.display='none'" style="width:50%; padding:12px; background:#152b52; color:white; border:none; border-radius:10px; font-weight:bold; cursor:pointer;">닫기</button>
+        </div>
+    `;
     
     if(document.body.classList.contains('dark-mode')) {
         html = html.replace('color:#152b52;', 'color:#fff;').replace('color:#333;', 'color:#fff;');
@@ -156,6 +154,15 @@ function showHistory() {
     
     document.getElementById('history-content').innerHTML = html;
     document.getElementById('history-overlay').style.display = 'flex';
+}
+
+// 🗑️ 기록지우기 함수 새로 추가!!
+function clearHistory(id) {
+    myConfirm("정말 채번 히스토리를 모두 지우시겠습니까?", () => {
+        localStorage.removeItem('ryanl_history_' + id);
+        document.getElementById('history-overlay').style.display = 'none';
+        myAlert("채번 히스토리가 모두 삭제되었습니다.");
+    }, "#e74c3c"); // 확인 버튼 색상을 빨간색으로!
 }
 
 function myAlert(msg) {
@@ -180,14 +187,9 @@ function saveInfo() {
     db.ref("users/" + userId).once('value', (snapshot) => {
         const userData = snapshot.val();
         if (userData && userData.approved === true) {
-            // 🚨 로그인 버튼 눌렀을 때 정지된 유저면 철벽 방어!!
-            if (userData.suspended === true) {
-                myAlert("🚨 계정이 정지되었습니다.\n\n관리자에게 문의하세요.");
-            } else {
-                localStorage.setItem('ryanl_id', userId);
-                localStorage.setItem('ryanl_camp', userCamp);
-                showMain(userId, userCamp);
-            }
+            localStorage.setItem('ryanl_id', userId);
+            localStorage.setItem('ryanl_camp', userCamp);
+            showMain(userId, userCamp);
         } else {
             db.ref("승인대기방/" + userId).once('value', (pendingSnap) => {
                 if (pendingSnap.exists()) {
