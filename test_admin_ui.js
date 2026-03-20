@@ -107,6 +107,19 @@ function checkAdminPw() {
     });
 }
 
+function toggleStatsSection(contentId, headerEl) {
+    const contentEl = document.getElementById(contentId);
+    const iconEl = headerEl.querySelector('.toggle-icon');
+
+    if (contentEl.style.display === 'none') {
+        contentEl.style.display = 'block';
+        iconEl.innerText = '▲ 접기';
+    } else {
+        contentEl.style.display = 'none';
+        iconEl.innerText = '▼ 펴기';
+    }
+}
+
 function searchStats() {
     const start = document.getElementById('stat-start-date').value;
     const end = document.getElementById('stat-end-date').value;
@@ -114,23 +127,38 @@ function searchStats() {
     if(!start || !end) { myAlert("시작일과 종료일을 모두 선택해주세요!"); return; }
     if(start > end) { myAlert("시작일이 종료일보다 늦을 수 없습니다!"); return; }
 
+    const startDateObj = new Date(start);
+    const endDateObj = new Date(end);
+    const diffTime = Math.abs(endDateObj - startDateObj);
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1; 
+
     db.ref("통계").orderByKey().startAt(start).endAt(end).once('value', snapshot => {
         const data = snapshot.val();
         let totalReqs = 0;
         let uniqueUsers = new Set();
+        let totalDau = 0; 
 
         if(data) {
             Object.keys(data).forEach(dateKey => {
                 const dayData = data[dateKey];
                 if(dayData.채번건수) totalReqs += dayData.채번건수;
                 if(dayData.접속자) {
+                    const dauCount = Object.keys(dayData.접속자).length;
+                    totalDau += dauCount; 
                     Object.keys(dayData.접속자).forEach(uid => uniqueUsers.add(uid));
                 }
             });
         }
 
+        const avgUsers = diffDays > 0 ? (uniqueUsers.size / diffDays).toFixed(1) : "0.0";
+        const avgReqs = diffDays > 0 ? (totalReqs / diffDays).toFixed(1) : "0.0";
+
         document.getElementById('search-total-users').innerText = uniqueUsers.size;
         document.getElementById('search-total-reqs').innerText = totalReqs;
+        
+        document.getElementById('search-avg-users').innerText = avgUsers;
+        document.getElementById('search-avg-reqs').innerText = avgReqs;
+
         document.getElementById('stat-search-result').style.display = 'block';
     });
 }
