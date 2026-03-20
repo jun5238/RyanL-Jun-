@@ -98,10 +98,40 @@ function checkAdminPw() {
             document.getElementById('admin-dashboard-view').style.display = 'block';
             loadApprovalRequests(); 
             loadTodayStats();
+            document.getElementById('stat-start-date').value = getTodayDateString();
+            document.getElementById('stat-end-date').value = getTodayDateString();
         } else {
             myAlert("인증 정보가 올바르지 않습니다.");
             document.getElementById('admin-pw').value = '';
         }
+    });
+}
+
+function searchStats() {
+    const start = document.getElementById('stat-start-date').value;
+    const end = document.getElementById('stat-end-date').value;
+    
+    if(!start || !end) { myAlert("시작일과 종료일을 모두 선택해주세요!"); return; }
+    if(start > end) { myAlert("시작일이 종료일보다 늦을 수 없습니다!"); return; }
+
+    db.ref("통계").orderByKey().startAt(start).endAt(end).once('value', snapshot => {
+        const data = snapshot.val();
+        let totalReqs = 0;
+        let uniqueUsers = new Set();
+
+        if(data) {
+            Object.keys(data).forEach(dateKey => {
+                const dayData = data[dateKey];
+                if(dayData.채번건수) totalReqs += dayData.채번건수;
+                if(dayData.접속자) {
+                    Object.keys(dayData.접속자).forEach(uid => uniqueUsers.add(uid));
+                }
+            });
+        }
+
+        document.getElementById('search-total-users').innerText = uniqueUsers.size;
+        document.getElementById('search-total-reqs').innerText = totalReqs;
+        document.getElementById('stat-search-result').style.display = 'block';
     });
 }
 
