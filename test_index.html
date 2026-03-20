@@ -189,16 +189,16 @@
                 </script>
             </div>
             
-            <div id="dark-mode-btn" onclick="toggleDarkMode()" style="position: absolute; top: 10px; left: 10px; width: 100px; padding: 6px; display: flex; align-items: center; justify-content: center; gap: 5px; background-color: #34495e; color: white; border-radius: 15px; font-weight: 900; font-size: 12px; box-shadow: 0 3px 6px rgba(0,0,0,0.15); cursor: pointer; z-index: 10; margin-top: 25px;">
-                <span style="font-size:14px;">🌙</span> <span style="font-weight: 900; font-size: 11px;">다크모드</span>
+            <div id="dark-mode-btn" class="premium-btn" onclick="toggleDarkMode()" style="top: 15px; left: 10px; width: 100px; margin-top: 25px;">
+                <span style="font-size:13px;">🌙</span> <span>다크모드</span>
             </div>
 
-            <div onclick="window.location.reload(true);" style="position: absolute; top: 10px; right: 10px; width: 90px; padding: 6px 0; text-align: center; background-color: #ff8c00; color: white; border-radius: 15px; font-weight: 900; font-size: 13px; box-shadow: 0 3px 6px rgba(0,0,0,0.15); cursor: pointer; z-index: 10;">
-                🔄 새로고침
+            <div class="premium-btn" onclick="window.location.reload(true);" style="top: 15px; right: 10px;">
+                <span style="font-size:13px;">🔄</span> <span>새로고침</span>
             </div>
             
-            <div onclick="sendFeedbackPrompt()" style="position: absolute; top: 45px; right: 10px; width: 90px; padding: 6px 0; text-align: center; background-color: #9b59b6; color: white; border-radius: 15px; font-weight: 900; font-size: 13px; box-shadow: 0 3px 6px rgba(0,0,0,0.15); cursor: pointer; z-index: 10;">
-                💡 피드백
+            <div class="premium-btn" onclick="sendFeedbackPrompt()" style="top: 55px; right: 10px;">
+                <span style="font-size:13px;">💡</span> <span>피드백</span>
             </div>
             
             <div style="position: relative; display: inline-block;">
@@ -248,40 +248,66 @@
 
         <div id="admin-dashboard-view" style="display:none;" class="main-card">
             
-            <div style="background:rgba(255,140,0,0.1); border:2px solid #ff8c00; border-radius:10px; padding:15px; margin-bottom:15px; text-align:center;">
-                <div style="font-size:14px; font-weight:900; color:#ff8c00; margin-bottom:10px;">📊 오늘 (<span id="stat-date-display"></span>) 실시간 통계</div>
-                <div style="display:flex; justify-content:space-around; align-items:center;">
-                    <div>
-                        <div style="font-size:12px; color:#aaa; margin-bottom:5px;">👤 접속 기사님</div>
-                        <div style="font-size:22px; font-weight:900; color:#fff;"><span id="stat-dau">0</span><span style="font-size:14px; color:#aaa; font-weight:bold;">명</span></div>
-                    </div>
-                    <div style="width:1px; height:40px; background:rgba(255,255,255,0.2);"></div>
-                    <div>
-                        <div style="font-size:12px; color:#aaa; margin-bottom:5px;">📦 채번 전송 건수</div>
-                        <div style="font-size:22px; font-weight:900; color:#2ecc71;"><span id="stat-reqs">0</span><span style="font-size:14px; color:#aaa; font-weight:bold;">건</span></div>
+            <div class="stats-box" style="background:rgba(255,140,0,0.08); border:2px solid #ff8c00; border-radius:10px; padding:0; margin-bottom:15px;">
+                <div onclick="toggleStatsSection('today-stats-content', this)" style="display:flex; justify-content:space-between; align-items:center; cursor:pointer; padding:15px 15px 10px 15px;">
+                    <div style="font-size:14px; font-weight:900; color:#ff8c00;">📊 오늘 (<span id="stat-date-display"></span>) 실시간 통계</div>
+                    <div class="toggle-icon" style="color:#aaa; font-size:11px; padding:4px 8px; background:rgba(255,255,255,0.1); border-radius:5px;">▲ 접기</div>
+                </div>
+                
+                <div id="today-stats-content" style="display:block; padding: 0 15px 15px 15px; text-align:center;">
+                    <div style="display:flex; justify-content:space-around; align-items:center;">
+                        <div>
+                            <div style="font-size:12px; color:#aaa; margin-bottom:5px;">👤 접속 기사님</div>
+                            <div style="font-size:22px; font-weight:900; color:#fff;"><span id="stat-dau">0</span><span style="font-size:14px; color:#aaa; font-weight:bold;">명</span></div>
+                        </div>
+                        <div style="width:1px; height:40px; background:rgba(255,255,255,0.2);"></div>
+                        <div>
+                            <div style="font-size:12px; color:#aaa; margin-bottom:5px;">📦 채번 전송 건수</div>
+                            <div style="font-size:22px; font-weight:900; color:#2ecc71;"><span id="stat-reqs">0</span><span style="font-size:14px; color:#aaa; font-weight:bold;">건</span></div>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <div style="background:rgba(255,255,255,0.1); border-radius:10px; padding:15px; margin-bottom:15px; text-align:center;">
-                <div style="color:#f1c40f; font-weight:bold; font-size:14px; margin-bottom:10px;">📅 기간별 누적 통계 검색</div>
-                <div style="display:flex; justify-content:center; align-items:center; gap:8px; margin-bottom:10px;">
-                    <input type="date" id="stat-start-date" style="flex:1; padding:8px; border-radius:6px; border:none; font-size:13px; font-family:inherit; box-sizing:border-box;">
-                    <span style="color:#aaa; font-weight:bold;">~</span>
-                    <input type="date" id="stat-end-date" style="flex:1; padding:8px; border-radius:6px; border:none; font-size:13px; font-family:inherit; box-sizing:border-box;">
-                    <button onclick="searchStats()" style="padding:8px 15px; background:#3498db; color:white; border:none; border-radius:6px; font-weight:bold; cursor:pointer; font-size:13px; box-shadow:0 2px 4px rgba(0,0,0,0.2);">조회</button>
+            <div class="stats-box" style="background:rgba(255,255,255,0.05); border-radius:10px; padding:0; margin-bottom:15px;">
+                <div onclick="toggleStatsSection('period-stats-content', this)" style="display:flex; justify-content:space-between; align-items:center; cursor:pointer; padding:15px 15px 10px 15px;">
+                    <div style="color:#f1c40f; font-weight:bold; font-size:14px;">📅 기간별 누적 통계 검색</div>
+                    <div class="toggle-icon" style="color:#aaa; font-size:11px; padding:4px 8px; background:rgba(255,255,255,0.1); border-radius:5px;">▲ 접기</div>
                 </div>
-                <div id="stat-search-result" style="display:none; background:rgba(0,0,0,0.2); padding:15px; border-radius:8px; margin-top:10px;">
-                    <div style="font-size:13px; color:#f1c40f; font-weight:bold; margin-bottom:10px;">✅ 선택 기간 누적 데이터</div>
-                    <div style="display:flex; justify-content:space-around; align-items:center;">
-                        <div>
-                            <div style="font-size:11px; color:#aaa; margin-bottom:3px;">총 접속자(중복제외)</div>
-                            <div><strong id="search-total-users" style="color:#fff; font-size:20px;">0</strong><span style="font-size:12px; color:#aaa;">명</span></div>
+
+                <div id="period-stats-content" style="display:block; padding: 0 15px 15px 15px; text-align:center;">
+                    <div style="display:flex; justify-content:center; align-items:center; gap:8px; margin-bottom:10px;">
+                        <input type="date" id="stat-start-date" style="flex:1; padding:8px; border-radius:6px; border:none; font-size:13px; font-family:inherit; box-sizing:border-box;">
+                        <span style="color:#aaa; font-weight:bold;">~</span>
+                        <input type="date" id="stat-end-date" style="flex:1; padding:8px; border-radius:6px; border:none; font-size:13px; font-family:inherit; box-sizing:border-box;">
+                        <button onclick="searchStats()" style="padding:8px 15px; background:#3498db; color:white; border:none; border-radius:6px; font-weight:bold; cursor:pointer; font-size:13px; box-shadow:0 2px 4px rgba(0,0,0,0.2);">조회</button>
+                    </div>
+                    
+                    <div id="stat-search-result" style="display:none; background:rgba(0,0,0,0.2); padding:15px; border-radius:8px; margin-top:10px;">
+                        <div style="font-size:13px; color:#f1c40f; font-weight:bold; margin-bottom:15px; border-bottom:1px dashed rgba(255,255,255,0.1); padding-bottom:10px;">✅ 선택 기간 누적 및 평균 데이터</div>
+                        
+                        <div style="display:flex; justify-content:space-around; align-items:center; margin-bottom:15px;">
+                            <div>
+                                <div style="font-size:11px; color:#aaa; margin-bottom:3px;">총 접속자(중복제외)</div>
+                                <div><strong id="search-total-users" style="color:#fff; font-size:20px;">0</strong><span style="font-size:12px; color:#aaa;">명</span></div>
+                            </div>
+                            <div style="width:1px; height:30px; background:rgba(255,255,255,0.1);"></div>
+                            <div>
+                                <div style="font-size:11px; color:#aaa; margin-bottom:3px;">총 채번건수</div>
+                                <div><strong id="search-total-reqs" style="color:#2ecc71; font-size:20px;">0</strong><span style="font-size:12px; color:#aaa;">건</span></div>
+                            </div>
                         </div>
-                        <div style="width:1px; height:30px; background:rgba(255,255,255,0.1);"></div>
-                        <div>
-                            <div style="font-size:11px; color:#aaa; margin-bottom:3px;">총 채번건수</div>
-                            <div><strong id="search-total-reqs" style="color:#2ecc71; font-size:20px;">0</strong><span style="font-size:12px; color:#aaa;">건</span></div>
+                        
+                        <div style="display:flex; justify-content:space-around; align-items:center; background:rgba(255,255,255,0.03); padding:10px; border-radius:6px;">
+                            <div>
+                                <div style="font-size:10px; color:#bbb; margin-bottom:3px;">📈 하루 평균 접속</div>
+                                <div><strong id="search-avg-users" style="color:#eee; font-size:16px;">0.0</strong><span style="font-size:11px; color:#bbb;">명</span></div>
+                            </div>
+                            <div style="width:1px; height:25px; background:rgba(255,255,255,0.08);"></div>
+                            <div>
+                                <div style="font-size:10px; color:#bbb; margin-bottom:3px;">🚀 하루 평균 채번</div>
+                                <div><strong id="search-avg-reqs" style="color:#82e0aa; font-size:16px;">0.0</strong><span style="font-size:11px; color:#bbb;">건</span></div>
+                            </div>
                         </div>
                     </div>
                 </div>
