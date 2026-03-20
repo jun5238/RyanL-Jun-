@@ -97,9 +97,29 @@ function checkAdminPw() {
             document.getElementById('admin-login-view').style.display = 'none';
             document.getElementById('admin-dashboard-view').style.display = 'block';
             loadApprovalRequests(); 
+            loadTodayStats();
         } else {
             myAlert("인증 정보가 올바르지 않습니다.");
             document.getElementById('admin-pw').value = '';
+        }
+    });
+}
+
+function loadTodayStats() {
+    const today = getTodayDateString();
+    document.getElementById('stat-date-display').innerText = today;
+    
+    db.ref(`통계/${today}`).on('value', (snapshot) => {
+        const data = snapshot.val();
+        if (data) {
+            const dauCount = data.접속자 ? Object.keys(data.접속자).length : 0;
+            const reqCount = data.채번건수 ? data.채번건수 : 0;
+            
+            document.getElementById('stat-dau').innerText = dauCount;
+            document.getElementById('stat-reqs').innerText = reqCount;
+        } else {
+            document.getElementById('stat-dau').innerText = 0;
+            document.getElementById('stat-reqs').innerText = 0;
         }
     });
 }
