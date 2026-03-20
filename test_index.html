@@ -9,7 +9,7 @@
     <link rel="apple-touch-icon" href="icon.jpg">
     <link rel="icon" sizes="192x192" href="icon.jpg">
 
-    <link rel="stylesheet" href="test_style.css?v=24">
+    <link rel="stylesheet" href="test_style.css?v=25">
 
     <style>
         body.dark-mode { background-color: #121212; color: #f1f1f1; }
@@ -37,9 +37,9 @@
     <script src="auth_gate_v1.js"></script>
     <script src="vip_list.js?v=2"></script>
     
-    <script src="test_core.js?v=24"></script> 
+    <script src="test_core.js?v=25"></script> 
     <script src="firebase_node_check.js"></script>
-    <script src="test_admin_ui.js?v=24"></script>
+    <script src="test_admin_ui.js?v=25"></script>
 
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
@@ -189,18 +189,17 @@
                 </script>
             </div>
             
-            <div id="dark-mode-btn" class="premium-btn" onclick="toggleDarkMode()" style="top: 15px; left: 10px; width: 100px; margin-top: 25px;">
-                <span style="font-size:13px;">🌙</span> <span>다크모드</span>
+            <div id="dark-mode-btn" onclick="toggleDarkMode()" style="position: absolute; top: 10px; left: 10px; width: 100px; padding: 6px; display: flex; align-items: center; justify-content: center; gap: 5px; background-color: #34495e; color: white; border-radius: 15px; font-weight: 900; font-size: 12px; box-shadow: 0 3px 6px rgba(0,0,0,0.15); cursor: pointer; z-index: 10; margin-top: 25px;">
+                <span style="font-size:14px;">🌙</span> <span style="font-weight: 900; font-size: 11px;">다크모드</span>
             </div>
 
-            <div class="premium-btn" onclick="window.location.reload(true);" style="top: 15px; right: 10px;">
-                <span style="font-size:13px;">🔄</span> <span>새로고침</span>
+            <div onclick="window.location.reload(true);" style="position: absolute; top: 10px; right: 10px; width: 90px; padding: 6px 0; text-align: center; background-color: #ff8c00; color: white; border-radius: 15px; font-weight: 900; font-size: 13px; box-shadow: 0 3px 6px rgba(0,0,0,0.15); cursor: pointer; z-index: 10;">
+                🔄 새로고침
             </div>
             
-            <div class="premium-btn" onclick="sendFeedbackPrompt()" style="top: 55px; right: 10px;">
-                <span style="font-size:13px;">💡</span> <span>피드백</span>
+            <div onclick="sendFeedbackPrompt()" style="position: absolute; top: 45px; right: 10px; width: 90px; padding: 6px 0; text-align: center; background-color: #9b59b6; color: white; border-radius: 15px; font-weight: 900; font-size: 13px; box-shadow: 0 3px 6px rgba(0,0,0,0.15); cursor: pointer; z-index: 10;">
+                💡 피드백
             </div>
-            
             <div style="position: relative; display: inline-block;">
                 <img src="mlogo.jpg" class="logo-img">
                 <div id="admin-badge" style="display:none; position:absolute; top:-5px; right:-5px; background:red; color:white; font-size:10px; font-weight:bold; padding:2px 6px; border-radius:10px; box-shadow:0 2px 4px rgba(0,0,0,0.3); z-index:11;">0</div>
