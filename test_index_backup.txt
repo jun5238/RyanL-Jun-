@@ -9,7 +9,7 @@
     <link rel="apple-touch-icon" href="icon.jpg">
     <link rel="icon" sizes="192x192" href="icon.jpg">
 
-    <link rel="stylesheet" href="test_style.css?v=6">
+    <link rel="stylesheet" href="test_style.css?v=21">
 
     <style>
         body.dark-mode { background-color: #121212; color: #f1f1f1; }
@@ -24,7 +24,6 @@
         body.dark-mode .history-waybill { color: #fff !important; }
         body.dark-mode .footer .designer-tag .hidden-name { color: #121212 !important; }
         
-        /* 다크모드 시 관리자 입력칸 하얗게 만들기 */
         body.dark-mode #admin-notice-input,
         body.dark-mode #admin-search-input {
             background-color: #ffffff !important;
@@ -36,9 +35,9 @@
     <script src="auth_gate_v1.js"></script>
     <script src="vip_list.js?v=2"></script>
     
-    <script src="test_core.js?v=7"></script> 
+    <script src="test_core.js?v=21"></script> 
     <script src="firebase_node_check.js"></script>
-    <script src="test_admin_ui.js?v=8"></script>
+    <script src="test_admin_ui.js?v=21"></script>
 
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
@@ -295,7 +294,7 @@
                 <button type="submit" class="btn-submit" id="submitBtn">바로 제출하기</button>
             </form>
             
-            <button type="button" onclick="showHistory()" style="width:100%; padding:12px; margin-top:15px; background:#2ecc71; color:white; border:none; border-radius:10px; font-weight:900; cursor:pointer; font-size:15px; box-shadow:0 4px 6px rgba(0,0,0,0.1);">📋 내가 오늘 보낸 기록 확인하기</button>
+            <button type="button" onclick="showHistory()" style="width:100%; padding:12px; margin-top:15px; background:#2ecc71; color:white; border:none; border-radius:10px; font-weight:900; cursor:pointer; font-size:15px; box-shadow:0 4px 6px rgba(0,0,0,0.1);">📋 채번 히스토리</button>
 
             <iframe name="hidden_iframe" id="hidden_iframe" style="display:none;" onload="if(window.isSubmitted){ handleFormSuccess(); }"></iframe>
         </div>
