@@ -1,3 +1,11 @@
+function getTodayDateString() {
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const day = String(now.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+}
+
 window.onload = function() {
     setTimeout(function() {
         document.getElementById('splash-screen').style.display = 'none';
@@ -20,7 +28,14 @@ window.onload = function() {
             db.ref("users/" + savedId).once('value', (snapshot) => {
                 const userData = snapshot.val();
                 if (userData && userData.approved === true) {
-                    showMain(savedId, savedCamp);
+                    if (userData.suspended === true) {
+                        myAlert("🚨 계정이 정지되었습니다.\n\n관리자에게 문의하세요.");
+                        localStorage.removeItem('ryanl_id');
+                        localStorage.removeItem('ryanl_camp');
+                        showSetup();
+                    } else {
+                        showMain(savedId, savedCamp);
+                    }
                 } else {
                     showSetup();
                 }
@@ -97,6 +112,11 @@ function handleFormSuccess() {
     
     saveHistory(waybill, qty);
     
+    const today = getTodayDateString();
+    db.ref(`통계/${today}/채번건수`).transaction(function(current_value) {
+        return (current_value || 0) + 1;
+    });
+    
     document.getElementById('success-overlay').style.display = 'flex';
     document.getElementById('waybill').value = '';
     document.getElementById('quantity').value = '';
@@ -140,7 +160,6 @@ function showHistory() {
         html += '</div>';
     }
     
-    // 🗑️ 기록지우기 버튼 추가 및 닫기 버튼 배치 수정!
     html += `
         <div style="display:flex; gap:10px; margin-top: 15px;">
             <button onclick="clearHistory('${id}')" style="width:50%; padding:12px; background:#e74c3c; color:white; border:none; border-radius:10px; font-weight:bold; cursor:pointer;">기록지우기</button>
@@ -156,13 +175,12 @@ function showHistory() {
     document.getElementById('history-overlay').style.display = 'flex';
 }
 
-// 🗑️ 기록지우기 함수 새로 추가!!
 function clearHistory(id) {
     myConfirm("정말 채번 히스토리를 모두 지우시겠습니까?", () => {
         localStorage.removeItem('ryanl_history_' + id);
         document.getElementById('history-overlay').style.display = 'none';
         myAlert("채번 히스토리가 모두 삭제되었습니다.");
-    }, "#e74c3c"); // 확인 버튼 색상을 빨간색으로!
+    }, "#e74c3c");
 }
 
 function myAlert(msg) {
@@ -187,9 +205,13 @@ function saveInfo() {
     db.ref("users/" + userId).once('value', (snapshot) => {
         const userData = snapshot.val();
         if (userData && userData.approved === true) {
-            localStorage.setItem('ryanl_id', userId);
-            localStorage.setItem('ryanl_camp', userCamp);
-            showMain(userId, userCamp);
+            if (userData.suspended === true) {
+                myAlert("🚨 계정이 정지되었습니다.\n\n관리자에게 문의하세요.");
+            } else {
+                localStorage.setItem('ryanl_id', userId);
+                localStorage.setItem('ryanl_camp', userCamp);
+                showMain(userId, userCamp);
+            }
         } else {
             db.ref("승인대기방/" + userId).once('value', (pendingSnap) => {
                 if (pendingSnap.exists()) {
@@ -216,6 +238,9 @@ function showMain(id, camp) {
     document.getElementById('display-camp').innerText = camp;
     document.getElementById('form-id').value = id;
     document.getElementById('form-camp').value = camp;
+
+    const today = getTodayDateString();
+    db.ref(`통계/${today}/접속자/${id}`).set(true);
 
     db.ref("공지사항").once('value', snap => {
         const val = snap.val();
