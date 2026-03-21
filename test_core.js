@@ -242,14 +242,18 @@ function showMain(id, camp) {
     const today = getTodayDateString();
     db.ref(`통계/${today}/접속자/${id}`).set(true);
 
-    db.ref("공지사항").once('value', snap => {
+    db.ref("공지사항/최신공지").once('value', snap => {
         const val = snap.val();
         if(val && val.text) {
-            const savedNotice = localStorage.getItem('notice_' + id);
+            const now = new Date().getTime();
+            const limitTime = 3 * 24 * 60 * 60 * 1000;
             
-            if(savedNotice !== val.text) {
-                myAlert("📢 [전체 공지사항]\n\n" + val.text);
-                localStorage.setItem('notice_' + id, val.text); 
+            if (now - val.timestamp <= limitTime) {
+                const savedNotice = localStorage.getItem('notice_' + id);
+                if(savedNotice !== val.text) {
+                    myAlert("📢 [전체 공지사항]\n\n" + val.text);
+                    localStorage.setItem('notice_' + id, val.text); 
+                }
             }
         }
     });
