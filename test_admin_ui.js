@@ -526,9 +526,15 @@ function saveNotice() {
     db.ref("공지사항/최신공지").set({
         text: text,
         timestamp: now
+    });
+    
+    db.ref("공지사항내역").push({
+        text: text,
+        time: now
     }).then(() => {
         input.value = '';
         myAlert("새로운 최신 공지가 성공적으로 등록되었습니다!");
+        loadNoticeHistory();
     });
 }
 
@@ -536,29 +542,24 @@ function loadNoticeHistory() {
     const listObj = document.getElementById('notice-history-list');
     if(!listObj) return;
     
-    db.ref("공지사항/최신공지").on('value', snap => {
-        const val = snap.val();
+    db.ref("공지사항내역").orderByChild("time").limitToLast(5).once('value', snap => {
+        let html = '';
+        const notices = [];
+        snap.forEach(child => { notices.unshift(child.val()); });
         
-        if(val && val.text) {
-            const now = new Date().getTime();
-            const limitTime = 3 * 24 * 60 * 60 * 1000; 
-            
-            if (now - val.timestamp <= limitTime) {
-                const d = new Date(val.timestamp);
-                const timeStr = `${d.getMonth()+1}/${d.getDate()} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
-                
-                listObj.innerHTML = `
-                    <div style="padding: 10px; background: rgba(255,140,0,0.1); border-radius: 8px; border-left: 3px solid #ff8c00;">
-                        <span style="color:#ff8c00; font-weight:bold; margin-right:5px; font-size:11px;">[${timeStr}]</span> 
-                        <span style="color:#fff; font-weight:bold;">${val.text}</span>
-                    </div>
-                `;
-            } else {
-                listObj.innerHTML = '<div style="color:#999; text-align:center; padding:10px;">현재 유효한 공지사항이 없습니다. (3일 경과 만료)</div>';
-            }
+        if(notices.length === 0) {
+            html = '<div style="color:#999; text-align:center; padding:10px;">등록된 공지가 없습니다.</div>';
         } else {
-            listObj.innerHTML = '<div style="color:#999; text-align:center; padding:10px;">등록된 공지가 없습니다.</div>';
+            notices.forEach(n => {
+                const d = new Date(n.time);
+                const timeStr = `${d.getMonth()+1}/${d.getDate()} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
+                html += `<div style="padding: 10px; margin-bottom: 8px; background: rgba(255,140,0,0.1); border-radius: 8px; border-left: 3px solid #ff8c00;">
+                    <span style="color:#ff8c00; font-weight:bold; margin-right:5px; font-size:11px;">[${timeStr}]</span> 
+                    <span style="color:#fff; font-weight:bold;">${n.text}</span>
+                </div>`;
+            });
         }
+        listObj.innerHTML = html;
     });
 }
 
