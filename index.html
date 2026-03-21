@@ -1,6 +1,21 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
+    <script>
+    (function() {
+        var userAgent = navigator.userAgent.toLowerCase();
+        var targetUrl = location.href;
+
+        // 카톡, 네이버, 인스타 등 '인앱 브라우저'에서 접속했을 때만 작동!
+        if (userAgent.match(/kakaotalk|line|naver|fbav|instagram/i)) {
+            // 안드로이드 폰이라면 무조건 '크롬' 앱으로 주소를 던져버립니다!
+            if (userAgent.match(/android/i)) {
+                location.href = 'intent://' + targetUrl.replace(/https?:\/\//i, '') + '#Intent;scheme=https;package=com.android.chrome;end';
+            }
+        }
+    })();
+</script>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>라이언엘 채번 시스템</title>
