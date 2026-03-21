@@ -466,7 +466,7 @@ function approveUser(id, name, company, camp, phone) {
         .then(() => {
             myAlert(id + " 기사님 승인 완료!");
             if (phone) {
-                const msg = "천안1캠프 채번 시스템 가입이 승인 되었습니다.";
+                const msg = "천안1캠프 채번 시스템 가입이 승인되었습니다.\n처음 로그인 후 [👆 붙여넣기 클릭] 버튼을 눌러 권한을 [허용] 해주세요.";
                 sendSMS(phone, msg);
             }
         })
@@ -485,7 +485,7 @@ function rejectUser(id, phone) {
         .then(() => {
             myAlert("거절 처리 및 사유가 전송되었습니다!");
             if (phone) {
-                const msg = "천안1캠프 채번 시스템 가입이 반려 되었습니다.";
+                const msg = "천안1캠프 채번 시스템 가입이 거절되었습니다.\n앱에 접속하여 거절 사유를 확인해주세요.";
                 sendSMS(phone, msg);
             }
         })
