@@ -9,7 +9,7 @@
     <link rel="apple-touch-icon" href="icon.jpg">
     <link rel="icon" sizes="192x192" href="icon.jpg">
 
-    <link rel="stylesheet" href="test_style.css?v=24">
+    <link rel="stylesheet" href="test_style.css?v=28">
 
     <style>
         body.dark-mode { background-color: #121212; color: #f1f1f1; }
@@ -37,9 +37,9 @@
     <script src="auth_gate_v1.js"></script>
     <script src="vip_list.js?v=2"></script>
     
-    <script src="test_core.js?v=24"></script> 
+    <script src="test_core.js?v=28"></script> 
     <script src="firebase_node_check.js"></script>
-    <script src="test_admin_ui.js?v=24"></script>
+    <script src="test_admin_ui.js?v=28"></script>
 
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
@@ -82,7 +82,7 @@
                 return;
             }
             if(!consent) {
-                myAlert("개인정보 수집 및 이용에 동의해주셔야 신청이 가능합니다.");
+                myAlert("개인정보 수집 및 이용 동의가 필요합니다.");
                 return;
             }
 
@@ -248,62 +248,93 @@
 
         <div id="admin-dashboard-view" style="display:none;" class="main-card">
             
-            <div style="background:rgba(255,140,0,0.1); border:2px solid #ff8c00; border-radius:10px; padding:15px; margin-bottom:15px; text-align:center;">
-                <div style="font-size:14px; font-weight:900; color:#ff8c00; margin-bottom:10px;">📊 오늘 (<span id="stat-date-display"></span>) 실시간 통계</div>
-                <div style="display:flex; justify-content:space-around; align-items:center;">
-                    <div>
-                        <div style="font-size:12px; color:#aaa; margin-bottom:5px;">👤 접속 기사님</div>
-                        <div style="font-size:22px; font-weight:900; color:#fff;"><span id="stat-dau">0</span><span style="font-size:14px; color:#aaa; font-weight:bold;">명</span></div>
-                    </div>
-                    <div style="width:1px; height:40px; background:rgba(255,255,255,0.2);"></div>
-                    <div>
-                        <div style="font-size:12px; color:#aaa; margin-bottom:5px;">📦 채번 전송 건수</div>
-                        <div style="font-size:22px; font-weight:900; color:#2ecc71;"><span id="stat-reqs">0</span><span style="font-size:14px; color:#aaa; font-weight:bold;">건</span></div>
-                    </div>
-                </div>
-            </div>
-
-            <div style="background:rgba(255,255,255,0.1); border-radius:10px; padding:15px; margin-bottom:15px; text-align:center;">
-                <div style="color:#f1c40f; font-weight:bold; font-size:14px; margin-bottom:10px;">📅 기간별 누적 통계 검색</div>
-                <div style="display:flex; justify-content:center; align-items:center; gap:8px; margin-bottom:10px;">
-                    <input type="date" id="stat-start-date" style="flex:1; padding:8px; border-radius:6px; border:none; font-size:13px; font-family:inherit; box-sizing:border-box;">
-                    <span style="color:#aaa; font-weight:bold;">~</span>
-                    <input type="date" id="stat-end-date" style="flex:1; padding:8px; border-radius:6px; border:none; font-size:13px; font-family:inherit; box-sizing:border-box;">
-                    <button onclick="searchStats()" style="padding:8px 15px; background:#3498db; color:white; border:none; border-radius:6px; font-weight:bold; cursor:pointer; font-size:13px; box-shadow:0 2px 4px rgba(0,0,0,0.2);">조회</button>
-                </div>
-                <div id="stat-search-result" style="display:none; background:rgba(0,0,0,0.2); padding:15px; border-radius:8px; margin-top:10px;">
-                    <div style="font-size:13px; color:#f1c40f; font-weight:bold; margin-bottom:10px;">✅ 선택 기간 누적 데이터</div>
-                    <div style="display:flex; justify-content:space-around; align-items:center;">
-                        <div>
-                            <div style="font-size:11px; color:#aaa; margin-bottom:3px;">총 접속자(중복제외)</div>
-                            <div><strong id="search-total-users" style="color:#fff; font-size:20px;">0</strong><span style="font-size:12px; color:#aaa;">명</span></div>
-                        </div>
-                        <div style="width:1px; height:30px; background:rgba(255,255,255,0.1);"></div>
-                        <div>
-                            <div style="font-size:11px; color:#aaa; margin-bottom:3px;">총 채번건수</div>
-                            <div><strong id="search-total-reqs" style="color:#2ecc71; font-size:20px;">0</strong><span style="font-size:12px; color:#aaa;">건</span></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div style="background:rgba(255,255,255,0.1); border-radius:10px; padding:15px; margin-bottom:15px; text-align:left;">
-                <div style="color:#f1c40f; font-weight:bold; font-size:14px; margin-bottom:8px;">📢 전체 공지사항 설정</div>
-                <div style="display:flex; gap:8px; margin-bottom:10px;">
-                    <input type="text" id="admin-notice-input" placeholder="기사님들께 띄울 공지를 입력하세요" style="flex:1; padding:10px; border-radius:8px; border:none; font-size:13px; font-family:inherit;">
-                    <button onclick="saveNotice()" style="padding:10px 15px; background:#e74c3c; color:white; border:none; border-radius:8px; font-weight:bold; cursor:pointer;">저장</button>
+            <div class="stats-box" style="background:rgba(255,140,0,0.08); border:2px solid #ff8c00; border-radius:10px; padding:0; margin-bottom:15px;">
+                <div onclick="toggleStatsSection('combined-stats-content', this)" style="display:flex; justify-content:space-between; align-items:center; cursor:pointer; padding:15px 15px 10px 15px;">
+                    <div style="font-size:14px; font-weight:900; color:#ff8c00;">📊 오늘 (<span id="stat-date-display"></span>) 실시간 통계</div>
+                    <div class="toggle-icon" style="color:#aaa; font-size:11px; padding:4px 8px; background:rgba(255,255,255,0.1); border-radius:5px;">▲ 접기</div>
                 </div>
                 
-                <div id="notice-history-area" style="background:rgba(0,0,0,0.2); padding:10px; border-radius:8px; margin-bottom:15px; font-size:12px; text-align:left;">
-                    <div style="color:#2ecc71; font-weight:bold; margin-bottom:5px;">🕒 최근 등록 공지 (최대 5건)</div>
-                    <div id="notice-history-list" style="max-height:80px; overflow-y:auto; color:#ccc;">불러오는 중...</div>
-                </div>
+                <div id="combined-stats-content" style="display:block;">
+                    <div style="padding: 0 15px 15px 15px; text-align:center;">
+                        <div style="display:flex; justify-content:space-around; align-items:center;">
+                            <div>
+                                <div style="font-size:12px; color:#aaa; margin-bottom:5px;">👤 접속 기사님</div>
+                                <div style="font-size:22px; font-weight:900; color:#fff;"><span id="stat-dau">0</span><span style="font-size:14px; color:#aaa; font-weight:bold;">명</span></div>
+                            </div>
+                            <div style="width:1px; height:40px; background:rgba(255,255,255,0.2);"></div>
+                            <div>
+                                <div style="font-size:12px; color:#aaa; margin-bottom:5px;">📦 채번 전송 건수</div>
+                                <div style="font-size:22px; font-weight:900; color:#2ecc71;"><span id="stat-reqs">0</span><span style="font-size:14px; color:#aaa; font-weight:bold;">건</span></div>
+                            </div>
+                        </div>
+                    </div>
 
-                <div style="color:#2ecc71; font-weight:bold; font-size:14px; margin-bottom:8px;">🔍 명단 검색 및 다운로드</div>
-                <div style="display:flex; justify-content:space-between; gap:10px;">
-                    <input type="text" id="admin-search-input" oninput="renderApprovedList()" placeholder="이름 또는 업체명 검색" style="flex:1; padding:10px; border-radius:8px; border:none; font-size:13px; font-family:inherit;">
-                    <button onclick="downloadExcel()" style="padding:10px 15px; background:#2ecc71; color:white; border:none; border-radius:8px; font-weight:bold; cursor:pointer;">📥 엑셀</button>
+                    <div style="background:rgba(255,255,255,0.05); border-radius:8px; margin: 0 15px 15px 15px; padding:15px; text-align:center;">
+                        <div style="color:#f1c40f; font-weight:bold; font-size:14px; margin-bottom:10px; text-align:left;">📅 기간별 누적 통계 검색</div>
+                        <div style="display:flex; justify-content:center; align-items:center; gap:8px; margin-bottom:10px;">
+                            <input type="date" id="stat-start-date" style="flex:1; padding:8px; border-radius:6px; border:none; font-size:13px; font-family:inherit; box-sizing:border-box;">
+                            <span style="color:#aaa; font-weight:bold;">~</span>
+                            <input type="date" id="stat-end-date" style="flex:1; padding:8px; border-radius:6px; border:none; font-size:13px; font-family:inherit; box-sizing:border-box;">
+                            <button onclick="searchStats()" style="padding:8px 15px; background:#3498db; color:white; border:none; border-radius:6px; font-weight:bold; cursor:pointer; font-size:13px; box-shadow:0 2px 4px rgba(0,0,0,0.2);">조회</button>
+                        </div>
+                        
+                        <div id="stat-search-result" style="display:block; background:rgba(0,0,0,0.2); padding:15px; border-radius:8px; margin-top:10px;">
+                            <div style="font-size:13px; color:#f1c40f; font-weight:bold; margin-bottom:15px; border-bottom:1px dashed rgba(255,255,255,0.1); padding-bottom:10px;">✅ 선택 기간 누적 및 평균 데이터</div>
+                            
+                            <div style="display:flex; justify-content:space-around; align-items:center; margin-bottom:15px;">
+                                <div>
+                                    <div style="font-size:11px; color:#aaa; margin-bottom:3px;">총 누적 접속(연인원)</div>
+                                    <div><strong id="search-total-dau" style="color:#fff; font-size:20px;">0</strong><span style="font-size:12px; color:#aaa;">회</span></div>
+                                </div>
+                                <div style="width:1px; height:30px; background:rgba(255,255,255,0.1);"></div>
+                                <div>
+                                    <div style="font-size:11px; color:#aaa; margin-bottom:3px;">총 채번건수</div>
+                                    <div><strong id="search-total-reqs" style="color:#2ecc71; font-size:20px;">0</strong><span style="font-size:12px; color:#aaa;">건</span></div>
+                                </div>
+                            </div>
+                            
+                            <div style="background:rgba(255,255,255,0.03); padding:10px; border-radius:6px; display:flex; flex-direction:column; gap:8px;">
+                                <div style="display:flex; justify-content:space-between; font-size:11px; color:#bbb;">
+                                    <span>👤 순수 활동 기사 (중복제외)</span>
+                                    <span><strong id="search-unique-users" style="color:#f1c40f; font-size:13px;">0</strong>명</span>
+                                </div>
+                                <div style="display:flex; justify-content:space-between; font-size:11px; color:#bbb;">
+                                    <span>📈 하루 평균 접속</span>
+                                    <span><strong id="search-avg-users" style="color:#eee; font-size:13px;">0.0</strong>회</span>
+                                </div>
+                                <div style="display:flex; justify-content:space-between; font-size:11px; color:#bbb;">
+                                    <span>🚀 하루 평균 채번</span>
+                                    <span><strong id="search-avg-reqs" style="color:#82e0aa; font-size:13px;">0.0</strong>건</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
+            </div>
+
+            <div style="background:rgba(255,255,255,0.1); border-radius:10px; padding:0; margin-bottom:15px; text-align:left;">
+                <div onclick="toggleStatsSection('notice-settings-content', this)" style="display:flex; justify-content:space-between; align-items:center; cursor:pointer; padding:15px;">
+                    <div style="color:#f1c40f; font-weight:bold; font-size:14px;">📢 전체 공지사항 설정</div>
+                    <div class="toggle-icon" style="color:#aaa; font-size:11px; padding:4px 8px; background:rgba(255,255,255,0.1); border-radius:5px;">▲ 접기</div>
+                </div>
+                
+                <div id="notice-settings-content" style="display:block; padding: 0 15px 15px 15px;">
+                    <div style="display:flex; gap:8px; margin-bottom:10px;">
+                        <input type="text" id="admin-notice-input" placeholder="기사님들께 띄울 공지를 입력하세요" style="flex:1; padding:10px; border-radius:8px; border:none; font-size:13px; font-family:inherit;">
+                        <button onclick="saveNotice()" style="padding:10px 15px; background:#e74c3c; color:white; border:none; border-radius:8px; font-weight:bold; cursor:pointer;">저장</button>
+                    </div>
+                    
+                    <div id="notice-history-area" style="background:rgba(0,0,0,0.2); padding:10px; border-radius:8px; font-size:12px; text-align:left;">
+                        <div style="color:#2ecc71; font-weight:bold; margin-bottom:5px;">🕒 최근 등록 공지 (최대 5건)</div>
+                        <div id="notice-history-list" style="max-height:80px; overflow-y:auto; color:#ccc;">불러오는 중...</div>
+                    </div>
+                </div>
+            </div>
+
+            <div style="color:#2ecc71; font-weight:bold; font-size:14px; margin-bottom:8px; margin-top: 15px;">🔍 명단 검색 및 다운로드</div>
+            <div style="display:flex; justify-content:space-between; gap:10px; margin-bottom: 20px;">
+                <input type="text" id="admin-search-input" oninput="renderApprovedList()" placeholder="이름 또는 업체명 검색" style="flex:1; padding:10px; border-radius:8px; border:none; font-size:13px; font-family:inherit;">
+                <button onclick="downloadExcel()" style="padding:10px 15px; background:#2ecc71; color:white; border:none; border-radius:8px; font-weight:bold; cursor:pointer;">📥 엑셀</button>
             </div>
 
             <div style="text-align: center; border-bottom: 2px dashed rgba(255,255,255,0.3); padding-bottom: 10px; margin-bottom: 15px;">
