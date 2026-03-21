@@ -521,15 +521,14 @@ function saveNotice() {
     const text = input.value.trim();
     if(!text) { myAlert("공지 내용을 입력해주세요!"); return; }
     
-    db.ref("공지사항").set({ text: text });
+    const now = new Date().getTime();
     
-    db.ref("공지사항내역").push({
+    db.ref("공지사항/최신공지").set({
         text: text,
-        time: new Date().getTime()
+        timestamp: now
     }).then(() => {
         input.value = '';
-        myAlert("공지사항이 성공적으로 저장되었습니다!");
-        loadNoticeHistory();
+        myAlert("새로운 최신 공지가 성공적으로 등록되었습니다!");
     });
 }
 
@@ -537,24 +536,29 @@ function loadNoticeHistory() {
     const listObj = document.getElementById('notice-history-list');
     if(!listObj) return;
     
-    db.ref("공지사항내역").orderByChild("time").limitToLast(5).once('value', snap => {
-        let html = '';
-        const notices = [];
-        snap.forEach(child => { notices.unshift(child.val()); });
+    db.ref("공지사항/최신공지").on('value', snap => {
+        const val = snap.val();
         
-        if(notices.length === 0) {
-            html = '<div style="color:#999;">최근 등록된 공지가 없습니다.</div>';
-        } else {
-            notices.forEach(n => {
-                const d = new Date(n.time);
+        if(val && val.text) {
+            const now = new Date().getTime();
+            const limitTime = 3 * 24 * 60 * 60 * 1000; 
+            
+            if (now - val.timestamp <= limitTime) {
+                const d = new Date(val.timestamp);
                 const timeStr = `${d.getMonth()+1}/${d.getDate()} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
-                html += `<div style="padding: 5px 0; border-bottom: 1px dashed rgba(255,255,255,0.1);">
-                    <span style="color:#f1c40f; margin-right:5px;">[${timeStr}]</span> 
-                    <span style="color:#fff;">${n.text}</span>
-                </div>`;
-            });
+                
+                listObj.innerHTML = `
+                    <div style="padding: 10px; background: rgba(255,140,0,0.1); border-radius: 8px; border-left: 3px solid #ff8c00;">
+                        <span style="color:#ff8c00; font-weight:bold; margin-right:5px; font-size:11px;">[${timeStr}]</span> 
+                        <span style="color:#fff; font-weight:bold;">${val.text}</span>
+                    </div>
+                `;
+            } else {
+                listObj.innerHTML = '<div style="color:#999; text-align:center; padding:10px;">현재 유효한 공지사항이 없습니다. (3일 경과 만료)</div>';
+            }
+        } else {
+            listObj.innerHTML = '<div style="color:#999; text-align:center; padding:10px;">등록된 공지가 없습니다.</div>';
         }
-        listObj.innerHTML = html;
     });
 }
 
