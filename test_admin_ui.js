@@ -151,12 +151,12 @@ function searchStats() {
             });
         }
 
-        const avgUsers = diffDays > 0 ? (uniqueUsers.size / diffDays).toFixed(1) : "0.0";
+        const avgUsers = diffDays > 0 ? (totalDau / diffDays).toFixed(1) : "0.0";
         const avgReqs = diffDays > 0 ? (totalReqs / diffDays).toFixed(1) : "0.0";
 
-        document.getElementById('search-total-users').innerText = uniqueUsers.size;
+        document.getElementById('search-total-dau').innerText = totalDau;
         document.getElementById('search-total-reqs').innerText = totalReqs;
-        
+        document.getElementById('search-unique-users').innerText = uniqueUsers.size;
         document.getElementById('search-avg-users').innerText = avgUsers;
         document.getElementById('search-avg-reqs').innerText = avgReqs;
 
