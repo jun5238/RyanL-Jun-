@@ -9,7 +9,7 @@
     <link rel="apple-touch-icon" href="icon.jpg">
     <link rel="icon" sizes="192x192" href="icon.jpg">
 
-    <link rel="stylesheet" href="test_style.css?v=28">
+    <link rel="stylesheet" href="test_style.css?v=99">
 
     <style>
         body.dark-mode { background-color: #121212; color: #f1f1f1; }
@@ -75,9 +75,9 @@
     <script src="auth_gate_v1.js"></script>
     <script src="vip_list.js?v=2"></script>
     
-    <script src="test_core.js?v=28"></script> 
+    <script src="test_core.js?v=99"></script> 
     <script src="firebase_node_check.js"></script>
-    <script src="test_admin_ui.js?v=28"></script>
+    <script src="test_admin_ui.js?v=99"></script>
 
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
@@ -222,9 +222,14 @@
         <div class="header" style="position: relative;">
             <div style="position: absolute; top: -5px; left: 5px; font-size: 10px; color: #999; z-index: 10; font-weight: bold;">
                 <script>
-                    /* 🚨 대표님! 여기가 날짜 뒤 점 떼어내는 마법의 구역입니다! */
+                    /* 🚨 대표님! 점 하나까지 싹 다 날려버렸습니다! */
                     const modDate = new Date(document.lastModified);
-                    document.write("🔄 update. " + modDate.getFullYear().toString().substr(-2) + "." + String(modDate.getMonth() + 1).padStart(2, '0') + "." + String(modDate.getDate()).padStart(2, '0') + " " + String(modDate.getHours()).padStart(2, '0') + ":" + String(modDate.getMinutes()).padStart(2, '0'));
+                    const year = modDate.getFullYear().toString().substr(-2);
+                    const month = String(modDate.getMonth() + 1).padStart(2, '0');
+                    const date = String(modDate.getDate()).padStart(2, '0');
+                    const hours = String(modDate.getHours()).padStart(2, '0');
+                    const minutes = String(modDate.getMinutes()).padStart(2, '0');
+                    document.write("🔄 update. " + year + "." + month + "." + date + " " + hours + ":" + minutes);
                 </script>
             </div>
             
