@@ -100,6 +100,7 @@ function checkAdminPw() {
             loadTodayStats();
             document.getElementById('stat-start-date').value = getTodayDateString();
             document.getElementById('stat-end-date').value = getTodayDateString();
+            searchStats(); 
         } else {
             myAlert("인증 정보가 올바르지 않습니다.");
             document.getElementById('admin-pw').value = '';
