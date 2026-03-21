@@ -14,7 +14,8 @@ const VIP_COMPANY_DATA = [
     { id: "rudghk3034", name: "박경화", company: "모벤티스" },
     { id: "jsa0524", name: "주혜숙", company: "유니스피어" },
     { id: "Rokmca12", name: "신설아", company: "모벤티스" },
-    { id: "sjhm0416", name: "장현미", company: "모벤티스" }
+    { id: "sjhm0416", name: "장현미", company: "모벤티스" },
+    { id: "YSYS665180%$", name: "윤유순", company: "모벤티스" }
 ];
 
 const VIP_LIST = VIP_COMPANY_DATA.map(function(user) { 
