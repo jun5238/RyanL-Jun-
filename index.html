@@ -4,6 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>라이언엘 채번 시스템</title>
+
+    <script>
+        window.onload = function() {
+            var ua = navigator.userAgent.toLowerCase();
+            if (ua.match(/kakaotalk|naver|line|fbav|instagram/i)) {
+                var chromeNotice = document.createElement('div');
+                chromeNotice.style.cssText = 'position:fixed; top:0; left:0; width:100%; background:#ff8c00; color:white; text-align:center; padding:12px; font-weight:900; z-index:999999; font-size:14px; box-shadow:0 4px 10px rgba(0,0,0,0.2);';
+                chromeNotice.innerHTML = '⚠️ 설치를 위해 <span style="text-decoration:underline; cursor:pointer;" onclick="location.href=\'intent://\' + location.host + location.pathname + \'#Intent;scheme=https;package=com.android.chrome;end\'">여기(클릭)를 눌러 크롬으로 열기</span>';
+                document.body.prepend(chromeNotice);
+            }
+        };
+    </script>
     
     <link rel="manifest" href="manifest.json">
     <link rel="apple-touch-icon" href="icon.jpg">
@@ -16,7 +28,6 @@
     <script src="vip_list.js?v=2"></script>
     <script src="rl_core.js?v=2"></script> 
     <script src="firebase_node_check.js"></script>
-    
     <script src="admin_ui.js"></script>
 </head>
 <body>
