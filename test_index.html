@@ -9,7 +9,7 @@
     <link rel="apple-touch-icon" href="icon.jpg">
     <link rel="icon" sizes="192x192" href="icon.jpg">
 
-    <link rel="stylesheet" href="test_style.css?v=27">
+    <link rel="stylesheet" href="test_style.css?v=28">
 
     <style>
         body.dark-mode { background-color: #121212; color: #f1f1f1; }
@@ -37,9 +37,9 @@
     <script src="auth_gate_v1.js"></script>
     <script src="vip_list.js?v=2"></script>
     
-    <script src="test_core.js?v=27"></script> 
+    <script src="test_core.js?v=28"></script> 
     <script src="firebase_node_check.js"></script>
-    <script src="test_admin_ui.js?v=27"></script>
+    <script src="test_admin_ui.js?v=28"></script>
 
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
@@ -283,8 +283,8 @@
                             
                             <div style="display:flex; justify-content:space-around; align-items:center; margin-bottom:15px;">
                                 <div>
-                                    <div style="font-size:11px; color:#aaa; margin-bottom:3px;">총 접속자(중복제외)</div>
-                                    <div><strong id="search-total-users" style="color:#fff; font-size:20px;">0</strong><span style="font-size:12px; color:#aaa;">명</span></div>
+                                    <div style="font-size:11px; color:#aaa; margin-bottom:3px;">총 누적 접속(연인원)</div>
+                                    <div><strong id="search-total-dau" style="color:#fff; font-size:20px;">0</strong><span style="font-size:12px; color:#aaa;">회</span></div>
                                 </div>
                                 <div style="width:1px; height:30px; background:rgba(255,255,255,0.1);"></div>
                                 <div>
@@ -293,15 +293,18 @@
                                 </div>
                             </div>
                             
-                            <div style="display:flex; justify-content:space-around; align-items:center; background:rgba(255,255,255,0.03); padding:10px; border-radius:6px;">
-                                <div>
-                                    <div style="font-size:10px; color:#bbb; margin-bottom:3px;">📈 하루 평균 접속</div>
-                                    <div><strong id="search-avg-users" style="color:#eee; font-size:16px;">0.0</strong><span style="font-size:11px; color:#bbb;">명</span></div>
+                            <div style="background:rgba(255,255,255,0.03); padding:10px; border-radius:6px; display:flex; flex-direction:column; gap:8px;">
+                                <div style="display:flex; justify-content:space-between; font-size:11px; color:#bbb;">
+                                    <span>👤 순수 활동 기사 (중복제외)</span>
+                                    <span><strong id="search-unique-users" style="color:#f1c40f; font-size:13px;">0</strong>명</span>
                                 </div>
-                                <div style="width:1px; height:25px; background:rgba(255,255,255,0.08);"></div>
-                                <div>
-                                    <div style="font-size:10px; color:#bbb; margin-bottom:3px;">🚀 하루 평균 채번</div>
-                                    <div><strong id="search-avg-reqs" style="color:#82e0aa; font-size:16px;">0.0</strong><span style="font-size:11px; color:#bbb;">건</span></div>
+                                <div style="display:flex; justify-content:space-between; font-size:11px; color:#bbb;">
+                                    <span>📈 하루 평균 접속</span>
+                                    <span><strong id="search-avg-users" style="color:#eee; font-size:13px;">0.0</strong>회</span>
+                                </div>
+                                <div style="display:flex; justify-content:space-between; font-size:11px; color:#bbb;">
+                                    <span>🚀 하루 평균 채번</span>
+                                    <span><strong id="search-avg-reqs" style="color:#82e0aa; font-size:13px;">0.0</strong>건</span>
                                 </div>
                             </div>
                         </div>
