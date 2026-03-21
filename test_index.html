@@ -9,7 +9,7 @@
     <link rel="apple-touch-icon" href="icon.jpg">
     <link rel="icon" sizes="192x192" href="icon.jpg">
 
-    <link rel="stylesheet" href="test_style.css?v=30">
+    <link rel="stylesheet" href="test_style.css?v=28">
 
     <style>
         body.dark-mode { background-color: #121212; color: #f1f1f1; }
@@ -25,7 +25,6 @@
         body.dark-mode .footer .designer-tag .hidden-name { color: #121212 !important; }
         body.dark-mode .guide-title { color: #f1c40f !important; font-weight: bold; }
         body.dark-mode .guide-box b { color: #ff8c00 !important; }
-        body.dark-mode .guide-text { color: #ccc !important; }
         
         body.dark-mode #admin-notice-input,
         body.dark-mode #admin-search-input,
@@ -35,7 +34,6 @@
             color: #000000 !important;
         }
 
-        /* 🚨 관리자 화면 주황색 테두리 박스 전용 스타일 */
         .admin-orange-box {
             background: rgba(255,140,0,0.08) !important;
             border: 2px solid #ff8c00 !important;
@@ -88,22 +86,21 @@
     <script src="auth_gate_v1.js"></script>
     <script src="vip_list.js?v=2"></script>
     
-    <script src="test_core.js?v=30"></script> 
+    <script src="test_core.js?v=28"></script> 
     <script src="firebase_node_check.js"></script>
-    <script src="test_admin_ui.js?v=30"></script>
+    <script src="test_admin_ui.js?v=28"></script>
 
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
     <script>
-        // 🚨 본서버(ryanl-logistics) 열쇠 적용 완료! 🚨
         const firebaseConfig = {
-            apiKey: "AIzaSyARk9-4wKQ_53Yw2p1_bHDa1U4igP7sUfI",
-            authDomain: "ryanl-logistics.firebaseapp.com",
-            databaseURL: "https://ryanl-logistics-default-rtdb.firebaseio.com",
-            projectId: "ryanl-logistics",
-            storageBucket: "ryanl-logistics.firebasestorage.app",
-            messagingSenderId: "711688730396",
-            appId: "1:711688730396:web:55ed4ffa98a0f5bbe86cd9"
+            apiKey: "AIzaSyDIA5MGfvoHQvrgCm1Wf1d7XcgC13b_D9Q",
+            authDomain: "ryanl-test.firebaseapp.com",
+            projectId: "ryanl-test",
+            storageBucket: "ryanl-test.appspot.com",
+            messagingSenderId: "818440188305",
+            appId: "1:818440188305:web:b5f89513e57eab942c2a30",
+            databaseURL: "https://ryanl-test-default-rtdb.firebaseio.com"
         };
         
         if (!firebase.apps.length) {
@@ -246,7 +243,7 @@
                 </script>
             </div>
             
-            <div id="dark-mode-btn" onclick="toggleDarkMode()" style="position: absolute; top: 25px; left: 10px; width: 100px; padding: 6px; display: flex; align-items: center; justify-content: center; gap: 5px; background-color: #34495e; color: white; border-radius: 15px; font-weight: 900; font-size: 12px; box-shadow: 0 3px 6px rgba(0,0,0,0.15); cursor: pointer; z-index: 10;">
+            <div id="dark-mode-btn" onclick="toggleDarkMode()" style="position: absolute; top: 10px; left: 10px; width: 100px; padding: 6px; display: flex; align-items: center; justify-content: center; gap: 5px; background-color: #34495e; color: white; border-radius: 15px; font-weight: 900; font-size: 12px; box-shadow: 0 3px 6px rgba(0,0,0,0.15); cursor: pointer; z-index: 10; margin-top: 25px;">
                 <span style="font-size:14px;">🌙</span> <span style="font-weight: 900; font-size: 11px;">다크모드</span>
             </div>
 
@@ -266,10 +263,9 @@
             <div class="rocket-title">🚀 채번 요청 1초컷</div>
             
             <div class="sub-tag">
-                천안1캠프 전용 스마트 시스템 <span style="background:#e74c3c; color:white; padding:3px 6px; border-radius:5px; font-size:11px; font-weight:bold; margin-left:3px; vertical-align:middle;">테스트 버전</span>
+                천안1캠프 전용 스마트 시스템 
             </div>
         </div>
-
         <div id="setup-view">
             <label class="setup-label">👤 기사님 아이디</label>
             <input type="text" id="user-id" placeholder="예: RyanL">
@@ -283,26 +279,18 @@
             <button class="btn-submit" onclick="saveInfo()" style="margin-top: 20px;">로그인</button>
 
             <button class="btn-guide" onclick="toggleGuide()">❓ 설치 방법 및 오류 해결 가이드</button>
-            <div id="guide-content" style="display:none; margin-top:10px;">
-                <div class="guide-box" style="padding:15px; border-radius:10px; background:#f9f9f9; border:1px solid #ddd; text-align:left;">
-                    <div style="border-left: 4px solid #ff8c00; padding-left: 10px; margin-bottom: 10px;">
-                        <span class="guide-title" style="font-weight:900; font-size:14px; color:#152b52;">📱 바탕화면 바로가기 설치</span>
-                    </div>
-                    <div class="guide-text" style="font-size:13px; color:#333; line-height:1.6; padding-left: 5px; margin-bottom: 15px; word-break: keep-all;">
-                        • <b>갤럭시:</b> 크롬 우측 상단 <b>점 3개</b> → <b>'홈 화면에 추가'</b> 클릭 후 <b>'설치'</b><br>
-                        • <b>아이폰:</b> 사파리 하단 <b>공유 버튼(↑)</b> → <b>'홈 화면에 추가'</b>
-                    </div>
-                    <hr style="border:0; border-top:1px dotted #ccc; margin:15px 0;">
-                    <div style="border-left: 4px solid #f1c40f; padding-left: 10px; margin-bottom: 10px;">
-                        <span class="guide-title" style="font-weight:900; font-size:14px; color:#152b52;">⚠️ 채번 오류 시 해결법</span>
-                    </div>
-                    <div class="guide-text" style="font-size:13px; color:#333; line-height:1.6; padding-left: 5px; word-break: keep-all;">
-                        • <b>첫번째:</b> 열려있는 구글 폼 창을 모두 닫은 후 다시 시도<br>
-                        • <b>두번째:</b> 브라우저 설정에서 <b>'방문 기록/캐시 삭제'</b> 후 재접속
-                    </div>
+            <div id="guide-content">
+                <div class="guide-box">
+                    <span class="guide-title">📱 바탕화면 바로가기 설치</span>
+                    • <b>갤럭시:</b> 크롬 우측 상단 <b>점 3개</b> → <b>'홈 화면에 추가'</b> 클릭 후 <b>'설치'</b><br>
+                    • <b>아이폰:</b> 사파리 하단 <b>공유 버튼(↑)</b> → <b>'홈 화면에 추가'</b>
+                </div>
+                <div class="guide-box" style="border-top: 1px dashed #ccc; padding-top: 10px;">
+                    <span class="guide-title">⚠️ 채번 오류 시 해결법</span>
+                    • <b>첫번째:</b> 열려있는 구글 폼 창을 모두 닫은 후 다시 시도<br>
+                    • <b>두번째:</b> 브라우저 설정에서 '방문 기록/캐시 삭제' 후 재접속
                 </div>
             </div>
-
         </div>
 
         <div id="admin-login-view" style="display:none; width: 92%; max-width: 380px; text-align: center;">
@@ -442,11 +430,11 @@
             <iframe name="hidden_iframe" id="hidden_iframe" style="display:none;" onload="if(window.isSubmitted){ handleFormSuccess(); }"></iframe>
         </div>
 
-        <div class="footer" style="margin-top: 30px; text-align: center; font-size: 11px; color: #999; padding-bottom: 20px;">
-            <span class="contact-info">버그 및 오류 문의 : cndrone@naver.com</span><br>
+        <div class="footer">
+            <span class="contact-info">오류 및 기타 문의 : cndrone@naver.com</span>
             © 2026 RyanL Logistics.<br>
-            <span class="designer-tag">Created by LJH</span><br><br>
-            <span class="warning-text" style="color:#e74c3c; font-weight:bold;">무단 복제 및 도용 시 법적 처벌을 받을 수 있습니다.</span>
+            <span class="designer-tag">Created by LJH<span class="hidden-name">이준희</span></span>
+            <span class="warning-text">무단 복제 및 도용 시 법적 처벌을 받을 수 있습니다.</span>
         </div>
     </div>
 </body>
