@@ -9,7 +9,7 @@
     <link rel="apple-touch-icon" href="icon.jpg">
     <link rel="icon" sizes="192x192" href="icon.jpg">
 
-    <link rel="stylesheet" href="test_style.css?v=26">
+    <link rel="stylesheet" href="test_style.css?v=27">
 
     <style>
         body.dark-mode { background-color: #121212; color: #f1f1f1; }
@@ -37,9 +37,9 @@
     <script src="auth_gate_v1.js"></script>
     <script src="vip_list.js?v=2"></script>
     
-    <script src="test_core.js?v=26"></script> 
+    <script src="test_core.js?v=27"></script> 
     <script src="firebase_node_check.js"></script>
-    <script src="test_admin_ui.js?v=26"></script>
+    <script src="test_admin_ui.js?v=27"></script>
 
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
@@ -82,7 +82,7 @@
                 return;
             }
             if(!consent) {
-                myAlert("개인정보 수집 및 이용에 동의해주셔야 신청이 가능합니다.");
+                myAlert("개인정보 수집 및 이용 동의가 필요합니다.");
                 return;
             }
 
@@ -278,7 +278,7 @@
                             <button onclick="searchStats()" style="padding:8px 15px; background:#3498db; color:white; border:none; border-radius:6px; font-weight:bold; cursor:pointer; font-size:13px; box-shadow:0 2px 4px rgba(0,0,0,0.2);">조회</button>
                         </div>
                         
-                        <div id="stat-search-result" style="display:none; background:rgba(0,0,0,0.2); padding:15px; border-radius:8px; margin-top:10px;">
+                        <div id="stat-search-result" style="display:block; background:rgba(0,0,0,0.2); padding:15px; border-radius:8px; margin-top:10px;">
                             <div style="font-size:13px; color:#f1c40f; font-weight:bold; margin-bottom:15px; border-bottom:1px dashed rgba(255,255,255,0.1); padding-bottom:10px;">✅ 선택 기간 누적 및 평균 데이터</div>
                             
                             <div style="display:flex; justify-content:space-around; align-items:center; margin-bottom:15px;">
