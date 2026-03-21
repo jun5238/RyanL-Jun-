@@ -245,15 +245,11 @@ function showMain(id, camp) {
     db.ref("공지사항/최신공지").once('value', snap => {
         const val = snap.val();
         if(val && val.text) {
-            const now = new Date().getTime();
-            const limitTime = 3 * 24 * 60 * 60 * 1000;
+            const savedNotice = localStorage.getItem('notice_' + id);
             
-            if (now - val.timestamp <= limitTime) {
-                const savedNotice = localStorage.getItem('notice_' + id);
-                if(savedNotice !== val.text) {
-                    myAlert("📢 [전체 공지사항]\n\n" + val.text);
-                    localStorage.setItem('notice_' + id, val.text); 
-                }
+            if(savedNotice !== val.text) {
+                myAlert("📢 [전체 공지사항]\n\n" + val.text);
+                localStorage.setItem('notice_' + id, val.text); 
             }
         }
     });
