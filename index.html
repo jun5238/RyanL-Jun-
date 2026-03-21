@@ -2,19 +2,20 @@
 <html lang="ko">
 <head>
     <script>
-    (function() {
-        var userAgent = navigator.userAgent.toLowerCase();
-        var targetUrl = location.href;
+        /* [라이언엘 전용 강제 크롬 탈출 시스템] */
+        (function() {
+            var userAgent = navigator.userAgent.toLowerCase();
+            var targetUrl = location.href;
 
-        // 카톡, 네이버, 인스타 등 '인앱 브라우저'에서 접속했을 때만 작동!
-        if (userAgent.match(/kakaotalk|line|naver|fbav|instagram/i)) {
-            // 안드로이드 폰이라면 무조건 '크롬' 앱으로 주소를 던져버립니다!
-            if (userAgent.match(/android/i)) {
-                location.href = 'intent://' + targetUrl.replace(/https?:\/\//i, '') + '#Intent;scheme=https;package=com.android.chrome;end';
+            if (userAgent.match(/kakaotalk|line|naver|fbav|instagram/i)) {
+                if (userAgent.match(/android/i)) {
+                    // 주소에서 http/https를 완전히 제거하고 인텐트 주소 생성
+                    var rawUrl = targetUrl.replace(/^https?:\/\//, "");
+                    location.href = "intent://" + rawUrl + "#Intent;scheme=https;package=com.android.chrome;end";
+                }
             }
-        }
-    })();
-</script>
+        })();
+    </script>
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -39,125 +40,3 @@
         <img src="loading.jpg" class="splash-logo" alt="RyanL Loading">
         <div class="splash-text">Loading.....</div>
     </div>
-
-    <div id="custom-alert-overlay" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.6); z-index:100000; justify-content:center; align-items:center;">
-        <div style="background:#fff; width:85%; max-width:320px; border-radius:15px; padding:25px 20px; text-align:center; box-shadow:0 10px 25px rgba(0,0,0,0.2);">
-            <div style="font-size:35px; margin-bottom:10px;">🚨</div>
-            <div style="font-size:18px; font-weight:900; color:#152b52; margin-bottom:15px;">미승인 아이디입니다</div>
-            <div style="font-size:14px; color:#444; line-height:1.6; text-align:left; background:#f4f4f4; padding:15px; border-radius:10px; margin-bottom:20px;">
-                관리자에게 승인을 요청하세요.<br><br>
-                <strong style="color:#ff8c00;">[승인 요청 양식]</strong><br>
-                • <b>아이디 :</b> <br>
-                • <b>성함 :</b> <br>
-                • <b>업체명 :</b> <br><br>
-                👉 위 내용을 <b>cndrone@naver.com</b> 으로 보내주세요.<br><br>
-                <span style="color:#ff3b30; font-size:12px; font-weight:bold;">※ 허위 정보로 신청 시 승인이 거절될 수 있습니다.</span>
-            </div>
-            <button onclick="document.getElementById('custom-alert-overlay').style.display='none'" style="width:100%; padding:14px; background:#152b52; color:#fff; border:none; border-radius:10px; font-size:16px; font-weight:900; cursor:pointer;">확인</button>
-        </div>
-    </div>
-
-    <div id="success-overlay" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.6); z-index:100000; justify-content:center; align-items:center;">
-        <div style="background:#fff; width:80%; max-width:300px; border-radius:15px; padding:30px 20px; text-align:center; box-shadow:0 10px 25px rgba(0,0,0,0.2);">
-            <div style="font-size:45px; margin-bottom:15px;">✅</div>
-            <div style="font-size:20px; font-weight:900; color:#152b52; margin-bottom:10px;">전송 완료!</div>
-            <div style="font-size:14px; color:#555; margin-bottom:20px; line-height:1.5;">운송장 채번 요청이<br>성공적으로 접수되었습니다.</div>
-            <button onclick="document.getElementById('success-overlay').style.display='none'" style="width:100%; padding:14px; background:#ff8c00; color:#fff; border:none; border-radius:10px; font-size:16px; font-weight:900; cursor:pointer;">확인</button>
-        </div>
-    </div>
-
-    <div class="wrapper">
-        <div class="header" style="position: relative;">
-            <div style="position: absolute; top: -5px; left: 5px; font-size: 10px; color: #999; z-index: 10; font-weight: bold;">
-                <script>
-                    const modDate = new Date(document.lastModified);
-                    document.write("🔄 update. " + modDate.getFullYear().toString().substr(-2) + "." + String(modDate.getMonth() + 1).padStart(2, '0') + "." + String(modDate.getDate()).padStart(2, '0') + " " + String(modDate.getHours()).padStart(2, '0') + ":" + String(modDate.getMinutes()).padStart(2, '0'));
-                </script>
-            </div>
-            
-            <div onclick="window.location.reload(true);" style="position: absolute; top: 10px; right: 10px; padding: 6px 12px; background-color: #ff8c00; color: white; border-radius: 15px; font-weight: 900; font-size: 13px; box-shadow: 0 3px 6px rgba(0,0,0,0.15); cursor: pointer; z-index: 10;">
-                🔄 새로고침
-            </div>
-            
-            <img src="mlogo.jpg" class="logo-img">
-            <div class="rocket-title">🚀 채번 요청 1초컷</div>
-            <div class="sub-tag">
-                천안1캠프 전용 스마트 시스템 
-                <span style="background:#e74c3c; color:white; font-size:11px; font-weight:900; padding:3px 6px; border-radius:5px; vertical-align:middle; margin-left:5px; box-shadow:0 2px 4px rgba(0,0,0,0.2);">테스트 버전</span>
-            </div>
-        </div>
-        <div id="setup-view">
-            <label class="setup-label">👤 기사님 아이디</label>
-            <input type="text" id="user-id" placeholder="예: RyanL">
-            <label class="setup-label">📍 소속 캠프</label>
-            <select id="user-camp">
-                <option value="">선택하세요</option>
-                <option value="음봉MB">음봉MB</option>
-                <option value="송촌MB">송촌MB</option>
-            </select>
-            
-            <button class="btn-submit" onclick="saveInfo()" style="margin-top: 20px;">로그인</button>
-
-            <button class="btn-guide" onclick="toggleGuide()">❓ 설치 방법 및 오류 해결 가이드</button>
-            <div id="guide-content">
-                <div class="guide-box">
-                    <span class="guide-title">📱 바탕화면 바로가기 설치</span>
-                    • <b>갤럭시:</b> 크롬 우측 상단 <b>점 3개</b> → <b>'홈 화면에 추가'</b> 클릭 후 <b>'설치'</b><br>
-                    • <b>아이폰:</b> 사파리 하단 <b>공유 버튼(↑)</b> → <b>'홈 화면에 추가'</b>
-                </div>
-                <div class="guide-box" style="border-top: 1px dashed #ccc; padding-top: 10px;">
-                    <span class="guide-title">⚠️ 채번 오류 시 해결법</span>
-                    • <b>첫번째:</b> 열려있는 구글 폼 창을 모두 닫은 후 다시 시도<br>
-                    • <b>두번째:</b> 브라우저 설정에서 '방문 기록/캐시 삭제' 후 재접속
-                </div>
-            </div>
-        </div>
-
-        <div id="admin-login-view" style="display:none; width: 92%; max-width: 380px; text-align: center;">
-            <label class="setup-label" style="color:var(--orange);">🔒 관리자 보안 접속</label>
-            <input type="password" id="admin-pw" placeholder="비밀번호를 입력하세요">
-            <button class="btn-submit" onclick="checkAdminPw()" style="margin-top: 20px;">접속하기</button>
-            <button class="btn-change" onclick="cancelAdmin()" style="margin-top: 10px; background:#f0f0f0;">돌아가기</button>
-        </div>
-
-        <div id="admin-dashboard-view" style="display:none;" class="main-card">
-            <div style="text-align: center; border-bottom: 2px dashed rgba(255,255,255,0.3); padding-bottom: 10px; margin-bottom: 15px;">
-                <h3 style="color:var(--orange); margin:0;">📊 업체별 기사 명단</h3>
-            </div>
-            <div id="admin-list-content" style="max-height: 400px; overflow-y: auto;"></div>
-            <button class="btn-change" onclick="closeAdmin()" style="margin-top: 20px;">로그인 화면으로</button>
-        </div>
-
-        <div id="main-view" style="display:none;" class="main-card">
-            <div class="info-box">
-                <span class="user-info">현재 계정: <strong><span id="display-id"></span> <span id="display-camp"></span></strong></span>
-                <button class="btn-change" onclick="showSetup()">정보 변경</button>
-            </div>
-            
-            <form action="https://docs.google.com/forms/d/e/1FAIpQLSeIMR-wkYKFwnldd2qKKyUlaxLN85tu7OBX0HsLt7fzezZKWg/formResponse" method="POST" target="hidden_iframe" onsubmit="window.isSubmitted=true; document.getElementById('submitBtn').innerText='전송 중... ⏳';">
-                <input type="hidden" name="pageHistory" value="0,1">
-                <input type="hidden" name="entry.1315166815" id="form-id">
-                <input type="hidden" name="entry.1573740217" id="form-camp">
-                <input type="hidden" name="entry.697011792" value="채번 요청">
-                
-                <div class="label-area">📦<span>운송장 번호</span></div>
-                <div class="input-group">
-                    <input type="text" name="entry.359305263" id="waybill" placeholder="우측 버튼을 누르세요 👉" required>
-                    <button type="button" class="btn-paste" onclick="pasteClipboard()">👆 붙여넣기 클릭</button>
-                </div>
-                <div class="label-area">🔢<span>채번 수량</span></div>
-                <input type="number" name="entry.1437474928" id="quantity" placeholder="숫자만 입력" required>
-                <button type="submit" class="btn-submit" id="submitBtn">바로 제출하기</button>
-            </form>
-            <iframe name="hidden_iframe" id="hidden_iframe" style="display:none;" onload="if(window.isSubmitted){ document.getElementById('success-overlay').style.display='flex'; document.getElementById('waybill').value=''; document.getElementById('quantity').value=''; document.getElementById('submitBtn').innerText='바로 제출하기'; window.isSubmitted=false; }"></iframe>
-        </div>
-
-        <div class="footer">
-            <span class="contact-info">버그 및 오류 문의 : cndrone@naver.com</span>
-            © 2026 RyanL Logistics.<br>
-            <span class="designer-tag">Created by LJH<span class="hidden-name">이준희</span></span>
-            <span class="warning-text">무단 복제 및 도용 시 법적 처벌을 받을 수 있습니다.</span>
-        </div>
-    </div>
-</body>
-</html>
