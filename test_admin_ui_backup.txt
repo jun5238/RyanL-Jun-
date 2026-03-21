@@ -521,14 +521,19 @@ function saveNotice() {
     const text = input.value.trim();
     if(!text) { myAlert("공지 내용을 입력해주세요!"); return; }
     
-    db.ref("공지사항").set({ text: text });
+    const now = new Date().getTime();
+    
+    db.ref("공지사항/최신공지").set({
+        text: text,
+        timestamp: now
+    });
     
     db.ref("공지사항내역").push({
         text: text,
-        time: new Date().getTime()
+        time: now
     }).then(() => {
         input.value = '';
-        myAlert("공지사항이 성공적으로 저장되었습니다!");
+        myAlert("새로운 최신 공지가 성공적으로 등록되었습니다!");
         loadNoticeHistory();
     });
 }
@@ -543,14 +548,14 @@ function loadNoticeHistory() {
         snap.forEach(child => { notices.unshift(child.val()); });
         
         if(notices.length === 0) {
-            html = '<div style="color:#999;">최근 등록된 공지가 없습니다.</div>';
+            html = '<div style="color:#999; text-align:center; padding:10px;">등록된 공지가 없습니다.</div>';
         } else {
             notices.forEach(n => {
                 const d = new Date(n.time);
                 const timeStr = `${d.getMonth()+1}/${d.getDate()} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
-                html += `<div style="padding: 5px 0; border-bottom: 1px dashed rgba(255,255,255,0.1);">
-                    <span style="color:#f1c40f; margin-right:5px;">[${timeStr}]</span> 
-                    <span style="color:#fff;">${n.text}</span>
+                html += `<div style="padding: 10px; margin-bottom: 8px; background: rgba(255,140,0,0.1); border-radius: 8px; border-left: 3px solid #ff8c00;">
+                    <span style="color:#ff8c00; font-weight:bold; margin-right:5px; font-size:11px;">[${timeStr}]</span> 
+                    <span style="color:#fff; font-weight:bold;">${n.text}</span>
                 </div>`;
             });
         }
