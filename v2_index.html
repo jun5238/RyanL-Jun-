@@ -31,6 +31,37 @@
             background-color: #ffffff !important;
             color: #000000 !important;
         }
+
+        /* 🚨 대표님! 여기가 날짜창 한 줄 정렬 마법의 코드입니다! */
+        .statistics-search-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            margin-bottom: 15px;
+            width: 100%;
+        }
+        .statistics-search-row input[type="date"] {
+            flex: 1;
+            min-width: 0;
+            padding: 8px 3px !important;
+            font-size: 11px !important;
+            border-radius: 6px;
+            border: none;
+            text-align: center;
+        }
+        .statistics-search-row .search-btn {
+            padding: 8px 12px !important;
+            background: #3498db !important;
+            color: white !important;
+            border: none !important;
+            border-radius: 6px !important;
+            font-weight: bold !important;
+            font-size: 13px !important;
+            white-space: nowrap;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
     </style>
 
     <script src="security_protocol.js"></script>
@@ -271,11 +302,12 @@
 
                     <div style="background:rgba(255,255,255,0.05); border-radius:8px; margin: 0 15px 15px 15px; padding:15px; text-align:center;">
                         <div style="color:#f1c40f; font-weight:bold; font-size:14px; margin-bottom:10px; text-align:left;">📅 기간별 누적 통계 검색</div>
-                        <div style="display:flex; justify-content:center; align-items:center; gap:8px; margin-bottom:10px;">
-                            <input type="date" id="stat-start-date" style="flex:1; padding:8px; border-radius:6px; border:none; font-size:13px; font-family:inherit; box-sizing:border-box;">
+                        
+                        <div class="statistics-search-row">
+                            <input type="date" id="stat-start-date">
                             <span style="color:#aaa; font-weight:bold;">~</span>
-                            <input type="date" id="stat-end-date" style="flex:1; padding:8px; border-radius:6px; border:none; font-size:13px; font-family:inherit; box-sizing:border-box;">
-                            <button onclick="searchStats()" style="padding:8px 15px; background:#3498db; color:white; border:none; border-radius:6px; font-weight:bold; cursor:pointer; font-size:13px; box-shadow:0 2px 4px rgba(0,0,0,0.2);">조회</button>
+                            <input type="date" id="stat-end-date">
+                            <button onclick="searchStats()" class="search-btn">조회</button>
                         </div>
                         
                         <div id="stat-search-result" style="display:block; background:rgba(0,0,0,0.2); padding:15px; border-radius:8px; margin-top:10px;">
