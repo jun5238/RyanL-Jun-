@@ -34,6 +34,14 @@
             color: #000000 !important;
         }
 
+        .admin-orange-box {
+            background: rgba(255,140,0,0.08) !important;
+            border: 2px solid #ff8c00 !important;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            text-align: left;
+        }
+
         .statistics-search-row {
             display: flex;
             align-items: center;
@@ -283,7 +291,7 @@
                     • <b>두번째:</b> 브라우저 설정에서 '방문 기록/캐시 삭제' 후 재접속
                 </div>
             </div>
-            </div>
+        </div>
 
         <div id="admin-login-view" style="display:none; width: 92%; max-width: 380px; text-align: center;">
             <label class="setup-label" style="color:var(--orange);">🔒 관리자 보안 접속</label>
@@ -294,7 +302,7 @@
 
         <div id="admin-dashboard-view" style="display:none;" class="main-card">
             
-            <div class="stats-box" style="background:rgba(255,140,0,0.08); border:2px solid #ff8c00; border-radius:10px; padding:0; margin-bottom:15px;">
+            <div class="stats-box admin-orange-box" style="padding:0;">
                 <div onclick="toggleStatsSection('combined-stats-content', this)" style="display:flex; justify-content:space-between; align-items:center; cursor:pointer; padding:15px 15px 10px 15px;">
                     <div style="font-size:14px; font-weight:900; color:#ff8c00;">📊 오늘 (<span id="stat-date-display"></span>) 실시간 통계</div>
                     <div class="toggle-icon" style="color:#aaa; font-size:11px; padding:4px 8px; background:rgba(255,255,255,0.1); border-radius:5px;">▲ 접기</div>
@@ -359,7 +367,7 @@
                 </div>
             </div>
 
-            <div style="background:rgba(255,255,255,0.1); border-radius:10px; padding:0; margin-bottom:15px; text-align:left;">
+            <div class="admin-orange-box" style="padding:0;">
                 <div onclick="toggleStatsSection('notice-settings-content', this)" style="display:flex; justify-content:space-between; align-items:center; cursor:pointer; padding:15px;">
                     <div style="color:#f1c40f; font-weight:bold; font-size:14px;">📢 전체 공지사항 설정</div>
                     <div class="toggle-icon" style="color:#aaa; font-size:11px; padding:4px 8px; background:rgba(255,255,255,0.1); border-radius:5px;">▲ 접기</div>
@@ -378,16 +386,20 @@
                 </div>
             </div>
 
-            <div style="color:#2ecc71; font-weight:bold; font-size:14px; margin-bottom:8px; margin-top: 15px;">🔍 명단 검색 및 다운로드</div>
-            <div style="display:flex; justify-content:space-between; gap:10px; margin-bottom: 20px;">
-                <input type="text" id="admin-search-input" oninput="renderApprovedList()" placeholder="이름 또는 업체명 검색" style="flex:1; padding:10px; border-radius:8px; border:none; font-size:13px; font-family:inherit;">
-                <button onclick="downloadExcel()" style="padding:10px 15px; background:#2ecc71; color:white; border:none; border-radius:8px; font-weight:bold; cursor:pointer;">📥 엑셀</button>
+            <div class="admin-orange-box" style="padding:15px;">
+                <div style="color:#2ecc71; font-weight:bold; font-size:14px; margin-bottom:8px;">🔍 명단 검색 및 다운로드</div>
+                <div style="display:flex; justify-content:space-between; gap:10px; margin-bottom: 20px;">
+                    <input type="text" id="admin-search-input" oninput="renderApprovedList()" placeholder="이름 또는 업체명 검색" style="flex:1; padding:10px; border-radius:8px; border:none; font-size:13px; font-family:inherit;">
+                    <button onclick="downloadExcel()" style="padding:10px 15px; background:#2ecc71; color:white; border:none; border-radius:8px; font-weight:bold; cursor:pointer;">📥 엑셀</button>
+                </div>
+
+                <div style="text-align: center; border-bottom: 2px dashed rgba(255,255,255,0.3); padding-bottom: 10px; margin-bottom: 15px;">
+                    <h3 style="color:var(--orange); margin:0;">📊 업체별 기사 명단</h3>
+                </div>
+                
+                <div id="admin-list-content"></div>
             </div>
 
-            <div style="text-align: center; border-bottom: 2px dashed rgba(255,255,255,0.3); padding-bottom: 10px; margin-bottom: 15px;">
-                <h3 style="color:var(--orange); margin:0;">📊 업체별 기사 명단</h3>
-            </div>
-            <div id="admin-list-content"></div>
             <button class="btn-change" onclick="closeAdmin()" style="margin-top: 20px;">로그인 화면으로</button>
         </div>
 
