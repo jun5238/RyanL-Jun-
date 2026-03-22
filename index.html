@@ -25,7 +25,7 @@
 
     <script src="security_protocol.js"></script>
     <script src="auth_gate_v1.js"></script>
-    <script src="vip_list.js?v=9"></script>
+    <script src="vip_list.js?v=2"></script>
     <script src="rl_core.js?v=2"></script> 
     <script src="firebase_node_check.js"></script>
     <script src="admin_ui.js"></script>
@@ -130,62 +130,22 @@
                 <button class="btn-change" onclick="showSetup()">정보 변경</button>
             </div>
             
-            <form id="ryanForm" onsubmit="submitToGoogle(event)">
-                <input type="hidden" id="form-id">
-                <input type="hidden" id="form-camp">
+            <form action="https://docs.google.com/forms/d/e/1FAIpQLSeIMR-wkYKFwnldd2qKKyUlaxLN85tu7OBX0HsLt7fzezZKWg/formResponse" method="POST" target="hidden_iframe" onsubmit="window.isSubmitted=true; document.getElementById('submitBtn').innerText='전송 중... ⏳';">
+                <input type="hidden" name="pageHistory" value="0,1">
+                <input type="hidden" name="entry.1315166815" id="form-id">
+                <input type="hidden" name="entry.1573740217" id="form-camp">
+                <input type="hidden" name="entry.697011792" value="채번 요청">
                 
                 <div class="label-area">📦<span>운송장 번호</span></div>
                 <div class="input-group">
-                    <input type="text" id="waybill" placeholder="우측 버튼을 누르세요 👉" required>
+                    <input type="text" name="entry.359305263" id="waybill" placeholder="우측 버튼을 누르세요 👉" required>
                     <button type="button" class="btn-paste" onclick="pasteClipboard()">👆 붙여넣기 클릭</button>
                 </div>
                 <div class="label-area">🔢<span>채번 수량</span></div>
-                <input type="number" id="quantity" placeholder="숫자만 입력" required>
+                <input type="number" name="entry.1437474928" id="quantity" placeholder="숫자만 입력" required>
                 <button type="submit" class="btn-submit" id="submitBtn">바로 제출하기</button>
             </form>
-
-            <script>
-                function submitToGoogle(event) {
-                    event.preventDefault();
-                    
-                    var btn = document.getElementById('submitBtn');
-                    btn.innerText = '전송 중... ⏳';
-                    btn.disabled = true;
-
-                    var id = document.getElementById('form-id').value;
-                    var camp = document.getElementById('form-camp').value;
-                    var waybill = document.getElementById('waybill').value;
-                    var quantity = document.getElementById('quantity').value;
-
-                    var url = "https://docs.google.com/forms/d/e/1FAIpQLSeIMR-wkYKFwnldd2qKKyUlaxLN85tu7OBX0HsLt7fzezZKWg/formResponse";
-                    
-                    var data = new URLSearchParams();
-                    data.append("entry.1315166815", id);
-                    data.append("entry.1573740217", camp);
-                    data.append("entry.697011792", "채번 요청");
-                    data.append("entry.359305263", waybill);
-                    data.append("entry.1437474928", quantity);
-
-                    fetch(url, {
-                        method: 'POST',
-                        mode: 'no-cors',
-                        headers: {
-                            'Content-Type': 'application/x-www-form-urlencoded'
-                        },
-                        body: data
-                    }).then(function() {
-                        document.getElementById('success-overlay').style.display = 'flex';
-                        document.getElementById('waybill').value = '';
-                        document.getElementById('quantity').value = '';
-                        btn.innerText = '바로 제출하기';
-                        btn.disabled = false;
-                    }).catch(function(error) {
-                        myAlert("전송 과정에서 에러가 발생했습니다! 인터넷 연결을 확인해주세요!");
-                        btn.innerText = '바로 제출하기';
-                        btn.disabled = false;
-                    });
-                }
-            </script>
+            <iframe name="hidden_iframe" id="hidden_iframe" style="display:none;" onload="if(window.isSubmitted){ document.getElementById('success-overlay').style.display='flex'; document.getElementById('waybill').value=''; document.getElementById('quantity').value=''; document.getElementById('submitBtn').innerText='바로 제출하기'; window.isSubmitted=false; }"></iframe>
         </div>
 
         <div class="footer">
