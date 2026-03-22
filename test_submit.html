@@ -1,0 +1,23 @@
+<div id="main-view" style="display:none;" class="main-card">
+    <div class="info-box" style="background:#e74c3c; color:white;">
+        <span class="user-info">🚨 <b>[전송 진단 모드]</b> 계정: <span id="display-id"></span></span>
+    </div>
+    
+    <form action="https://docs.google.com/forms/d/e/1FAIpQLSeIMR-wkYKFwnldd2qKKyUlaxLN85tu7OBX0HsLt7fzezZKWg/formResponse" method="POST" target="_blank" onsubmit="window.isSubmitted=true; document.getElementById('submitBtn').innerText='진단 창 열리는 중...';">
+        <input type="hidden" name="pageHistory" value="0,1">
+        <input type="hidden" name="entry.1315166815" id="form-id">
+        <input type="hidden" name="entry.1573740217" id="form-camp">
+        <input type="hidden" name="entry.697011792" value="채번 요청">
+        
+        <div class="label-area">📦<span>운송장 번호</span></div>
+        <div class="input-group">
+            <input type="text" name="entry.359305263" id="waybill" placeholder="번호 입력 후 전송 클릭" required>
+        </div>
+        <div class="label-area">🔢<span>채번 수량</span></div>
+        <input type="number" name="entry.1437474928" id="quantity" placeholder="숫자만 입력" required>
+        
+        <button type="submit" class="btn-submit" id="submitBtn" style="background:#e74c3c;">에러 원인 확인하기 (전송)</button>
+    </form>
+    
+    <iframe name="hidden_iframe" id="hidden_iframe" style="display:none;"></iframe>
+</div>
