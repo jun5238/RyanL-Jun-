@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>라이언엘 스마트 입력 보조기</title>
+    
+    <style>
+        body { font-family: 'Malgun Gothic', sans-serif; background-color: #f4f7f6; margin: 0; padding: 0; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+        .wrapper { width: 100%; max-width: 420px; background: white; padding: 30px 20px; border-radius: 20px; box-shadow: 0 10px 20px rgba(0,0,0,0.1); box-sizing: border-box; }
+        .header { text-align: center; margin-bottom: 25px; }
+        .rocket-title { font-size: 24px; font-weight: 900; color: #152b52; margin-bottom: 5px; }
+        .sub-tag { font-size: 12px; color: #7f8c8d; font-weight: bold; background: #e9ecef; display: inline-block; padding: 5px 10px; border-radius: 15px; }
+        .label-area { font-weight: 900; color: #2c3e50; margin-bottom: 8px; margin-top: 15px; font-size: 14px; }
+        input, select { width: 100%; padding: 15px; border: 2px solid #ddd; border-radius: 10px; font-size: 15px; box-sizing: border-box; font-weight: bold; transition: 0.3s; }
+        input:focus, select:focus { border-color: #ff8c00; outline: none; }
+        .btn-submit { width: 100%; padding: 16px; background: #3498db; color: white; border: none; border-radius: 12px; font-weight: 900; font-size: 16px; cursor: pointer; margin-top: 25px; box-shadow: 0 4px 6px rgba(52, 152, 219, 0.3); }
+        .notice-box { background: #fff3cd; color: #856404; padding: 15px; border-radius: 10px; font-size: 12px; font-weight: bold; margin-top: 20px; line-height: 1.5; border: 1px solid #ffeeba; }
+    </style>
+</head>
+<body>
+
+    <div class="wrapper">
+        <div class="header">
+            <div class="rocket-title">🛡️ 스마트 입력 보조기</div>
+            <div class="sub-tag">※ 시연용 안전 모드 (보안 리스크 0%)</div>
+        </div>
+
+        <form onsubmit="openPrefilledForm(event)">
+            <div class="label-area">👤 기사님 아이디 (미리 세팅됨)</div>
+            <input type="text" id="demo-id" value="RyanL_Demo" readonly style="background:#f0f0f0; color:#555;">
+            
+            <div class="label-area">📍 소속 캠프 (미리 세팅됨)</div>
+            <input type="text" id="demo-camp" value="음봉MB" readonly style="background:#f0f0f0; color:#555;">
+
+            <div class="label-area">📦 운송장 번호 입력</div>
+            <input type="text" id="waybill" placeholder="송장번호를 입력하세요" required>
+            
+            <div class="label-area">🔢 채번 수량 입력</div>
+            <input type="number" id="quantity" placeholder="숫자만 입력 (예: 1)" required>
+            
+            <button type="submit" class="btn-submit">✅ 빈칸 채워서 구글 폼 열기</button>
+        </form>
+
+        <div class="notice-box">
+            💡 <b>[안내] 본 앱은 자동 제출(매크로) 프로그램이 아닙니다.</b><br>
+            기사님의 타이핑 번거로움을 덜어주기 위해 구글 폼의 빈칸만 미리 채워주는 '보조 도구'이며, <b>최종 제출은 기사님이 직접 구글 폼 화면에서 진행합니다.</b> 따라서 쿠팡 보안망에 어떠한 영향도 주지 않습니다.
+        </div>
+    </div>
+
+    <script>
+        function openPrefilledForm(event) {
+            event.preventDefault();
+            
+            var id = document.getElementById('demo-id').value;
+            var camp = document.getElementById('demo-camp').value;
+            var waybill = document.getElementById('waybill').value;
+            var quantity = document.getElementById('quantity').value;
+            
+            var baseUrl = "https://docs.google.com/forms/d/e/1FAIpQLSeIMR-wkYKFwnldd2qKKyUlaxLN85tu7OBX0HsLt7fzezZKWg/viewform?usp=pp_url";
+            
+            var finalUrl = baseUrl + 
+                "&entry.1315166815=" + encodeURIComponent(id) + 
+                "&entry.1573740217=" + encodeURIComponent(camp) + 
+                "&entry.697011792=" + encodeURIComponent("채번 요청") + 
+                "&entry.359305263=" + encodeURIComponent(waybill) + 
+                "&entry.1437474928=" + encodeURIComponent(quantity);
+                
+            window.open(finalUrl, '_blank');
+        }
+    </script>
+
+</body>
+</html>
