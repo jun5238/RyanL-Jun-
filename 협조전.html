@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>업무 협조전 - 라이언엘</title>
+    <style>
+        body { 
+            font-family: 'Malgun Gothic', '맑은 고딕', sans-serif; 
+            background: #f0f0f0; 
+            margin: 0; 
+            padding: 20px; 
+        }
+        .document { 
+            background: white; 
+            max-width: 800px; 
+            margin: 0 auto; 
+            padding: 50px 40px; 
+            box-shadow: 0 0 15px rgba(0,0,0,0.2); 
+            border: 1px solid #ccc;
+        }
+        h1 { 
+            text-align: center; 
+            font-size: 30px; 
+            border-bottom: 2px solid #000; 
+            padding-bottom: 15px; 
+            margin-bottom: 30px; 
+            letter-spacing: 10px; 
+        }
+        table { 
+            width: 100%; 
+            border-collapse: collapse; 
+            margin-bottom: 20px; 
+            font-size: 14px; 
+            line-height: 1.6; 
+        }
+        th, td { 
+            border: 1px solid #444; 
+            padding: 12px 15px; 
+        }
+        th { 
+            background-color: #f8f9fa; 
+            width: 25%; 
+            text-align: center; 
+            font-weight: 900; 
+            color: #222;
+        }
+        .section-title { 
+            font-weight: 900; 
+            background-color: #e9ecef; 
+            text-align: center; 
+            font-size: 15px;
+        }
+        .sign-area { 
+            display: flex; 
+            justify-content: space-between; 
+            margin-top: 50px; 
+            padding: 0 20px;
+        }
+        .sign-box { 
+            font-weight: bold; 
+            font-size: 15px;
+        }
+        .sign-box span { 
+            display: inline-block; 
+            width: 120px; 
+            border-bottom: 1px solid #000; 
+            margin-left: 10px; 
+        }
+        
+        /* 🚨 인쇄할 때 배경색과 테두리가 깔끔하게 나오도록 하는 마법의 코드! */
+        @media print {
+            body { background: white; padding: 0; }
+            .document { box-shadow: none; border: none; padding: 0; max-width: 100%; }
+            th, .section-title { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+        }
+    </style>
+</head>
+<body>
+    <div class="document">
+        <h1>업무 협조전</h1>
+        
+        <table>
+            <tr>
+                <th>요 청 일 자</th>
+                <td>2026-03-22</td>
+            </tr>
+            <tr>
+                <th>요 청 업 체</th>
+                <td>라이언엘 로지스틱스</td>
+            </tr>
+            <tr>
+                <th>요 청 자</th>
+                <td>이숙 대표 (연락처: 010-8274-4888)</td>
+            </tr>
+            <tr>
+                <th>수 신 부 서</th>
+                <td>천안1캠프</td>
+            </tr>
+            <tr>
+                <th>요 청 제 목</th>
+                <td style="font-weight: 900; color: #152b52;">[업무개선] 라이언엘 자체 개발 '스마트 채번 시스템' 연동 테스트 및 실시간 소통(Teams) 지원 요청</td>
+            </tr>
+            <tr>
+                <td colspan="2" class="section-title">■ 요 청 내 용</td>
+            </tr>
+            <tr>
+                <th>요 청 배 경</th>
+                <td>기존 채번 신청 방식의 불편함을 해소하고 기사님들의 업무 효율을 극대화하기 위해, 당사에서 자체 개발한 스마트 채번 어플리케이션을 도입 및 테스트 중입니다.<br><br>이에 실제 현장 데이터를 기반으로 한 완벽한 안정성 검증 및 기능 개선을 위해 천안1캠프 측의 업무 협조를 요청드립니다.</td>
+            </tr>
+            <tr>
+                <th>협조 요청 사항</th>
+                <td>기기별 호환성 테스트 및 업데이트 시, 즉각적인 실시간 송수신 확인을 위해 <b>당사 개발 담당자(이준희)의 캠프 팀즈(Teams) 방 초대</b>를 요청합니다.</td>
+            </tr>
+            <tr>
+                <th>테스트 진행 방식</th>
+                <td>
+                    1. 당사 시스템에서 가상의 운송장 번호(예: "test1") 발송<br>
+                    2. 캠프 수신 측(Teams)에서 "test1 확인이요" 형태로 간단히 응답
+                </td>
+            </tr>
+            <tr>
+                <th>테스트 규모</th>
+                <td>캠프 본연의 업무에 지장이 없도록, 실제 오류 발생 건 및 시스템 업데이트 반영 시에만 소수 건(극소량)으로 제한하여 진행합니다.</td>
+            </tr>
+            <tr>
+                <td colspan="2" class="section-title">■ 사유 및 기대 효과</td>
+            </tr>
+            <tr>
+                <td colspan="2" style="padding: 20px;">
+                    <div style="margin-bottom: 8px;"><b>[혁신적 상생 모델]</b> 캠프와 협력사(라이언엘) 간의 자발적 시스템 연동을 통한 업계 최초의 전례 없는 모범적 협업 사례 창출.</div>
+                    <div style="margin-bottom: 8px;"><b>[압도적 편의성 제공]</b> 천안1캠프 소속 기사님들의 채번 프로세스를 1초 컷으로 단축시켜, 현장 만족도 및 배송속도 대폭 향상.</div>
+                    <div style="margin-bottom: 8px;"><b>[캠프 업무 경감]</b> 자동화 시스템 정착 시, 휴먼 에러(누락, 오타)가 방지되어 캠프 관리자님들의 데이터 취합 업무 또한 획기적으로 경감될 것으로 기대합니다.</div>
+                    <div><b>[확장성 검증]</b> 본 테스트의 성공적 완수 후, 향후 타 캠프 확대 적용 등 물류 시스템 개선의 선도적 모델 확보.</div>
+                </td>
+            </tr>
+            <tr>
+                <th>요청(테스트) 기한</th>
+                <td>승인일로부터 <b>1개월간</b> 집중 진행 (※ 안정화 완료 시 즉시 종료)</td>
+            </tr>
+            <tr>
+                <th>긴 급 여 부</th>
+                <td>업무 개선 프로젝트 (신속한 안정화를 위해 빠른 협조 부탁드립니다.)</td>
+            </tr>
+            <tr>
+                <th>비 고</th>
+                <td>본 시스템은 오직 기사님들의 편의와 천안1캠프의 원활한 업무 흐름을 돕기 위해 당사가 선제적으로 도입한 공익적 시스템입니다. 원활한 서비스 개선을 위해 적극적인 협조 부탁드립니다. 감사합니다.</td>
+            </tr>
+        </table>
+
+        <div class="sign-area">
+            <div class="sign-box">요청자 : 라이언엘 이숙 대표 <span></span> (서명)</div>
+            <div class="sign-box">협조부서 : 천안1캠프 <span></span> (서명)</div>
+        </div>
+    </div>
+</body>
+</html>
