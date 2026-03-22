@@ -1,0 +1,24 @@
+<div id="main-view" style="display:none;" class="main-card">
+    <div class="info-box" style="background:#e74c3c; color:white; border-radius:10px; margin-bottom:15px; padding:12px; text-align:center;">
+        <span style="font-weight:900; font-size:14px;">⚠️ [전송 오류 정밀 진단 모드] ⚠️</span><br>
+        <span style="font-size:11px;">전송 후 화면에 뜨는 메시지를 확인해주세요!</span>
+    </div>
+    
+    <form action="https://docs.google.com/forms/d/e/1FAIpQLSeIMR-wkYKFwnldd2qKKyUlaxLN85tu7OBX0HsLt7fzezZKWg/formResponse" method="POST" onsubmit="document.getElementById('submitBtn').innerText='구글 서버 접속 중...';">
+        <input type="hidden" name="pageHistory" value="0,1">
+        <input type="hidden" name="entry.1315166815" id="form-id">
+        <input type="hidden" name="entry.1573740217" id="form-camp">
+        <input type="hidden" name="entry.697011792" value="채번 요청">
+        
+        <div class="label-area" style="color:#ff8c00;">📦<span>운송장 번호</span></div>
+        <div class="input-group">
+            <input type="text" name="entry.359305263" id="waybill" placeholder="운송장 번호 입력" required>
+        </div>
+        
+        <div class="label-area" style="color:#ff8c00;">🔢<span>채번 수량</span></div>
+        <input type="number" name="entry.1437474928" id="quantity" placeholder="숫자만 입력" required>
+        
+        <button type="submit" class="btn-submit" id="submitBtn" style="background:#e74c3c; margin-top:20px;">지금 바로 전송하고 원인 확인</button>
+    </form>
+    
+    </div>
