@@ -127,7 +127,7 @@
                 </div>
                 <div class="label-area">🔢<span>채번 수량</span></div>
                 <input type="number" id="quantity" placeholder="숫자만 입력" required>
-                <button type="submit" class="btn-submit" id="submitBtn">구글 폼으로 이동 🚀</button>
+                <button type="submit" class="btn-submit" id="submitBtn">바로 제출하기</button>
             </form>
 
             <script>
@@ -135,7 +135,7 @@
                     event.preventDefault();
                     
                     var btn = document.getElementById('submitBtn');
-                    btn.innerText = '구글 폼 여는 중... ⏳';
+                    btn.innerText = '전송 중... ⏳';
                     
                     var id = document.getElementById('form-id').value;
                     var camp = document.getElementById('form-camp').value;
