@@ -442,16 +442,16 @@
                     var waybillVal = document.getElementById('waybill').value;
                     var quantityVal = document.getElementById('quantity').value;
 
-                    // 🚨 [쿠팡 전용 구글 폼 주소] 🚨
-                    var url = "https://docs.google.com/forms/d/e/1FAIpQLSfiEqOUQAo_pCMhh1q3E-_VYxAkDKp5kn8RqB3_mcHL6ksYeQ/formResponse";
+                    // 🚨 쿠팡 폼 찐주소와 번호로 정밀 수정 🚨
+                    var url = "https://docs.google.com/forms/d/e/1FAIpQLSeIMR-wkYKFwnldd2qKKyUlaxLN85tu7OBX0HsLt7fzezZKWg/formResponse";
                     
                     var params = new URLSearchParams();
                     params.append("pageHistory", "0,1"); 
-                    params.append("entry.893130037", "채번 요청"); // [쿠팡 주소번호]
-                    params.append("entry.442655354", idVal.trim()); // [쿠팡 주소번호]
-                    params.append("entry.786194174", campVal.trim()); // [쿠팡 주소번호]
-                    params.append("entry.633777622", waybillVal); // [쿠팡 주소번호]
-                    params.append("entry.1141746706", quantityVal); // [쿠팡 주소번호]
+                    params.append("entry.697011792", "채번 요청"); // 요청 작업
+                    params.append("entry.1315166815", idVal.trim()); // 기사 아이디
+                    params.append("entry.1573740217", campVal.trim()); // 캠프
+                    params.append("entry.359305263", waybillVal); // 운송장
+                    params.append("entry.1437474928", quantityVal); // 수량
 
                     fetch(url, {
                         method: 'POST',
