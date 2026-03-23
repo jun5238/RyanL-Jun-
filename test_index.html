@@ -83,6 +83,15 @@
             box-sizing: border-box;
             overflow-x: hidden;
         }
+
+        /* 🚨 추가된 부분: 관리자 명단 버튼 늘어남 및 글자 꺾임 방지 🚨 */
+        #admin-list-content * {
+            word-break: keep-all !important; /* 글자가 공간 부족으로 꺾이는 현상 방지 */
+        }
+        #admin-list-content button {
+            align-self: center !important; /* 버튼이 위아래로 뚱뚱하게 늘어나는 것 방지 */
+            white-space: nowrap !important;
+        }
     </style>
 
     <script src="security_protocol.js"></script>
@@ -424,23 +433,12 @@
             </form>
 
             <script>
-                // 🚨 붙여넣기 버튼 스크립트만 정확히 교체 완료 🚨
                 async function pasteClipboard() {
                     try {
-                        const waybillInput = document.getElementById('waybill');
-                        waybillInput.focus();
                         const text = await navigator.clipboard.readText();
-                        if(text) {
-                            waybillInput.value = text;
-                        }
+                        document.getElementById('waybill').value = text;
                     } catch (err) {
-                        const inputField = document.getElementById('waybill');
-                        inputField.focus();
-                        if(typeof myAlert === 'function') {
-                            myAlert("🚫 클립보드 권한이 차단되었습니다!\n\n우측 상단 점 3개(크롬) 👉 설정 👉 사이트 설정 👉 클립보드 👉 '허용'으로 바꿔주세요.");
-                        } else {
-                            alert("🚫 클립보드 권한이 차단되었습니다!\n\n우측 상단 점 3개(크롬) 👉 설정 👉 사이트 설정 👉 클립보드 👉 '허용'으로 바꿔주세요.");
-                        }
+                        myAlert("🚫 직접 꾹 눌러서 붙여넣어주세요!");
                     }
                 }
 
@@ -450,20 +448,22 @@
                     btn.innerText = '전송 중... ⏳';
                     btn.disabled = true;
 
+                    // 화면 데이터 낚아채기
                     var idVal = document.getElementById('display-id').innerText;
                     var campVal = document.getElementById('display-camp').innerText;
                     var waybillVal = document.getElementById('waybill').value;
                     var quantityVal = document.getElementById('quantity').value;
 
+                    // 🚨 쿠팡 폼 찐주소와 번호로 정밀 수정 🚨
                     var url = "https://docs.google.com/forms/d/e/1FAIpQLSeIMR-wkYKFwnldd2qKKyUlaxLN85tu7OBX0HsLt7fzezZKWg/formResponse";
                     
                     var params = new URLSearchParams();
                     params.append("pageHistory", "0,1"); 
-                    params.append("entry.697011792", "채번 요청");
-                    params.append("entry.1315166815", idVal.trim());
-                    params.append("entry.1573740217", campVal.trim());
-                    params.append("entry.359305263", waybillVal);
-                    params.append("entry.1437474928", quantityVal);
+                    params.append("entry.697011792", "채번 요청"); // [쿠팡 주소번호]
+                    params.append("entry.1315166815", idVal.trim()); // [쿠팡 주소번호]
+                    params.append("entry.1573740217", campVal.trim()); // [쿠팡 주소번호]
+                    params.append("entry.359305263", waybillVal); // [쿠팡 주소번호]
+                    params.append("entry.1437474928", quantityVal); // [쿠팡 주소번호]
 
                     fetch(url, {
                         method: 'POST',
@@ -472,9 +472,10 @@
                         body: params.toString()
                     });
 
+                    // 🚨 히스토리 기록 및 성공 처리 (test_core.js 내 함수 호출) 🚨
                     setTimeout(function() {
                         if(typeof handleFormSuccess === 'function') {
-                            handleFormSuccess();
+                            handleFormSuccess(); // 이 함수 내부에서 히스토리 저장과 알림창이 뜹니다.
                         } else {
                             document.getElementById('success-overlay').style.display = 'flex';
                             document.getElementById('waybill').value = '';
