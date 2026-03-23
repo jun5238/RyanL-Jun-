@@ -260,12 +260,13 @@
                 <div id="admin-badge" style="display:none; position:absolute; top:-5px; right:-5px; background:red; color:white; font-size:10px; font-weight:bold; padding:2px 6px; border-radius:10px; box-shadow:0 2px 4px rgba(0,0,0,0.3); z-index:11;">0</div>
             </div>
 
-            <div class="rocket-title">🚀 채번 요청 1초컷</div>
+            <div class="rocket-title">🚀 채번 요청 1초컷 <span style="font-size: 13px; color: #ff8c00; font-weight: 900; background: rgba(255,140,0,0.15); padding: 2px 8px; border-radius: 20px; border: 1.5px solid #ff8c00; margin-left: 5px; vertical-align: middle;">내 구글폼</span></div>
             
             <div class="sub-tag">
                 천안1캠프 전용 스마트 시스템 
             </div>
         </div>
+        
         <div id="setup-view">
             <label class="setup-label">👤 기사님 아이디</label>
             <input type="text" id="user-id" placeholder="예: RyanL">
@@ -442,16 +443,16 @@
                     var waybillVal = document.getElementById('waybill').value;
                     var quantityVal = document.getElementById('quantity').value;
 
-                    // 🚨 [여기가 대표님 개인 구글 폼 주소입니다!] 🚨
+                    // 🚨 [여기가 대표님 개인 구글 폼 주소!] 🚨
                     var url = "https://docs.google.com/forms/d/e/1FAIpQLSfiEqOUQAo_pCMhh1q3E-_VYxAkDKp5kn8RqB3_mcHL6ksYeQ/formResponse";
                     
                     var params = new URLSearchParams();
                     params.append("pageHistory", "0,1"); 
-                    params.append("entry.893130037", "채번 요청"); // 🚨 [내 구글폼 주소번호]
-                    params.append("entry.442655354", idVal.trim()); // 🚨 [내 구글폼 주소번호]
-                    params.append("entry.786194174", campVal.trim()); // 🚨 [내 구글폼 주소번호]
-                    params.append("entry.633777622", waybillVal); // 🚨 [내 구글폼 주소번호]
-                    params.append("entry.1141746706", quantityVal); // 🚨 [내 구글폼 주소번호]
+                    params.append("entry.893130037", "채번 요청");
+                    params.append("entry.442655354", idVal.trim());
+                    params.append("entry.786194174", campVal.trim());
+                    params.append("entry.633777622", waybillVal);
+                    params.append("entry.1141746706", quantityVal);
 
                     fetch(url, {
                         method: 'POST',
@@ -460,10 +461,9 @@
                         body: params.toString()
                     });
 
-                    // 🚨 히스토리 기록 및 성공 처리 (test_core.js 내 함수 호출) 🚨
                     setTimeout(function() {
                         if(typeof handleFormSuccess === 'function') {
-                            handleFormSuccess(); // 이 함수 내부에서 히스토리 저장과 알림창이 뜹니다.
+                            handleFormSuccess();
                         } else {
                             document.getElementById('success-overlay').style.display = 'flex';
                             document.getElementById('waybill').value = '';
@@ -479,7 +479,6 @@
         </div>
 
         <div class="footer">
-            <div style="color: #2ecc71; font-weight: bold; font-size: 13px; margin-bottom: 5px;">✅ 현재 버전: 대표님 개인 구글폼 연결됨</div>
             <span class="contact-info">오류 및 기타 문의 : cndrone@naver.com</span>
             © 2026 RyanL Logistics.<br>
             <span class="designer-tag">Created by LJH<span class="hidden-name">이준희</span></span>
