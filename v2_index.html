@@ -93,7 +93,6 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
     <script>
-        // 🚨 본서버(ryanl-logistics) 열쇠로 완벽하게 교체 완료! 🚨
         const firebaseConfig = {
             apiKey: "AIzaSyARk9-4wKQ_53Yw2p1_bHDa1U4igP7sUfI",
             authDomain: "ryanl-logistics.firebaseapp.com",
@@ -410,25 +409,73 @@
                 <button class="btn-change" onclick="showSetup()">정보 변경</button>
             </div>
             
-            <form action="https://docs.google.com/forms/d/e/1FAIpQLSeIMR-wkYKFwnldd2qKKyUlaxLN85tu7OBX0HsLt7fzezZKWg/formResponse" method="POST" target="hidden_iframe" onsubmit="window.isSubmitted=true; document.getElementById('submitBtn').innerText='전송 중... ⏳';">
-                <input type="hidden" name="pageHistory" value="0,1">
-                <input type="hidden" name="entry.1315166815" id="form-id">
-                <input type="hidden" name="entry.1573740217" id="form-camp">
-                <input type="hidden" name="entry.697011792" value="채번 요청">
-                
+            <form id="ryanForm" onsubmit="submitFinal(event)">
                 <div class="label-area">📦<span>운송장 번호</span></div>
                 <div class="input-group">
-                    <input type="text" name="entry.359305263" id="waybill" placeholder="우측 버튼을 누르세요 👉" required>
+                    <input type="text" id="waybill" placeholder="우측 버튼을 누르세요 👉" required>
                     <button type="button" class="btn-paste" onclick="pasteClipboard()">👆 붙여넣기 클릭</button>
                 </div>
                 <div class="label-area">🔢<span>채번 수량</span></div>
-                <input type="number" name="entry.1437474928" id="quantity" placeholder="숫자만 입력" required>
+                <input type="number" id="quantity" placeholder="숫자만 입력" required>
                 <button type="submit" class="btn-submit" id="submitBtn">바로 제출하기</button>
             </form>
+
+            <script>
+                async function pasteClipboard() {
+                    try {
+                        const text = await navigator.clipboard.readText();
+                        document.getElementById('waybill').value = text;
+                    } catch (err) {
+                        myAlert("🚫 직접 꾹 눌러서 붙여넣어주세요!");
+                    }
+                }
+
+                function submitFinal(event) {
+                    event.preventDefault();
+                    var btn = document.getElementById('submitBtn');
+                    btn.innerText = '전송 중... ⏳';
+                    btn.disabled = true;
+
+                    // 화면 데이터 낚아채기
+                    var idVal = document.getElementById('display-id').innerText;
+                    var campVal = document.getElementById('display-camp').innerText;
+                    var waybillVal = document.getElementById('waybill').value;
+                    var quantityVal = document.getElementById('quantity').value;
+
+                    // 🚨 쿠팡 폼 찐주소와 번호로 정밀 수정 🚨
+                    var url = "https://docs.google.com/forms/d/e/1FAIpQLSeIMR-wkYKFwnldd2qKKyUlaxLN85tu7OBX0HsLt7fzezZKWg/formResponse";
+                    
+                    var params = new URLSearchParams();
+                    params.append("pageHistory", "0,1"); 
+                    params.append("entry.697011792", "채번 요청"); // 요청 작업
+                    params.append("entry.1315166815", idVal.trim()); // 기사 아이디
+                    params.append("entry.1573740217", campVal.trim()); // 캠프
+                    params.append("entry.359305263", waybillVal); // 운송장
+                    params.append("entry.1437474928", quantityVal); // 수량
+
+                    fetch(url, {
+                        method: 'POST',
+                        mode: 'no-cors',
+                        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                        body: params.toString()
+                    });
+
+                    // 🚨 히스토리 기록 및 성공 처리 (test_core.js 내 함수 호출) 🚨
+                    setTimeout(function() {
+                        if(typeof handleFormSuccess === 'function') {
+                            handleFormSuccess(); // 이 함수 내부에서 히스토리 저장과 알림창이 뜹니다.
+                        } else {
+                            document.getElementById('success-overlay').style.display = 'flex';
+                            document.getElementById('waybill').value = '';
+                            document.getElementById('quantity').value = '';
+                        }
+                        btn.innerText = '바로 제출하기';
+                        btn.disabled = false;
+                    }, 500);
+                }
+            </script>
             
             <button type="button" onclick="showHistory()" style="width:100%; padding:12px; margin-top:15px; background:#2ecc71; color:white; border:none; border-radius:10px; font-weight:900; cursor:pointer; font-size:15px; box-shadow:0 4px 6px rgba(0,0,0,0.1);">📋 채번 히스토리</button>
-
-            <iframe name="hidden_iframe" id="hidden_iframe" style="display:none;" onload="if(window.isSubmitted){ handleFormSuccess(); }"></iframe>
         </div>
 
         <div class="footer">
