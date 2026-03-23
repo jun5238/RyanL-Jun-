@@ -12,7 +12,7 @@
     <link rel="manifest" href="manifest.json"> <link rel="apple-touch-icon" href="icon.jpg">
     <link rel="icon" sizes="192x192" href="icon.jpg">
 
-    <link rel="stylesheet" href="test_style.css?v=28">
+    <link rel="stylesheet" href="v2_style.css?v=28">
 
     <style>
         body.dark-mode { background-color: #121212; color: #f1f1f1; }
@@ -98,9 +98,9 @@
     <script src="auth_gate_v1.js"></script>
     <script src="vip_list.js?v=2"></script>
     
-    <script src="test_core.js?v=28"></script> 
+    <script src="v2_core.js?v=28"></script> 
     <script src="firebase_node_check.js"></script>
-    <script src="test_admin_ui.js?v=28"></script>
+    <script src="v2_admin_ui.js?v=28"></script>
 
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
