@@ -1,7 +1,7 @@
 {
   "name": "천안1캠프 채번",
   "short_name": "천안1캠프 채번",
-  "start_url": "index.html",
+  "start_url": "v2_index.html",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#152b52",
