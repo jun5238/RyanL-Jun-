@@ -52,49 +52,40 @@
             </div>
             
             <form id="ryanForm" onsubmit="submitToPostOffice(event)">
-                <input type="hidden" id="final-id">
-                <input type="hidden" id="final-camp">
-                
                 <div class="label-area">📦<span>운송장 번호</span></div>
-                <input type="text" id="final-waybill" placeholder="운송장 번호 입력" required>
+                <input type="text" id="post-waybill" placeholder="운송장 번호 입력" required>
                 
                 <div class="label-area">🔢<span>채번 수량</span></div>
-                <input type="number" id="final-quantity" placeholder="숫자만 입력" required>
+                <input type="number" id="post-quantity" placeholder="숫자만 입력" required>
                 
                 <button type="submit" class="btn-submit" id="submitBtn" style="margin-top:20px;">바로 제출하기</button>
             </form>
 
             <script>
-                // 기사님 아이디와 캠프 정보를 히든 필드에 복사해주는 함수 (rl_core.js와 연동용)
-                function syncInfo() {
-                    document.getElementById('final-id').value = document.getElementById('display-id').innerText;
-                    document.getElementById('final-camp').value = document.getElementById('display-camp').innerText;
-                }
-
                 function submitToPostOffice(event) {
                     event.preventDefault();
-                    syncInfo(); // 전송 전 데이터 최종 동기화
-
                     var btn = document.getElementById('submitBtn');
                     btn.innerText = '전송 중... ⏳';
                     btn.disabled = true;
 
-                    // 1. 데이터 뽑기 (ID 매칭 완벽화)
-                    var idVal = document.getElementById('final-id').value;
-                    var campVal = document.getElementById('final-camp').value;
-                    var waybillVal = document.getElementById('final-waybill').value;
-                    var quantityVal = document.getElementById('final-quantity').value;
+                    // 1. 화면에 보이는 글자들을 직접 변수에 담기 (가장 확실한 방법!)
+                    var finalId = document.getElementById('display-id').innerText || document.getElementById('display-id').textContent;
+                    var finalCamp = document.getElementById('display-camp').innerText || document.getElementById('display-camp').textContent;
+                    var finalWaybill = document.getElementById('post-waybill').value;
+                    var finalQuantity = document.getElementById('post-quantity').value;
 
+                    // 2. 구글 폼 주소
                     var url = "https://docs.google.com/forms/d/e/1FAIpQLSfiEqOUQAo_pCMhh1q3E-_VYxAkDKp5kn8RqB3_mcHL6ksYeQ/formResponse";
                     
+                    // 3. 파라미터 조립 (찐 번호표 매칭)
                     var params = new URLSearchParams();
                     params.append("entry.893130037", "채번 요청");
-                    params.append("entry.442655354", idVal);
-                    params.append("entry.786194174", campVal);
-                    params.append("entry.633777622", waybillVal);
-                    params.append("entry.1141746706", quantityVal);
+                    params.append("entry.442655354", finalId.trim());     // 기사 아이디
+                    params.append("entry.786194174", finalCamp.trim());   // 캠프
+                    params.append("entry.633777622", finalWaybill);      // 송장번호
+                    params.append("entry.1141746706", finalQuantity);     // 수량
 
-                    // 2. 전송 발사
+                    // 4. 전송 (모든 결과 상관없이 시트로 던지기)
                     fetch(url, {
                         method: 'POST',
                         mode: 'no-cors',
@@ -102,11 +93,11 @@
                         body: params.toString()
                     });
 
-                    // 3. 팝업 및 초기화
+                    // 5. 즉시 완료 처리
                     setTimeout(function() {
                         document.getElementById('success-overlay').style.display = 'flex';
-                        document.getElementById('final-waybill').value = '';
-                        document.getElementById('final-quantity').value = '';
+                        document.getElementById('post-waybill').value = '';
+                        document.getElementById('post-quantity').value = '';
                         btn.innerText = '바로 제출하기';
                         btn.disabled = false;
                     }, 500);
