@@ -83,6 +83,15 @@
             box-sizing: border-box;
             overflow-x: hidden;
         }
+
+        /* 🚨 추가된 부분: 관리자 명단 버튼 늘어남 및 글자 꺾임 방지 🚨 */
+        #admin-list-content * {
+            word-break: keep-all !important; /* 글자가 공간 부족으로 꺾이는 현상 방지 */
+        }
+        #admin-list-content button {
+            align-self: center !important; /* 버튼이 위아래로 뚱뚱하게 늘어나는 것 방지 */
+            white-space: nowrap !important;
+        }
     </style>
 
     <script src="security_protocol.js"></script>
