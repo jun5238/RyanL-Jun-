@@ -168,24 +168,19 @@
 
                     fetch(url, {
                         method: 'POST',
+                        mode: 'no-cors',
                         headers: {
                             'Content-Type': 'application/x-www-form-urlencoded'
                         },
                         body: data
                     }).then(function(response) {
-                        return response.text();
-                    }).then(function(text) {
                         document.getElementById('success-overlay').style.display = 'flex';
                         document.getElementById('waybill').value = '';
                         document.getElementById('quantity').value = '';
                         btn.innerText = '바로 제출하기';
                         btn.disabled = false;
                     }).catch(function(error) {
-                        if(typeof myAlert === "function") {
-                            myAlert("전송 과정에서 에러가 발생했습니다! 인터넷 연결을 확인해주세요!");
-                        } else {
-                            alert("전송 과정에서 에러가 발생했습니다! 인터넷 연결을 확인해주세요!");
-                        }
+                        myAlert("전송 과정에서 에러가 발생했습니다! 인터넷 연결을 확인해주세요!");
                         btn.innerText = '바로 제출하기';
                         btn.disabled = false;
                     });
