@@ -236,13 +236,11 @@ function showMain(id, camp) {
     document.getElementById('main-view').style.display = 'block';
     document.getElementById('display-id').innerText = id;
     document.getElementById('display-camp').innerText = camp;
-    document.getElementById('form-id').value = id;
-    document.getElementById('form-camp').value = camp;
 
     const today = getTodayDateString();
     db.ref(`통계/${today}/접속자/${id}`).set(true);
 
-    db.ref("공지사항").once('value', snap => {
+    db.ref("공지사항/최신공지").once('value', snap => {
         const val = snap.val();
         if(val && val.text) {
             const savedNotice = localStorage.getItem('notice_' + id);
