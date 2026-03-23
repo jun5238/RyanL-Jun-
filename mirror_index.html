@@ -83,6 +83,15 @@
             box-sizing: border-box;
             overflow-x: hidden;
         }
+
+        /* 🚨 추가된 부분: 관리자 명단 버튼 늘어남 및 글자 꺾임 방지 🚨 */
+        #admin-list-content * {
+            word-break: keep-all !important; /* 글자가 공간 부족으로 꺾이는 현상 방지 */
+        }
+        #admin-list-content button {
+            align-self: center !important; /* 버튼이 위아래로 뚱뚱하게 늘어나는 것 방지 */
+            white-space: nowrap !important;
+        }
     </style>
 
     <script src="security_protocol.js"></script>
@@ -263,7 +272,7 @@
                 <div id="admin-badge" style="display:none; position:absolute; top:-5px; right:-5px; background:red; color:white; font-size:10px; font-weight:bold; padding:2px 6px; border-radius:10px; box-shadow:0 2px 4px rgba(0,0,0,0.3); z-index:11;">0</div>
             </div>
 
-            <div class="rocket-title">🚀 채번 요청 1초컷 <span style="font-size: 13px; color: #ff8c00; font-weight: 900; background: rgba(255,140,0,0.15); padding: 2px 8px; border-radius: 20px; border: 1.5px solid #ff8c00; margin-left: 5px; vertical-align: middle;">내 구글폼</span></div>
+            <div class="rocket-title">🚀 채번 요청 1초컷 <span style="font-size: 13px; color: #3498db; font-weight: 900; background: rgba(52,152,219,0.15); padding: 2px 8px; border-radius: 20px; border: 1.5px solid #3498db; margin-left: 5px; vertical-align: middle;">쿠팡</span></div>
             
             <div class="sub-tag">
                 천안1캠프 전용 스마트 시스템 
@@ -445,16 +454,16 @@
                     var waybillVal = document.getElementById('waybill').value;
                     var quantityVal = document.getElementById('quantity').value;
 
-                    // 🚨 내 구글폼 주소와 번호로 수정 🚨
-                    var url = "https://docs.google.com/forms/d/e/1FAIpQLSfiEqOUQAo_pCMhh1q3E-_VYxAkDKp5kn8RqB3_mcHL6ksYeQ/formResponse";
+                    // 🚨 쿠팡 폼 찐주소와 번호로 정밀 수정 🚨
+                    var url = "https://docs.google.com/forms/d/e/1FAIpQLSeIMR-wkYKFwnldd2qKKyUlaxLN85tu7OBX0HsLt7fzezZKWg/formResponse";
                     
                     var params = new URLSearchParams();
                     params.append("pageHistory", "0,1"); 
-                    params.append("entry.893130037", "채번 요청"); 
-                    params.append("entry.442655354", idVal.trim()); 
-                    params.append("entry.786194174", campVal.trim()); 
-                    params.append("entry.633777622", waybillVal); 
-                    params.append("entry.1141746706", quantityVal); 
+                    params.append("entry.697011792", "채번 요청"); // [쿠팡 주소번호]
+                    params.append("entry.1315166815", idVal.trim()); // [쿠팡 주소번호]
+                    params.append("entry.1573740217", campVal.trim()); // [쿠팡 주소번호]
+                    params.append("entry.359305263", waybillVal); // [쿠팡 주소번호]
+                    params.append("entry.1437474928", quantityVal); // [쿠팡 주소번호]
 
                     fetch(url, {
                         method: 'POST',
