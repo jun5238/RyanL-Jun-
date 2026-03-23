@@ -447,11 +447,11 @@
                     
                     var params = new URLSearchParams();
                     params.append("pageHistory", "0,1"); 
-                    params.append("entry.697011792", "채번 요청"); // 요청 작업
-                    params.append("entry.1315166815", idVal.trim()); // 기사 아이디
-                    params.append("entry.1573740217", campVal.trim()); // 캠프
-                    params.append("entry.359305263", waybillVal); // 운송장
-                    params.append("entry.1437474928", quantityVal); // 수량
+                    params.append("entry.697011792", "채번 요청"); // [쿠팡 주소번호]
+                    params.append("entry.1315166815", idVal.trim()); // [쿠팡 주소번호]
+                    params.append("entry.1573740217", campVal.trim()); // [쿠팡 주소번호]
+                    params.append("entry.359305263", waybillVal); // [쿠팡 주소번호]
+                    params.append("entry.1437474928", quantityVal); // [쿠팡 주소번호]
 
                     fetch(url, {
                         method: 'POST',
