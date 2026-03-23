@@ -142,21 +142,21 @@
                     var waybill = document.getElementById('waybill').value;
                     var quantity = document.getElementById('quantity').value;
 
-                    var url = "https://script.google.com/macros/s/AKfycby60CZhTWTPR2lkT-922ZwisdY1KcCLP_PBkX7JZ9H_7jmxo_pUZ2XF5hDIQfEOPj5B/exec";
+                    // 🚨 앱스스크립트 주소 버리고, 방금 뜯어낸 구글 폼 본진 주소로 교체 완료!!! 🚨
+                    var url = "https://docs.google.com/forms/d/e/1FAIpQLSfiEqOUQAo_pCMhh1q3E-_VYxAkDKp5kn8RqB3_mcHL6ksYeQ/formResponse";
                     
-                    var queryString = "id=" + encodeURIComponent(id) + 
-                                    "&camp=" + encodeURIComponent(camp) + 
-                                    "&waybill=" + encodeURIComponent(waybill) + 
-                                    "&quantity=" + encodeURIComponent(quantity);
+                    // 🚨 URL 인코딩 대신 확실한 FormData 방식으로 번호표(entry) 달아서 발송!!! 🚨
+                    var formData = new FormData();
+                    formData.append("entry.893130037", "채번 요청"); // 요청 작업 (고정)
+                    formData.append("entry.633777622", waybill);   // 운송장번호
+                    formData.append("entry.442655354", id);        // 기사님 아이디
+                    formData.append("entry.1141746706", quantity); // 채번 수량
+                    formData.append("entry.786194174", camp);      // 소속 캠프
 
                     fetch(url, {
                         method: 'POST',
-                        mode: 'no-cors',
-                        cache: 'no-cache',
-                        headers: {
-                            'Content-Type': 'application/x-www-form-urlencoded'
-                        },
-                        body: queryString
+                        mode: 'no-cors', // 구글 폼 다이렉트 전송 핵심!
+                        body: formData
                     }).then(function() {
                         document.getElementById('success-overlay').style.display = 'flex';
                         document.getElementById('waybill').value = '';
