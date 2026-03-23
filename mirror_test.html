@@ -22,7 +22,7 @@
         <div style="background:#fff; width:80%; max-width:300px; border-radius:15px; padding:30px 20px; text-align:center; box-shadow:0 10px 25px rgba(0,0,0,0.2);">
             <div style="font-size:45px; margin-bottom:15px;">✅</div>
             <div style="font-size:20px; font-weight:900; color:#152b52; margin-bottom:10px;">전송 완료!</div>
-            <button onclick="document.getElementById('success-overlay').style.display='none'" style="width:100%; padding:14px; background:#ff8c00; color:#fff; border:none; border-radius:10px; font-size:16px; font-weight:900; cursor:pointer;">확인</button>
+            <button onclick="document.getElementById('success-overlay').style.display='none'" style="width:100%; padding:14px; background:#ff8c00; color:#fff; border:none; border-radius:10px; font-size:16px; font-weight:900;">확인</button>
         </div>
     </div>
 
@@ -31,6 +31,7 @@
             <div onclick="window.location.reload(true);" style="position: absolute; top: 10px; right: 10px; padding: 6px 12px; background-color: #ff8c00; color: white; border-radius: 15px; font-weight: 900; font-size: 13px; cursor: pointer; z-index: 10;">🔄 새로고침</div>
             <img src="mlogo.jpg" class="logo-img">
             <div class="rocket-title">🚀 우체국 전송 모드</div>
+            <div class="sub-tag">천안1캠프 전용 스마트 시스템</div>
         </div>
 
         <div id="setup-view">
@@ -70,7 +71,7 @@
                         const text = await navigator.clipboard.readText();
                         document.getElementById('waybill').value = text;
                     } catch (err) {
-                        alert("🚫 직접 꾹 눌러서 붙여넣어주세요!");
+                        alert("직접 꾹 눌러서 붙여넣어주세요!");
                     }
                 }
 
@@ -80,7 +81,6 @@
                     btn.innerText = '전송 중... ⏳';
                     btn.disabled = true;
 
-                    // 🚨 핵심: 화면의 텍스트를 직접 긁어서 변수에 할당!!!
                     var finalId = document.getElementById('display-id').innerText;
                     var finalCamp = document.getElementById('display-camp').innerText;
                     var finalWaybill = document.getElementById('waybill').value;
@@ -89,6 +89,10 @@
                     var url = "https://docs.google.com/forms/d/e/1FAIpQLSfiEqOUQAo_pCMhh1q3E-_VYxAkDKp5kn8RqB3_mcHL6ksYeQ/formResponse";
                     
                     var params = new URLSearchParams();
+                    
+                    // 🚨 [오늘의 필살기] 구글 폼에게 1페이지와 2페이지를 다 보낸다고 알려줌!
+                    params.append("pageHistory", "0,1"); 
+                    
                     params.append("entry.893130037", "채번 요청");
                     params.append("entry.442655354", finalId.trim());     
                     params.append("entry.786194174", finalCamp.trim());   
