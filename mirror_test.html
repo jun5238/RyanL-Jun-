@@ -4,24 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>라이언엘 우체국 테스트</title>
-
-    <script>
-        window.onload = function() {
-            var ua = navigator.userAgent.toLowerCase();
-            if (ua.match(/kakaotalk|naver|line|fbav|instagram/i)) {
-                var chromeNotice = document.createElement('div');
-                chromeNotice.style.cssText = 'position:fixed; top:0; left:0; width:100%; background:#ff8c00; color:white; text-align:center; padding:12px; font-weight:900; z-index:999999; font-size:14px; box-shadow:0 4px 10px rgba(0,0,0,0.2);';
-                chromeNotice.innerHTML = '⚠️ 설치를 위해 <span style="text-decoration:underline; cursor:pointer;" onclick="location.href=\'intent://\' + location.host + location.pathname + \'#Intent;scheme=https;package=com.android.chrome;end\'">여기(클릭)를 눌러 크롬으로 열기</span>';
-                document.body.prepend(chromeNotice);
-            }
-        };
-    </script>
-    
-    <link rel="manifest" href="manifest.json">
-    <link rel="apple-touch-icon" href="icon.jpg">
-    <link rel="icon" sizes="192x192" href="icon.jpg">
     <link rel="stylesheet" href="style.css?v=2">
-
     <script src="security_protocol.js"></script>
     <script src="auth_gate_v1.js"></script>
     <script src="vip_list.js?v=2"></script>
@@ -35,22 +18,6 @@
         <div class="splash-text">Loading.....</div>
     </div>
 
-    <div id="custom-alert-overlay" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.6); z-index:100000; justify-content:center; align-items:center;">
-        <div style="background:#fff; width:85%; max-width:320px; border-radius:15px; padding:25px 20px; text-align:center; box-shadow:0 10px 25px rgba(0,0,0,0.2);">
-            <div style="font-size:35px; margin-bottom:10px;">🚨</div>
-            <div style="font-size:18px; font-weight:900; color:#152b52; margin-bottom:15px;">미승인 아이디입니다</div>
-            <div style="font-size:14px; color:#444; line-height:1.6; text-align:left; background:#f4f4f4; padding:15px; border-radius:10px; margin-bottom:20px;">
-                관리자에게 승인을 요청하세요.<br><br>
-                <strong style="color:#ff8c00;">[승인 요청 양식]</strong><br>
-                • <b>아이디 :</b> <br>
-                • <b>성함 :</b> <br>
-                • <b>업체명 :</b> <br><br>
-                👉 위 내용을 <b>cndrone@naver.com</b> 으로 보내주세요.
-            </div>
-            <button onclick="document.getElementById('custom-alert-overlay').style.display='none'" style="width:100%; padding:14px; background:#152b52; color:#fff; border:none; border-radius:10px; font-size:16px; font-weight:900; cursor:pointer;">확인</button>
-        </div>
-    </div>
-
     <div id="success-overlay" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.6); z-index:100000; justify-content:center; align-items:center;">
         <div style="background:#fff; width:80%; max-width:300px; border-radius:15px; padding:30px 20px; text-align:center; box-shadow:0 10px 25px rgba(0,0,0,0.2);">
             <div style="font-size:45px; margin-bottom:15px;">✅</div>
@@ -60,11 +27,10 @@
     </div>
 
     <div class="wrapper">
-        <div class="header" style="position: relative;">
-            <div onclick="window.location.reload(true);" style="position: absolute; top: 10px; right: 10px; padding: 6px 12px; background-color: #ff8c00; color: white; border-radius: 15px; font-weight: 900; font-size: 13px; box-shadow: 0 3px 6px rgba(0,0,0,0.15); cursor: pointer; z-index: 10;">🔄 새로고침</div>
+        <div class="header">
+            <div onclick="window.location.reload(true);" style="position: absolute; top: 10px; right: 10px; padding: 6px 12px; background-color: #ff8c00; color: white; border-radius: 15px; font-weight: 900; font-size: 13px; cursor: pointer; z-index: 10;">🔄 새로고침</div>
             <img src="mlogo.jpg" class="logo-img">
-            <div class="rocket-title">🚀 채번 요청 1초컷</div>
-            <div class="sub-tag">우체국 전용 테스트</div>
+            <div class="rocket-title">🚀 우체국 전송 모드 (Non-iframe)</div>
         </div>
 
         <div id="setup-view">
@@ -88,51 +54,46 @@
             <form id="ryanForm" onsubmit="submitToPostOffice(event)">
                 <input type="hidden" id="form-id">
                 <input type="hidden" id="form-camp">
+                
                 <div class="label-area">📦<span>운송장 번호</span></div>
-                <div class="input-group">
-                    <input type="text" id="waybill" placeholder="우측 버튼 클릭 👉" required>
-                    <button type="button" class="btn-paste" onclick="pasteClipboard()">👆 붙여넣기</button>
-                </div>
+                <input type="text" id="waybill" placeholder="운송장 번호를 입력하세요" required>
+                
                 <div class="label-area">🔢<span>채번 수량</span></div>
                 <input type="number" id="quantity" placeholder="숫자만 입력" required>
-                <button type="submit" class="btn-submit" id="submitBtn">바로 제출하기</button>
+                
+                <button type="submit" class="btn-submit" id="submitBtn" style="margin-top:20px;">바로 제출하기</button>
             </form>
 
             <script>
-                async function pasteClipboard() {
-                    try {
-                        const text = await navigator.clipboard.readText();
-                        document.getElementById('waybill').value = text;
-                    } catch (err) {
-                        myAlert("직접 붙여넣어주세요!");
-                    }
-                }
-
                 function submitToPostOffice(event) {
                     event.preventDefault();
                     var btn = document.getElementById('submitBtn');
                     btn.innerText = '전송 중... ⏳';
                     btn.disabled = true;
 
-                    var id = document.getElementById('form-id').value;
-                    var camp = document.getElementById('form-camp').value;
-                    var waybill = document.getElementById('waybill').value;
-                    var quantity = document.getElementById('quantity').value;
+                    // 1. 입력값 낚아채기
+                    var idVal = document.getElementById('form-id').value;
+                    var campVal = document.getElementById('form-camp').value;
+                    var waybillVal = document.getElementById('waybill').value;
+                    var quantityVal = document.getElementById('quantity').value;
 
+                    // 2. 구글 폼 주소
                     var url = "https://docs.google.com/forms/d/e/1FAIpQLSfiEqOUQAo_pCMhh1q3E-_VYxAkDKp5kn8RqB3_mcHL6ksYeQ/formResponse";
                     
-                    var formData = new FormData();
-                    // 🚨 본섭에서 검증 완료된 찐 번호표 적용! 🚨
+                    // 3. FormData 객체 생성 및 찐 번호표 매칭
+                    var formData = new URLSearchParams();
                     formData.append("entry.893130037", "채번 요청");
-                    formData.append("entry.633777622", waybill);
-                    formData.append("entry.442655354", id);
-                    formData.append("entry.1141746706", quantity);
-                    formData.append("entry.786194174", camp);
+                    formData.append("entry.442655354", idVal);
+                    formData.append("entry.786194174", campVal);
+                    formData.append("entry.633777622", waybillVal);
+                    formData.append("entry.1141746706", quantityVal);
 
+                    // 4. fetch 전송 (아이프레임 없이 다이렉트!)
                     fetch(url, {
                         method: 'POST',
                         mode: 'no-cors',
-                        body: formData
+                        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                        body: formData.toString()
                     }).then(function() {
                         document.getElementById('success-overlay').style.display = 'flex';
                         document.getElementById('waybill').value = '';
@@ -140,13 +101,12 @@
                         btn.innerText = '바로 제출하기';
                         btn.disabled = false;
                     }).catch(function(error) {
-                        myAlert("❌ 전송 실패!");
+                        alert("❌ 전송 실패! 관리자에게 문의하세요.");
                         btn.disabled = false;
                     });
                 }
             </script>
         </div>
-        <div class="footer">© 2026 RyanL Logistics.</div>
     </div>
 </body>
 </html>
