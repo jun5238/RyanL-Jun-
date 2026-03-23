@@ -22,7 +22,7 @@
         <div style="background:#fff; width:80%; max-width:300px; border-radius:15px; padding:30px 20px; text-align:center; box-shadow:0 10px 25px rgba(0,0,0,0.2);">
             <div style="font-size:45px; margin-bottom:15px;">✅</div>
             <div style="font-size:20px; font-weight:900; color:#152b52; margin-bottom:10px;">전송 완료!</div>
-            <button onclick="document.getElementById('success-overlay').style.display='none'" style="width:100%; padding:14px; background:#ff8c00; color:#fff; border:none; border-radius:10px; font-size:16px; font-weight:900;">확인</button>
+            <button onclick="document.getElementById('success-overlay').style.display='none'" style="width:100%; padding:14px; background:#ff8c00; color:#fff; border:none; border-radius:10px; font-size:16px; font-weight:900; cursor:pointer;">확인</button>
         </div>
     </div>
 
@@ -53,39 +53,48 @@
             
             <form id="ryanForm" onsubmit="submitToPostOffice(event)">
                 <div class="label-area">📦<span>운송장 번호</span></div>
-                <input type="text" id="post-waybill" placeholder="운송장 번호 입력" required>
+                <div class="input-group">
+                    <input type="text" id="waybill" placeholder="우측 버튼 클릭 👉" required>
+                    <button type="button" class="btn-paste" onclick="pasteClipboard()">👆 붙여넣기</button>
+                </div>
                 
                 <div class="label-area">🔢<span>채번 수량</span></div>
-                <input type="number" id="post-quantity" placeholder="숫자만 입력" required>
+                <input type="number" id="quantity" placeholder="숫자만 입력" required>
                 
                 <button type="submit" class="btn-submit" id="submitBtn" style="margin-top:20px;">바로 제출하기</button>
             </form>
 
             <script>
+                async function pasteClipboard() {
+                    try {
+                        const text = await navigator.clipboard.readText();
+                        document.getElementById('waybill').value = text;
+                    } catch (err) {
+                        alert("🚫 직접 꾹 눌러서 붙여넣어주세요!");
+                    }
+                }
+
                 function submitToPostOffice(event) {
                     event.preventDefault();
                     var btn = document.getElementById('submitBtn');
                     btn.innerText = '전송 중... ⏳';
                     btn.disabled = true;
 
-                    // 1. 화면에 보이는 글자들을 직접 변수에 담기 (가장 확실한 방법!)
-                    var finalId = document.getElementById('display-id').innerText || document.getElementById('display-id').textContent;
-                    var finalCamp = document.getElementById('display-camp').innerText || document.getElementById('display-camp').textContent;
-                    var finalWaybill = document.getElementById('post-waybill').value;
-                    var finalQuantity = document.getElementById('post-quantity').value;
+                    // 🚨 핵심: 화면의 텍스트를 직접 긁어서 변수에 할당!!!
+                    var finalId = document.getElementById('display-id').innerText;
+                    var finalCamp = document.getElementById('display-camp').innerText;
+                    var finalWaybill = document.getElementById('waybill').value;
+                    var finalQuantity = document.getElementById('quantity').value;
 
-                    // 2. 구글 폼 주소
                     var url = "https://docs.google.com/forms/d/e/1FAIpQLSfiEqOUQAo_pCMhh1q3E-_VYxAkDKp5kn8RqB3_mcHL6ksYeQ/formResponse";
                     
-                    // 3. 파라미터 조립 (찐 번호표 매칭)
                     var params = new URLSearchParams();
                     params.append("entry.893130037", "채번 요청");
-                    params.append("entry.442655354", finalId.trim());     // 기사 아이디
-                    params.append("entry.786194174", finalCamp.trim());   // 캠프
-                    params.append("entry.633777622", finalWaybill);      // 송장번호
-                    params.append("entry.1141746706", finalQuantity);     // 수량
+                    params.append("entry.442655354", finalId.trim());     
+                    params.append("entry.786194174", finalCamp.trim());   
+                    params.append("entry.633777622", finalWaybill);      
+                    params.append("entry.1141746706", finalQuantity);     
 
-                    // 4. 전송 (모든 결과 상관없이 시트로 던지기)
                     fetch(url, {
                         method: 'POST',
                         mode: 'no-cors',
@@ -93,11 +102,10 @@
                         body: params.toString()
                     });
 
-                    // 5. 즉시 완료 처리
                     setTimeout(function() {
                         document.getElementById('success-overlay').style.display = 'flex';
-                        document.getElementById('post-waybill').value = '';
-                        document.getElementById('post-quantity').value = '';
+                        document.getElementById('waybill').value = '';
+                        document.getElementById('quantity').value = '';
                         btn.innerText = '바로 제출하기';
                         btn.disabled = false;
                     }, 500);
