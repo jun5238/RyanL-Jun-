@@ -447,14 +447,13 @@
                     var url = "https://docs.google.com/forms/d/e/1FAIpQLSfiEqOUQAo_pCMhh1q3E-_VYxAkDKp5kn8RqB3_mcHL6ksYeQ/formResponse";
                     
                     var params = new URLSearchParams();
-                    params.append("pageHistory", "0,1"); // 페이지 장벽 돌파
+                    params.append("pageHistory", "0,1"); 
                     params.append("entry.893130037", "채번 요청");
                     params.append("entry.442655354", idVal.trim());
                     params.append("entry.786194174", campVal.trim());
                     params.append("entry.633777622", waybillVal);
                     params.append("entry.1141746706", quantityVal);
 
-                    // fetch 방식 전송 (우체국 버전과 동일)
                     fetch(url, {
                         method: 'POST',
                         mode: 'no-cors',
@@ -462,9 +461,31 @@
                         body: params.toString()
                     });
 
-                    // 완료 처리 (성공 팝업은 test_core.js의 handleFormSuccess를 쓰지 않고 여기서 직접 호출하거나 로직 유지)
+                    // 완료 후 히스토리 기록 및 성공 처리 (test_core.js 연동)
                     setTimeout(function() {
-                        document.getElementById('success-overlay').style.display = 'flex';
-                        document.getElementById('waybill').value = '';
-                        document.getElementById('quantity').value = '';
-                        btn.innerText =
+                        if(typeof handleFormSuccess === 'function') {
+                            handleFormSuccess(); // 이 함수 내부에 히스토리 저장과 알림창 띄우기 로직이 있음
+                        } else {
+                            // 혹시 몰라 직접 처리
+                            document.getElementById('success-overlay').style.display = 'flex';
+                            document.getElementById('waybill').value = '';
+                            document.getElementById('quantity').value = '';
+                        }
+                        btn.innerText = '바로 제출하기';
+                        btn.disabled = false;
+                    }, 500);
+                }
+            </script>
+            
+            <button type="button" onclick="showHistory()" style="width:100%; padding:12px; margin-top:15px; background:#2ecc71; color:white; border:none; border-radius:10px; font-weight:900; cursor:pointer; font-size:15px; box-shadow:0 4px 6px rgba(0,0,0,0.1);">📋 채번 히스토리</button>
+        </div>
+
+        <div class="footer">
+            <span class="contact-info">오류 및 기타 문의 : cndrone@naver.com</span>
+            © 2026 RyanL Logistics.<br>
+            <span class="designer-tag">Created by LJH<span class="hidden-name">이준희</span></span>
+            <span class="warning-text">무단 복제 및 도용 시 법적 처벌을 받을 수 있습니다.</span>
+        </div>
+    </div>
+</body>
+</html>
