@@ -2,19 +2,32 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>천안1캠프 채번시스템</title>
     
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="mobile-web-app-capable" content="yes">
     
     <link rel="manifest" href="manifest.json"> <link rel="apple-touch-icon" href="icon.jpg">
     <link rel="icon" sizes="192x192" href="icon.jpg">
 
-    <link rel="stylesheet" href="test_style.css?v=28">
+    <link rel="stylesheet" href="v2_style.css?v=30">
 
     <style>
+        html, body {
+            -webkit-text-size-adjust: 100% !important;
+            -moz-text-size-adjust: 100% !important;
+            -ms-text-size-adjust: 100% !important;
+            text-size-adjust: 100% !important;
+            -webkit-user-select: none !important;
+            user-select: none !important;
+        }
+        input, select, textarea, button {
+            -webkit-text-size-adjust: 100% !important;
+            text-size-adjust: 100% !important;
+        }
+
         body.dark-mode { background-color: #121212; color: #f1f1f1; }
         body.dark-mode .wrapper { background-color: #121212; }
         body.dark-mode .main-card, body.dark-mode .guide-box { background-color: #1e1e1e !important; border-color: #333 !important; color: #ffffff !important; }
@@ -84,12 +97,11 @@
             overflow-x: hidden;
         }
 
-        /* 🚨 추가된 부분: 관리자 명단 버튼 늘어남 및 글자 꺾임 방지 🚨 */
         #admin-list-content * {
-            word-break: keep-all !important; /* 글자가 공간 부족으로 꺾이는 현상 방지 */
+            word-break: keep-all !important; 
         }
         #admin-list-content button {
-            align-self: center !important; /* 버튼이 위아래로 뚱뚱하게 늘어나는 것 방지 */
+            align-self: center !important; 
             white-space: nowrap !important;
         }
     </style>
@@ -98,9 +110,9 @@
     <script src="auth_gate_v1.js"></script>
     <script src="vip_list.js?v=2"></script>
     
-    <script src="test_core.js?v=28"></script> 
+    <script src="v2_core.js?v=30"></script> 
     <script src="firebase_node_check.js"></script>
-    <script src="test_admin_ui.js?v=28"></script>
+    <script src="v2_admin_ui.js?v=30"></script>
 
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
@@ -448,22 +460,20 @@
                     btn.innerText = '전송 중... ⏳';
                     btn.disabled = true;
 
-                    // 화면 데이터 낚아채기
                     var idVal = document.getElementById('display-id').innerText;
                     var campVal = document.getElementById('display-camp').innerText;
                     var waybillVal = document.getElementById('waybill').value;
                     var quantityVal = document.getElementById('quantity').value;
 
-                    // 🚨 쿠팡 폼 찐주소와 번호로 정밀 수정 🚨
                     var url = "https://docs.google.com/forms/d/e/1FAIpQLSeIMR-wkYKFwnldd2qKKyUlaxLN85tu7OBX0HsLt7fzezZKWg/formResponse";
                     
                     var params = new URLSearchParams();
                     params.append("pageHistory", "0,1"); 
-                    params.append("entry.697011792", "채번 요청"); // [쿠팡 주소번호]
-                    params.append("entry.1315166815", idVal.trim()); // [쿠팡 주소번호]
-                    params.append("entry.1573740217", campVal.trim()); // [쿠팡 주소번호]
-                    params.append("entry.359305263", waybillVal); // [쿠팡 주소번호]
-                    params.append("entry.1437474928", quantityVal); // [쿠팡 주소번호]
+                    params.append("entry.697011792", "채번 요청");
+                    params.append("entry.1315166815", idVal.trim());
+                    params.append("entry.1573740217", campVal.trim());
+                    params.append("entry.359305263", waybillVal);
+                    params.append("entry.1437474928", quantityVal);
 
                     fetch(url, {
                         method: 'POST',
@@ -472,10 +482,9 @@
                         body: params.toString()
                     });
 
-                    // 🚨 히스토리 기록 및 성공 처리 (test_core.js 내 함수 호출) 🚨
                     setTimeout(function() {
                         if(typeof handleFormSuccess === 'function') {
-                            handleFormSuccess(); // 이 함수 내부에서 히스토리 저장과 알림창이 뜹니다.
+                            handleFormSuccess(); 
                         } else {
                             document.getElementById('success-overlay').style.display = 'flex';
                             document.getElementById('waybill').value = '';
