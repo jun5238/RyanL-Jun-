@@ -449,12 +449,24 @@
             </form>
 
             <script>
+                document.getElementById('waybill').addEventListener('paste', function(e) {
+                    e.preventDefault();
+                    let paste = (e.clipboardData || window.clipboardData).getData('text');
+                    this.value = paste.replace(/\r?\n/g, ' ').replace(/\s+/g, ' ').trim();
+                });
+
                 async function pasteClipboard() {
                     try {
+                        const waybillInput = document.getElementById('waybill');
+                        waybillInput.focus();
                         const text = await navigator.clipboard.readText();
-                        document.getElementById('waybill').value = text;
+                        if(text) {
+                            waybillInput.value = text.replace(/\r?\n/g, ' ').replace(/\s+/g, ' ').trim();
+                        }
                     } catch (err) {
-                        myAlert("🚫 직접 꾹 눌러서 붙여넣어주세요!");
+                        const inputField = document.getElementById('waybill');
+                        inputField.focus();
+                        myAlert("🚫 클립보드 권한이 차단되었습니다!\n\n우측 상단 점 3개(크롬) 👉 설정 👉 사이트 설정 👉 클립보드 👉 '허용'으로 바꿔주세요.");
                     }
                 }
 
