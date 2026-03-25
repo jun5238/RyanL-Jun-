@@ -2,16 +2,32 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>천안1캠프 채번시스템</title>
     
-    <link rel="manifest" href="test_manifest.json">
-    <link rel="apple-touch-icon" href="icon.jpg">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="mobile-web-app-capable" content="yes">
+    
+    <link rel="manifest" href="manifest.json"> <link rel="apple-touch-icon" href="icon.jpg">
     <link rel="icon" sizes="192x192" href="icon.jpg">
 
-    <link rel="stylesheet" href="test_style.css?v=28">
+    <link rel="stylesheet" href="v2_style.css?v=30">
 
     <style>
+        html, body {
+            -webkit-text-size-adjust: 100% !important;
+            -moz-text-size-adjust: 100% !important;
+            -ms-text-size-adjust: 100% !important;
+            text-size-adjust: 100% !important;
+            -webkit-user-select: none !important;
+            user-select: none !important;
+        }
+        input, select, textarea, button {
+            -webkit-text-size-adjust: 100% !important;
+            text-size-adjust: 100% !important;
+        }
+
         body.dark-mode { background-color: #121212; color: #f1f1f1; }
         body.dark-mode .wrapper { background-color: #121212; }
         body.dark-mode .main-card, body.dark-mode .guide-box { background-color: #1e1e1e !important; border-color: #333 !important; color: #ffffff !important; }
@@ -80,27 +96,39 @@
             box-sizing: border-box;
             overflow-x: hidden;
         }
+
+        #admin-list-content * {
+            word-break: keep-all !important; 
+        }
+        #admin-list-content button {
+            align-self: center !important; 
+            white-space: nowrap !important;
+        }
+        @media screen and (max-width: 380px) {
+    .logo-img { max-width: 120px !important; margin-top: 15px !important; }
+}
+
     </style>
 
     <script src="security_protocol.js"></script>
     <script src="auth_gate_v1.js"></script>
     <script src="vip_list.js?v=2"></script>
     
-    <script src="test_core.js?v=28"></script> 
+    <script src="v2_core.js?v=30"></script> 
     <script src="firebase_node_check.js"></script>
-    <script src="test_admin_ui.js?v=28"></script>
+    <script src="v2_admin_ui.js?v=30"></script>
 
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
     <script>
         const firebaseConfig = {
-            apiKey: "AIzaSyDIA5MGfvoHQvrgCm1Wf1d7XcgC13b_D9Q",
-            authDomain: "ryanl-test.firebaseapp.com",
-            projectId: "ryanl-test",
-            storageBucket: "ryanl-test.appspot.com",
-            messagingSenderId: "818440188305",
-            appId: "1:818440188305:web:b5f89513e57eab942c2a30",
-            databaseURL: "https://ryanl-test-default-rtdb.firebaseio.com"
+            apiKey: "AIzaSyARk9-4wKQ_53Yw2p1_bHDa1U4igP7sUfI",
+            authDomain: "ryanl-logistics.firebaseapp.com",
+            databaseURL: "https://ryanl-logistics-default-rtdb.firebaseio.com",
+            projectId: "ryanl-logistics",
+            storageBucket: "ryanl-logistics.firebasestorage.app",
+            messagingSenderId: "711688730396",
+            appId: "1:711688730396:web:55ed4ffa98a0f5bbe86cd9"
         };
         
         if (!firebase.apps.length) {
@@ -260,7 +288,7 @@
                 <div id="admin-badge" style="display:none; position:absolute; top:-5px; right:-5px; background:red; color:white; font-size:10px; font-weight:bold; padding:2px 6px; border-radius:10px; box-shadow:0 2px 4px rgba(0,0,0,0.3); z-index:11;">0</div>
             </div>
 
-            <div class="rocket-title">🚀 채번 요청 1초컷</div>
+            <div class="rocket-title">🚀 채번 요청 1초컷 <span style="font-size: 13px; color: #3498db; font-weight: 900; background: rgba(52,152,219,0.15); padding: 2px 8px; border-radius: 20px; border: 1.5px solid #3498db; margin-left: 5px; vertical-align: middle;">쿠팡</span></div>
             
             <div class="sub-tag">
                 천안1캠프 전용 스마트 시스템 
@@ -409,25 +437,82 @@
                 <button class="btn-change" onclick="showSetup()">정보 변경</button>
             </div>
             
-            <form action="https://docs.google.com/forms/d/e/1FAIpQLSeIMR-wkYKFwnldd2qKKyUlaxLN85tu7OBX0HsLt7fzezZKWg/formResponse" method="POST" target="hidden_iframe" onsubmit="window.isSubmitted=true; document.getElementById('submitBtn').innerText='전송 중... ⏳';">
-                <input type="hidden" name="pageHistory" value="0,1">
-                <input type="hidden" name="entry.1315166815" id="form-id">
-                <input type="hidden" name="entry.1573740217" id="form-camp">
-                <input type="hidden" name="entry.697011792" value="채번 요청">
-                
+            <form id="ryanForm" onsubmit="submitFinal(event)">
                 <div class="label-area">📦<span>운송장 번호</span></div>
                 <div class="input-group">
-                    <input type="text" name="entry.359305263" id="waybill" placeholder="우측 버튼을 누르세요 👉" required>
+                    <input type="text" id="waybill" placeholder="우측 버튼을 누르세요 👉" required>
                     <button type="button" class="btn-paste" onclick="pasteClipboard()">👆 붙여넣기 클릭</button>
                 </div>
                 <div class="label-area">🔢<span>채번 수량</span></div>
-                <input type="number" name="entry.1437474928" id="quantity" placeholder="숫자만 입력" required>
+                <input type="number" id="quantity" placeholder="숫자만 입력" required>
                 <button type="submit" class="btn-submit" id="submitBtn">바로 제출하기</button>
             </form>
+
+            <script>
+                document.getElementById('waybill').addEventListener('paste', function(e) {
+                    e.preventDefault();
+                    let paste = (e.clipboardData || window.clipboardData).getData('text');
+                    this.value = paste.replace(/\r?\n/g, ' ').replace(/\s+/g, ' ').trim();
+                });
+
+                async function pasteClipboard() {
+                    try {
+                        const waybillInput = document.getElementById('waybill');
+                        waybillInput.focus();
+                        const text = await navigator.clipboard.readText();
+                        if(text) {
+                            waybillInput.value = text.replace(/\r?\n/g, ' ').replace(/\s+/g, ' ').trim();
+                        }
+                    } catch (err) {
+                        const inputField = document.getElementById('waybill');
+                        inputField.focus();
+                        myAlert("🚫 클립보드 권한이 차단되었습니다!\n\n우측 상단 점 3개(크롬) 👉 설정 👉 사이트 설정 👉 클립보드 👉 '허용'으로 바꿔주세요.");
+                    }
+                }
+
+                function submitFinal(event) {
+                    event.preventDefault();
+                    var btn = document.getElementById('submitBtn');
+                    btn.innerText = '전송 중... ⏳';
+                    btn.disabled = true;
+
+                    var idVal = document.getElementById('display-id').innerText;
+                    var campVal = document.getElementById('display-camp').innerText;
+                    var waybillVal = document.getElementById('waybill').value;
+                    var quantityVal = document.getElementById('quantity').value;
+
+                    var url = "https://docs.google.com/forms/d/e/1FAIpQLSeIMR-wkYKFwnldd2qKKyUlaxLN85tu7OBX0HsLt7fzezZKWg/formResponse";
+                    
+                    var params = new URLSearchParams();
+                    params.append("pageHistory", "0,1"); 
+                    params.append("entry.697011792", "채번 요청");
+                    params.append("entry.1315166815", idVal.trim());
+                    params.append("entry.1573740217", campVal.trim());
+                    params.append("entry.359305263", waybillVal);
+                    params.append("entry.1437474928", quantityVal);
+
+                    fetch(url, {
+                        method: 'POST',
+                        mode: 'no-cors',
+                        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                        body: params.toString()
+                    });
+
+                    setTimeout(function() {
+                        if(typeof handleFormSuccess === 'function') {
+                            handleFormSuccess(); 
+                        } else {
+                            document.getElementById('success-overlay').style.display = 'flex';
+                            document.getElementById('waybill').value = '';
+                            document.getElementById('quantity').value = '';
+                        }
+                        btn.innerText = '바로 제출하기';
+                        btn.disabled = false;
+                    }, 500);
+                }
+            </script>
             
             <button type="button" onclick="showHistory()" style="width:100%; padding:12px; margin-top:15px; background:#2ecc71; color:white; border:none; border-radius:10px; font-weight:900; cursor:pointer; font-size:15px; box-shadow:0 4px 6px rgba(0,0,0,0.1);">📋 채번 히스토리</button>
-
-            <iframe name="hidden_iframe" id="hidden_iframe" style="display:none;" onload="if(window.isSubmitted){ handleFormSuccess(); }"></iframe>
         </div>
 
         <div class="footer">
