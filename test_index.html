@@ -105,40 +105,9 @@
             white-space: nowrap !important;
         }
         @media screen and (max-width: 380px) {
-            .logo-img { max-width: 120px !important; margin-top: 15px !important; }
-        }
+    .logo-img { max-width: 120px !important; margin-top: 15px !important; }
+}
 
-        /* [스캔 기능 전용 스타일 추가] */
-        #camera-modal {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; width: 100vw; height: 100vh;
-            background: rgba(0,0,0,0.85);
-            z-index: 200000;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-        }
-        #reader {
-            width: 85%;
-            max-width: 340px;
-            background: white;
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
-        }
-        .btn-close-camera {
-            margin-top: 20px;
-            background-color: #e74c3c;
-            color: white;
-            border: none;
-            padding: 12px 30px;
-            border-radius: 25px;
-            font-weight: bold;
-            font-size: 15px;
-            cursor: pointer;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-        }
     </style>
 
     <script src="security_protocol.js"></script>
@@ -148,9 +117,6 @@
     <script src="v2_core.js?v=30"></script> 
     <script src="firebase_node_check.js"></script>
     <script src="v2_admin_ui.js?v=30"></script>
-
-    <!-- 초고속 바코드 스캔 라이브러리 추가 -->
-    <script src="https://unpkg.com/html5-qrcode"></script>
 
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
@@ -305,14 +271,8 @@
                 </script>
             </div>
             
-            <!-- 다크모드 버튼 -->
             <div id="dark-mode-btn" onclick="toggleDarkMode()" style="position: absolute; top: 10px; left: 10px; width: 100px; padding: 6px; display: flex; align-items: center; justify-content: center; gap: 5px; background-color: #34495e; color: white; border-radius: 15px; font-weight: 900; font-size: 12px; box-shadow: 0 3px 6px rgba(0,0,0,0.15); cursor: pointer; z-index: 10; margin-top: 25px;">
                 <span style="font-size:14px;">🌙</span> <span style="font-weight: 900; font-size: 11px;">다크모드</span>
-            </div>
-
-            <!-- 다크모드 바로 아래에 [운송장 스캔] 버튼 완벽 결합! -->
-            <div id="waybill-scan-btn" onclick="openCamera()" style="position: absolute; top: 48px; left: 10px; width: 100px; padding: 6px; display: flex; align-items: center; justify-content: center; gap: 5px; background-color: #2e86de; color: white; border-radius: 15px; font-weight: 900; font-size: 12px; box-shadow: 0 3px 6px rgba(0,0,0,0.15); cursor: pointer; z-index: 10; margin-top: 25px;">
-                <span style="font-size:13px;">📸</span> <span style="font-weight: 900; font-size: 11px;">운송장 스캔</span>
             </div>
 
             <div onclick="window.location.reload(true);" style="position: absolute; top: 10px; right: 10px; width: 90px; padding: 6px 0; text-align: center; background-color: #ff8c00; color: white; border-radius: 15px; font-weight: 900; font-size: 13px; box-shadow: 0 3px 6px rgba(0,0,0,0.15); cursor: pointer; z-index: 10;">
@@ -409,7 +369,7 @@
                                     <div style="font-size:11px; color:#aaa; margin-bottom:3px;">총 누적 접속(연인원)</div>
                                     <div><strong id="search-total-dau" style="color:#fff; font-size:20px;">0</strong><span style="font-size:12px; color:#aaa;">회</span></div>
                                 </div>
-                                <div style="width:1px; height:30px; background:rgba(255,255,255,0.1);</div>
+                                <div style="width:1px; height:30px; background:rgba(255,255,255,0.1);"></div>
                                 <div>
                                     <div style="font-size:11px; color:#aaa; margin-bottom:3px;">총 채번건수</div>
                                     <div><strong id="search-total-reqs" style="color:#2ecc71; font-size:20px;">0</strong><span style="font-size:12px; color:#aaa;">건</span></div>
@@ -562,62 +522,5 @@
             <span class="warning-text">무단 복제 및 도용 시 법적 처벌을 받을 수 있습니다.</span>
         </div>
     </div>
-
-    <!-- [스캔 카메라 팝업 레이어 & 제어 스크립트 기능 통합 완료] -->
-    <div id="camera-modal">
-        <div id="reader"></div>
-        <button class="btn-close-camera" onclick="closeCamera()">닫기</button>
-    </div>
-
-    <script>
-        let myHtml5QrcodeScanner = null;
-
-        function myAlert(message) {
-            const alertBox = document.getElementById('custom-alert-box');
-            const alertMsg = document.getElementById('custom-alert-msg');
-            if (alertBox && alertMsg) {
-                alertMsg.innerText = message;
-                alertBox.style.display = 'flex';
-            } else {
-                alert(message);
-            }
-        }
-
-        function openCamera() {
-            document.getElementById('camera-modal').style.display = 'flex';
-            
-            myHtml5QrcodeScanner = new Html5QrcodeScanner(
-                "reader", 
-                { 
-                    fps: 15, 
-                    qrbox: { width: 250, height: 120 },
-                    rememberLastUsedCamera: true
-                },
-                false
-            );
-            
-            myHtml5QrcodeScanner.render(onScanSuccess, onScanFailure);
-        }
-
-        function closeCamera() {
-            if (myHtml5QrcodeScanner) {
-                myHtml5QrcodeScanner.clear().catch(err => console.error(err));
-            }
-            document.getElementById('camera-modal').style.display = 'none';
-        }
-
-        function onScanSuccess(decodedText) {
-            closeCamera();
-            
-            navigator.clipboard.writeText(decodedText).then(() => {
-                myAlert("운송장 번호가 복사되었습니다!\n\n▶ 번호: " + decodedText + "\n\n이제 [붙여넣기 클릭] 버튼을 눌러주세요!");
-            }).catch(err => {
-                myAlert("클립보드 자동 복사에 실패했습니다.\n인식된 번호: " + decodedText);
-            });
-        }
-
-        function onScanFailure(error) {
-        }
-    </script>
 </body>
 </html>
