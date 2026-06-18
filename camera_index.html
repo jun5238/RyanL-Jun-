@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>바코드 스캔 시스템</title>
-    <script src="https://unpkg.com/html5-qrcode"></script>
+    <title>운송장 만능 글자 스캔 시스템</title>
+    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
     <style>
         html, body {
             margin: 0; padding: 0; width: 100%; height: 100%;
@@ -13,31 +13,60 @@
         }
         .container { width: 95%; max-width: 360px; text-align: center; }
         h2 { font-size: 18px; margin-bottom: 15px; color: #ff8c00; }
-        #reader { width: 100%; background: #000; border-radius: 12px; overflow: hidden; box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
+        
+        .video-container {
+            position: relative; width: 100%; background: #000; 
+            border-radius: 12px; overflow: hidden; box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+        }
+        video { width: 100%; display: block; }
+        
+        /* 스캔 조준선 가이드 */
+        .scan-guide {
+            position: absolute; top: 50%; left: 50%;
+            width: 280px; height: 80px;
+            transform: translate(-50%, -50%);
+            border: 3px solid #ff8c00; border-radius: 8px;
+            box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.5);
+            pointer-events: none;
+        }
+        .scan-guide::after {
+            content: "이 네모에 운송장 번호 숫자를 맞춰주세요";
+            position: absolute; bottom: -25px; left: 0; width: 100%;
+            color: #ff8c00; font-size: 11px; text-align: center; font-weight: bold;
+        }
+
         .result-box {
             margin-top: 15px; padding: 15px; background: #1e1e1e;
             border: 1px solid #333; border-radius: 8px; font-size: 14px;
         }
+        .status { font-size: 12px; color: #aaa; margin-bottom: 5px; }
         .btn-copy {
             width: 100%; padding: 14px; margin-top: 10px;
             background-color: #2ecc71; color: white; border: none;
             border-radius: 8px; font-size: 18px; font-weight: bold;
             cursor: pointer; display: none; box-shadow: 0 4px 6px rgba(0,0,0,0.2);
         }
+        canvas { display: none; }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <h2>📸 운송장 바코드 스캔 시스템</h2>
-        <div id="reader"></div>
+        <h2>📸 운송장 번호 만능 인식기</h2>
+        
+        <div class="video-container">
+            <video id="webcam" autoplay playsinline></video>
+            <div class="scan-guide"></div>
+        </div>
         
         <div class="result-box">
-            <span style="color:#aaa; font-size:12px;">[ 인식된 운송장 번호 ]</span>
-            <strong id="scan-result" style="color: #f1c40f; font-size: 22px; display: block; margin: 8px 0;">-</strong>
+            <div id="scan-status" class="status">카메라 구동 중...</div>
+            <strong id="scan-result" style="color: #f1c40f; font-size: 24px; display: block; margin: 8px 0;">-</strong>
             <button id="copy-btn" class="btn-copy" onclick="copyToClipboard()">📋 번호 복사하기</button>
         </div>
     </div>
+
+    <canvas id="capture-canvas"></canvas>
 
     <div id="custom-alert-box" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); z-index:999999; justify-content:center; align-items:center;">
         <div style="background:#fff; width:80%; max-width:300px; border-radius:15px; padding:25px; text-align:center; box-shadow:0 10px 25px rgba(0,0,0,0.3);">
@@ -49,6 +78,10 @@
 
     <script>
         let currentNumber = "";
+        let isProcessing = false;
+        const video = document.getElementById('webcam');
+        const canvas = document.getElementById('capture-canvas');
+        const statusDiv = document.getElementById('scan-status');
 
         function myAlert(message) {
             const alertBox = document.getElementById('custom-alert-box');
@@ -61,54 +94,77 @@
             }
         }
 
-        window.onload = function() {
-            Html5Qrcode.getCameras().then(cameras => {
-                if (cameras && cameras.length > 0) {
-                    const html5QrCode = new Html5Qrcode("reader");
-                    html5QrCode.start(
-                        { facingMode: "environment" }, 
-                        { 
-                            fps: 20, 
-                            qrbox: { width: 280, height: 100 } // 바코드가 잘 찍히도록 가로로 길고 얇게 세팅!
-                        },
-                        onScanSuccess,
-                        onScanFailure
-                    ).catch(err => {
-                        console.error(err);
-                    });
-                }
-            }).catch(err => {
-                console.error(err);
+        // 카메라 시작
+        navigator.mediaDevices.getUserMedia({
+            video: { facingMode: { exact: "environment" } }
+        }).then(stream => {
+            video.srcObject = stream;
+            statusDiv.innerText = "🔍 번호 인식을 위해 조준해 주세요";
+            // 1.5초마다 가이드라인 영역 글자 캡처 및 판독 시작
+            setInterval(captureAndRecognize, 1500);
+        }).catch(err => {
+            // 일반 environment로 재시도
+            navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } }).then(stream => {
+                video.srcObject = stream;
+                statusDiv.innerText = "🔍 번호 인식을 위해 조준해 주세요";
+                setInterval(captureAndRecognize, 1500);
+            }).catch(e => {
+                statusDiv.innerText = "카메라 연결 실패";
             });
-        };
+        });
 
-        function onScanSuccess(decodedText) {
-            let processedText = decodedText.trim();
-            
-            // 만약 기사님이 보신 것처럼 중간에 구분선(|)이 들어간 데이터라면?
-            if (processedText.includes('|')) {
-                // 맨 첫 번째 덩어리(운송장 번호)만 쏙 뽑아내기!
-                processedText = processedText.split('|')[0];
-            }
-            
-            // 추출한 번호가 순수한 숫자인지 다시 한 번 검증
-            processedText = processedText.replace(/[^0-9]/g, '');
+        function captureAndRecognize() {
+            if (isProcessing) return;
+            isProcessing = true;
 
-            if (processedText.length > 0) {
-                currentNumber = processedText;
-                document.getElementById('scan-result').innerText = processedText;
-                document.getElementById('copy-btn').style.display = 'block'; 
+            const ctx = canvas.getContext('2d');
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            
+            if (canvas.width === 0 || canvas.height === 0) {
+                isProcessing = false;
+                return;
             }
+
+            // 전체 화면 캡처
+            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+            statusDiv.innerText = "⚡ 번호 스캔 중...";
+
+            // Tesseract OCR 엔진으로 숫자 판독 시작
+            Tesseract.recognize(
+                canvas,
+                'eng', // 숫자는 영어 엔진이 제일 정확함
+                { logger: m => {} }
+            ).then(({ data: { text } }) => {
+                // 줄바꿈이나 공백 없애고 오직 연속된 10자리 이상의 '숫자'만 매칭 시도
+                // 쿠팡 운송장은 보통 12자리~14자리 숫자입니다.
+                let numbers = text.replace(/[^0-9]/g, '');
+                
+                // 운송장 번호 자릿수 필터링 (최소 10자리 이상 연속된 숫자 찾기)
+                let matched = numbers.match(/\d{10,15}/);
+
+                if (matched) {
+                    currentNumber = matched[0];
+                    document.getElementById('scan-result').innerText = currentNumber;
+                    document.getElementById('copy-btn').style.display = 'block';
+                    statusDiv.innerText = "✅ 인식 성공!";
+                } else {
+                    statusDiv.innerText = "🔍 다시 조준하는 중...";
+                }
+                isProcessing = false;
+            }).catch(err => {
+                isProcessing = false;
+                statusDiv.innerText = "🔍 번호 조준 중...";
+            });
         }
-
-        function onScanFailure(error) {}
 
         function copyToClipboard() {
             if(!currentNumber) return;
             navigator.clipboard.writeText(currentNumber).then(() => {
                 myAlert("운송장 번호가 성공적으로 복사되었습니다! 🚀\n\n▶ 번호: " + currentNumber);
             }).catch(err => {
-                myAlert("복사에 실패했습니다. 번호를 직접 복사해 주세요: " + currentNumber);
+                myAlert("복사 실패! 번호: " + currentNumber);
             });
         }
     </script>
