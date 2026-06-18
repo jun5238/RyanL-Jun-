@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>바코드 스캔 테스트</title>
+    <script src="https://unpkg.com/html5-qrcode"></script>
+    <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #121212;
+            color: white;
+            font-family: sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        .container {
+            width: 90%;
+            max-width: 360px;
+            text-align: center;
+        }
+        h2 {
+            font-size: 18px;
+            margin-bottom: 20px;
+            color: #ff8c00;
+        }
+        #reader {
+            width: 100%;
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+        }
+        .result-box {
+            margin-top: 20px;
+            padding: 15px;
+            background: #1e1e1e;
+            border: 1px solid #333;
+            border-radius: 8px;
+            font-size: 14px;
+            word-break: break-all;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>📸 운송장 바코드 스캔 테스트</h2>
+        
+        <div id="reader"></div>
+        
+        <div class="result-box">
+            <div>스캔 결과가 여기에 표시됩니다.</div>
+            <strong id="scan-result" style="color: #2ecc71; font-size: 16px; display: block; margin-top: 10px;">-</strong>
+        </div>
+    </div>
+
+    <div id="custom-alert-box" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); z-index:999999; justify-content:center; align-items:center;">
+        <div style="background:#fff; width:80%; max-width:300px; border-radius:15px; padding:25px; text-align:center; box-shadow:0 10px 25px rgba(0,0,0,0.3);">
+            <div style="font-size:30px; margin-bottom:10px;">⚠️</div>
+            <div id="custom-alert-msg" style="font-size:15px; font-weight:bold; color:#333; line-height:1.5; margin-bottom:20px;">메시지 내용</div>
+            <button onclick="document.getElementById('custom-alert-box').style.display='none'" style="width:100%; padding:12px; background:#ff8c00; color:#fff; border:none; border-radius:10px; font-weight:900; cursor:pointer;">확인</button>
+        </div>
+    </div>
+
+    <script>
+        // 시스템 알림창 띄우기
+        function myAlert(message) {
+            const alertBox = document.getElementById('custom-alert-box');
+            const alertMsg = document.getElementById('custom-alert-msg');
+            if (alertBox && alertMsg) {
+                alertMsg.innerText = message;
+                alertBox.style.display = 'flex';
+            } else {
+                alert(message);
+            }
+        }
+
+        // 페이지 열리자마자 카메라 자동 실행
+        window.onload = function() {
+            const html5QrcodeScanner = new Html5QrcodeScanner(
+                "reader", 
+                { 
+                    fps: 15, 
+                    qrbox: { width: 260, height: 130 }, // 스캔 가이드 네모 박스 크기
+                    rememberLastUsedCamera: true
+                },
+                false
+            );
+            html5QrcodeScanner.render(onScanSuccess, onScanFailure);
+        };
+
+        // 스캔 성공 시 실행되는 함수
+        function onScanSuccess(decodedText) {
+            // 화면 결과창에 번호 표시
+            document.getElementById('scan-result').innerText = decodedText;
+            
+            // 클립보드에 자동 복사 시도
+            navigator.clipboard.writeText(decodedText).then(() => {
+                myAlert("복사 성공!\n\n운송장 번호: " + decodedText);
+            }).catch(err => {
+                myAlert("인식은 되었으나 클립보드 복사에 실패했습니다.\n\n번호: " + decodedText);
+            });
+        }
+
+        // 스캔 실패 시 (바코드를 찾는 중일 때) 실행
+        function onScanFailure(error) {
+            // 콘솔 로그가 너무 쌓이지 않도록 비워둡니다.
+        }
+    </script>
+</body>
+</html>
