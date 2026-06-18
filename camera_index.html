@@ -3,47 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>운송장 카메라 스캔</title>
-    <script src="https://cdn.jsdelivr.net/npm/javascript-barcode-reader"></script>
+    <title>바코드 스캔 시스템</title>
+    <script src="https://unpkg.com/html5-qrcode"></script>
     <style>
         html, body {
             margin: 0; padding: 0; width: 100%; height: 100%;
             background-color: #121212; color: white;
             font-family: sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center;
         }
-        .container { width: 90%; max-width: 360px; text-align: center; }
-        h2 { font-size: 18px; margin-bottom: 25px; color: #ff8c00; }
-        
-        .scan-btn {
-            width: 100%; padding: 20px; background-color: #ff8c00;
-            color: white; border: none; border-radius: 12px;
-            font-size: 18px; font-weight: bold; cursor: pointer;
-            box-shadow: 0 5px 15px rgba(255, 140, 0, 0.4);
-            margin-bottom: 20px;
-        }
+        .container { width: 95%; max-width: 360px; text-align: center; }
+        h2 { font-size: 18px; margin-bottom: 15px; color: #ff8c00; }
+        #reader { width: 100%; background: #000; border-radius: 12px; overflow: hidden; box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
         .result-box {
-            padding: 15px; background: #1e1e1e;
+            margin-top: 15px; padding: 15px; background: #1e1e1e;
             border: 1px solid #333; border-radius: 8px; font-size: 14px;
         }
         .btn-copy {
-            width: 100%; padding: 12px; margin-top: 10px;
+            width: 100%; padding: 14px; margin-top: 10px;
             background-color: #2ecc71; color: white; border: none;
-            border-radius: 8px; font-size: 16px; font-weight: bold;
-            cursor: pointer; display: none;
+            border-radius: 8px; font-size: 18px; font-weight: bold;
+            cursor: pointer; display: none; box-shadow: 0 4px 6px rgba(0,0,0,0.2);
         }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <h2>🚀 채번 시스템 카메라 스캔</h2>
+        <h2>📸 운송장 바코드 스캔 시스템</h2>
+        <div id="reader"></div>
         
-        <button class="scan-btn" onclick="document.getElementById('camera-input').click();">📸 운송장 촬영하기</button>
-        <input type="file" id="camera-input" accept="image/*" capture="environment" style="display: none;" onchange="processImage(this)">
-
         <div class="result-box">
             <span style="color:#aaa; font-size:12px;">[ 인식된 운송장 번호 ]</span>
-            <strong id="scan-result" style="color: #f1c40f; font-size: 20px; display: block; margin: 8px 0;">-</strong>
+            <strong id="scan-result" style="color: #f1c40f; font-size: 22px; display: block; margin: 8px 0;">-</strong>
             <button id="copy-btn" class="btn-copy" onclick="copyToClipboard()">📋 번호 복사하기</button>
         </div>
     </div>
@@ -70,51 +61,54 @@
             }
         }
 
-        function processImage(input) {
-            if (!input.files || !input.files[0]) return;
-            
-            const file = input.files[0];
-            const reader = new FileReader();
-            
-            document.getElementById('scan-result').innerText = "분석 중...";
-            
-            reader.onload = function(e) {
-                const img = new Image();
-                img.src = e.target.result;
-                img.onload = function() {
-                    // 이미지에서 바코드 추출 시도
-                    javascriptBarcodeReader({
-                        image: img,
-                        barcode: 'code-128' // 쿠팡 운송장 기본 규격
-                    }).then(result => {
-                        currentNumber = result;
-                        document.getElementById('scan-result').innerText = result;
-                        document.getElementById('copy-btn').style.display = 'block';
-                    }).catch(err => {
-                        // 128 실패 시 다른 규격 재시도
-                        javascriptBarcodeReader({
-                            image: img,
-                            barcode: 'code-39'
-                        }).then(result => {
-                            currentNumber = result;
-                            document.getElementById('scan-result').innerText = result;
-                            document.getElementById('copy-btn').style.display = 'block';
-                        }).catch(e => {
-                            document.getElementById('scan-result').innerText = "인식 실패 (다시 촬영)";
-                            myAlert("바코드를 흐리지 않게 수평으로 다시 찍어주세요!");
-                        });
+        window.onload = function() {
+            Html5Qrcode.getCameras().then(cameras => {
+                if (cameras && cameras.length > 0) {
+                    const html5QrCode = new Html5Qrcode("reader");
+                    html5QrCode.start(
+                        { facingMode: "environment" }, 
+                        { 
+                            fps: 20, 
+                            qrbox: { width: 280, height: 100 } // 바코드가 잘 찍히도록 가로로 길고 얇게 세팅!
+                        },
+                        onScanSuccess,
+                        onScanFailure
+                    ).catch(err => {
+                        console.error(err);
                     });
-                };
-            };
-            reader.readAsDataURL(file);
+                }
+            }).catch(err => {
+                console.error(err);
+            });
+        };
+
+        function onScanSuccess(decodedText) {
+            let processedText = decodedText.trim();
+            
+            // 만약 기사님이 보신 것처럼 중간에 구분선(|)이 들어간 데이터라면?
+            if (processedText.includes('|')) {
+                // 맨 첫 번째 덩어리(운송장 번호)만 쏙 뽑아내기!
+                processedText = processedText.split('|')[0];
+            }
+            
+            // 추출한 번호가 순수한 숫자인지 다시 한 번 검증
+            processedText = processedText.replace(/[^0-9]/g, '');
+
+            if (processedText.length > 0) {
+                currentNumber = processedText;
+                document.getElementById('scan-result').innerText = processedText;
+                document.getElementById('copy-btn').style.display = 'block'; 
+            }
         }
+
+        function onScanFailure(error) {}
 
         function copyToClipboard() {
             if(!currentNumber) return;
             navigator.clipboard.writeText(currentNumber).then(() => {
-                myAlert("복사 완료! 이제 원래 채번 창에 붙여넣으세요! 🔥\n\n번호: " + currentNumber);
+                myAlert("운송장 번호가 성공적으로 복사되었습니다! 🚀\n\n▶ 번호: " + currentNumber);
             }).catch(err => {
-                myAlert("복사 실패! 번호를 직접 입력해 주세요: " + currentNumber);
+                myAlert("복사에 실패했습니다. 번호를 직접 복사해 주세요: " + currentNumber);
             });
         }
     </script>
