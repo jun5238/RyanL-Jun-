@@ -3,60 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>바코드 스캔 테스트</title>
+    <title>바코드 스캔 시스템</title>
     <script src="https://unpkg.com/html5-qrcode"></script>
     <style>
         html, body {
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            height: 100%;
-            background-color: #121212;
-            color: white;
-            font-family: sans-serif;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
+            margin: 0; padding: 0; width: 100%; height: 100%;
+            background-color: #121212; color: white;
+            font-family: sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center;
         }
-        .container {
-            width: 90%;
-            max-width: 360px;
-            text-align: center;
-        }
-        h2 {
-            font-size: 18px;
-            margin-bottom: 20px;
-            color: #ff8c00;
-        }
-        #reader {
-            width: 100%;
-            background: white;
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
-        }
+        .container { width: 90%; max-width: 360px; text-align: center; }
+        h2 { font-size: 18px; margin-bottom: 15px; color: #ff8c00; }
+        #reader { width: 100%; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
         .result-box {
-            margin-top: 20px;
-            padding: 15px;
-            background: #1e1e1e;
-            border: 1px solid #333;
-            border-radius: 8px;
-            font-size: 14px;
-            word-break: break-all;
+            margin-top: 15px; padding: 15px; background: #1e1e1e;
+            border: 1px solid #333; border-radius: 8px; font-size: 14px;
+        }
+        .btn-copy {
+            width: 100%; padding: 12px; margin-top: 10px;
+            background-color: #2ecc71; color: white; border: none;
+            border-radius: 8px; font-size: 16px; font-weight: bold;
+            cursor: pointer; display: none; box-shadow: 0 4px 6px rgba(0,0,0,0.2);
         }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <h2>📸 운송장 바코드 스캔 테스트</h2>
-        
+        <h2>📸 운송장 바코드 스캔 시스템</h2>
         <div id="reader"></div>
         
         <div class="result-box">
-            <div>스캔 결과가 여기에 표시됩니다.</div>
-            <strong id="scan-result" style="color: #2ecc71; font-size: 16px; display: block; margin-top: 10px;">-</strong>
+            <span style="color:#aaa; font-size:12px;">[ 인식된 운송장 번호 ]</span>
+            <strong id="scan-result" style="color: #f1c40f; font-size: 20px; display: block; margin: 8px 0;">-</strong>
+            <button id="copy-btn" class="btn-copy" onclick="copyToClipboard()">📋 번호 복사하기</button>
         </div>
     </div>
 
@@ -69,7 +48,8 @@
     </div>
 
     <script>
-        // 시스템 알림창 띄우기
+        let currentNumber = "";
+
         function myAlert(message) {
             const alertBox = document.getElementById('custom-alert-box');
             const alertMsg = document.getElementById('custom-alert-msg');
@@ -81,36 +61,45 @@
             }
         }
 
-        // 페이지 열리자마자 카메라 자동 실행
         window.onload = function() {
-            const html5QrcodeScanner = new Html5QrcodeScanner(
-                "reader", 
-                { 
-                    fps: 15, 
-                    qrbox: { width: 260, height: 130 }, // 스캔 가이드 네모 박스 크기
-                    rememberLastUsedCamera: true
-                },
-                false
-            );
-            html5QrcodeScanner.render(onScanSuccess, onScanFailure);
+            // 접속 시 파일 업로드창 없이 바로 후면 카메라가 켜지도록 강제 설정
+            Html5Qrcode.getCameras().then(cameras => {
+                if (cameras && cameras.length > 0) {
+                    const html5QrCode = new Html5Qrcode("reader");
+                    html5QrCode.start(
+                        { facingMode: "environment" }, // 스마트폰 뒷면 카메라 지지
+                        { fps: 15, qrbox: { width: 260, height: 130 } },
+                        onScanSuccess,
+                        onScanFailure
+                    ).catch(err => {
+                        // 권한 거부 시 직접 요청 버튼 생성 유도
+                        document.getElementById('reader').innerHTML = `
+                            <div style="padding:20px; color:#333; text-align:center;">
+                                <p style="font-weight:bold; margin-bottom:10px;">카메라 권한 승인이 필요합니다.</p>
+                                <button onclick="location.reload()" style="padding:10px 15px; background:#ff8c00; color:white; border:none; border-radius:5px; font-weight:bold;">카메라 다시 켜기</button>
+                            </div>`;
+                    });
+                }
+            }).catch(err => {
+                console.error(err);
+            });
         };
 
-        // 스캔 성공 시 실행되는 함수
         function onScanSuccess(decodedText) {
-            // 화면 결과창에 번호 표시
+            currentNumber = decodedText;
             document.getElementById('scan-result').innerText = decodedText;
-            
-            // 클립보드에 자동 복사 시도
-            navigator.clipboard.writeText(decodedText).then(() => {
-                myAlert("복사 성공!\n\n운송장 번호: " + decodedText);
-            }).catch(err => {
-                myAlert("인식은 되었으나 클립보드 복사에 실패했습니다.\n\n번호: " + decodedText);
-            });
+            document.getElementById('copy-btn').style.display = 'block'; // 스캔 완료 시 복사 버튼 노출
         }
 
-        // 스캔 실패 시 (바코드를 찾는 중일 때) 실행
-        function onScanFailure(error) {
-            // 콘솔 로그가 너무 쌓이지 않도록 비워둡니다.
+        function onScanFailure(error) {}
+
+        function copyToClipboard() {
+            if(!currentNumber) return;
+            navigator.clipboard.writeText(currentNumber).then(() => {
+                myAlert("운송장 번호가 성공적으로 복사되었습니다! 🚀\n\n▶ 번호: " + currentNumber);
+            }).catch(err => {
+                myAlert("복사에 실패했습니다. 번호를 직접 복사해 주세요: " + currentNumber);
+            });
         }
     </script>
 </body>
