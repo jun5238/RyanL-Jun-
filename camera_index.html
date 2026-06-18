@@ -29,7 +29,7 @@
 <body>
 
     <div class="container">
-        <h2>📸 운송장 바코드 스캔 시스템</h2>
+        <h2>📸 고해상도 고속 스캔 시스템</h2>
         <div id="reader"></div>
         
         <div class="result-box">
@@ -68,8 +68,13 @@
                     html5QrCode.start(
                         { facingMode: "environment" }, 
                         { 
-                            fps: 25, 
-                            qrbox: { width: 280, height: 130 }
+                            fps: 30, // 초당 인식 횟수를 30회로 대폭 상향! (초고속 스캔)
+                            qrbox: { width: 260, height: 260 }, // 조준선 크기를 키워서 멀리서도 잘 잡히게 변경!
+                            // 카메라 화질을 최고 화질(풀HD급)로 강제 고정하여 멀리서도 픽셀이 안 깨지게 세팅!
+                            videoConstraints: {
+                                width: { ideal: 1920 },
+                                height: { ideal: 1080 }
+                            }
                         },
                         onScanSuccess,
                         onScanFailure
