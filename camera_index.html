@@ -29,7 +29,7 @@
 <body>
 
     <div class="container">
-        <h2>📸 고해상도 고속 스캔 시스템</h2>
+        <h2>📸 고해상도 후면 고속 스캔</h2>
         <div id="reader"></div>
         
         <div class="result-box">
@@ -66,12 +66,13 @@
                 if (cameras && cameras.length > 0) {
                     const html5QrCode = new Html5Qrcode("reader");
                     html5QrCode.start(
-                        { facingMode: "environment" }, 
+                        // facingMode를 정확히 'exact'로 걸어서 무조건 뒷면 카메라만 강제로 작동시킵니다!
+                        { facingMode: { exact: "environment" } }, 
                         { 
-                            fps: 30, // 초당 인식 횟수를 30회로 대폭 상향! (초고속 스캔)
-                            qrbox: { width: 260, height: 260 }, // 조준선 크기를 키워서 멀리서도 잘 잡히게 변경!
-                            // 카메라 화질을 최고 화질(풀HD급)로 강제 고정하여 멀리서도 픽셀이 안 깨지게 세팅!
+                            fps: 30, 
+                            qrbox: { width: 260, height: 260 },
                             videoConstraints: {
+                                facingMode: { exact: "environment" },
                                 width: { ideal: 1920 },
                                 height: { ideal: 1080 }
                             }
@@ -79,7 +80,13 @@
                         onScanSuccess,
                         onScanFailure
                     ).catch(err => {
-                        console.error(err);
+                        // 만약 에러나면 차선책으로 일반 후면 카메라로 재구동
+                        html5QrCode.start(
+                            { facingMode: "environment" },
+                            { fps: 30, qrbox: { width: 260, height: 260 } },
+                            onScanSuccess,
+                            onScanFailure
+                        ).catch(e => console.error(e));
                     });
                 }
             }).catch(err => {
