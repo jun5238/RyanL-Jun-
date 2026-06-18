@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>운송장 만능 바코드 스캔 시스템</title>
+    <title>바코드 스캔 시스템</title>
     <script src="https://unpkg.com/html5-qrcode"></script>
     <style>
         html, body {
@@ -14,7 +14,6 @@
         .container { width: 95%; max-width: 360px; text-align: center; }
         h2 { font-size: 18px; margin-bottom: 15px; color: #ff8c00; }
         #reader { width: 100%; background: #000; border-radius: 12px; overflow: hidden; box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
-        
         .result-box {
             margin-top: 15px; padding: 15px; background: #1e1e1e;
             border: 1px solid #333; border-radius: 8px; font-size: 14px;
@@ -30,7 +29,7 @@
 <body>
 
     <div class="container">
-        <h2>📸 운송장 바코드/QR 스캔</h2>
+        <h2>📸 운송장 바코드 스캔 시스템</h2>
         <div id="reader"></div>
         
         <div class="result-box">
@@ -70,13 +69,7 @@
                         { facingMode: "environment" }, 
                         { 
                             fps: 25, 
-                            qrbox: { width: 280, height: 130 },
-                            // QR코드뿐만 아니라 일반 길쭉한 바코드(CODE_128)까지 동시에 실시간 추적하도록 강제 설정
-                            formatsToSupport: [ 
-                                Html5QrcodeSupportedFormats.QR_CODE, 
-                                Html5QrcodeSupportedFormats.CODE_128,
-                                Html5QrcodeSupportedFormats.CODE_39
-                            ]
+                            qrbox: { width: 280, height: 130 }
                         },
                         onScanSuccess,
                         onScanFailure
@@ -92,16 +85,13 @@
         function onScanSuccess(decodedText) {
             let processedText = decodedText.trim();
             
-            // 1. QR코드 데이터에 | 구분자가 들어있으면 운송장 번호만 자르기
             if (processedText.includes('|')) {
                 processedText = processedText.split('|')[0];
             }
             
-            // 2. 숫자가 아닌 다른 찌꺼기 문자들은 전부 청소하기
             processedText = processedText.replace(/[^0-9]/g, '');
 
-            // 3. 정상적인 운송장 번호가 추출되었다면 화면에 표출
-            if (processedText.length >= 10) {
+            if (processedText.length > 0) {
                 currentNumber = processedText;
                 document.getElementById('scan-result').innerText = processedText;
                 document.getElementById('copy-btn').style.display = 'block'; 
