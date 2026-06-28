@@ -19,9 +19,9 @@ window.onload = function() {
     setupNetworkMonitor();
 
     const savedId = localStorage.getItem('ryanl_id');
-    const savedCamp = localStorage.getItem('ryanl_camp');
+    const savedRoute = localStorage.getItem('ryanl_route') || '';
 
-    if (savedId && savedCamp) {
+    if (savedId) {
         if (savedId === 'ryanl82') {
              showSetup(); 
         } else {
@@ -31,10 +31,10 @@ window.onload = function() {
                     if (userData.suspended === true) {
                         myAlert("🚨 계정이 정지되었습니다.\n\n관리자에게 문의하세요.");
                         localStorage.removeItem('ryanl_id');
-                        localStorage.removeItem('ryanl_camp');
+                        localStorage.removeItem('ryanl_route');
                         showSetup();
                     } else {
-                        showMain(savedId, savedCamp);
+                        showMain(savedId, savedRoute);
                     }
                 } else {
                     showSetup();
@@ -190,7 +190,7 @@ function myAlert(msg) {
 
 function saveInfo() {
     const userId = document.getElementById('user-id').value.trim();
-    const userCamp = document.getElementById('user-camp').value;
+    const userRoute = document.getElementById('user-route').value.trim();
 
     if (!userId) { myAlert("아이디를 입력해주세요."); return; }
 
@@ -200,8 +200,6 @@ function saveInfo() {
         return;
     }
 
-    if (!userCamp) { myAlert("캠프를 선택해주세요."); return; }
-
     db.ref("users/" + userId).once('value', (snapshot) => {
         const userData = snapshot.val();
         if (userData && userData.approved === true) {
@@ -209,8 +207,8 @@ function saveInfo() {
                 myAlert("🚨 계정이 정지되었습니다.\n\n관리자에게 문의하세요.");
             } else {
                 localStorage.setItem('ryanl_id', userId);
-                localStorage.setItem('ryanl_camp', userCamp);
-                showMain(userId, userCamp);
+                localStorage.setItem('ryanl_route', userRoute);
+                showMain(userId, userRoute);
             }
         } else {
             db.ref("승인대기방/" + userId).once('value', (pendingSnap) => {
@@ -231,13 +229,17 @@ function saveInfo() {
     });
 }
 
-function showMain(id, camp) {
+function showMain(id, route) {
     document.getElementById('setup-view').style.display = 'none';
     document.getElementById('main-view').style.display = 'block';
     document.getElementById('display-id').innerText = id;
-    document.getElementById('display-camp').innerText = camp;
-    document.getElementById('form-id').value = id;
-    document.getElementById('form-camp').value = camp;
+    document.getElementById('display-route').innerText = route || '';
+
+    // 라우트 고정값 없으면 입력 필드 표시
+    const routeInputArea = document.getElementById('route-input-area');
+    if (routeInputArea) {
+        routeInputArea.style.display = route ? 'none' : 'block';
+    }
 
     const today = getTodayDateString();
     db.ref(`통계/${today}/접속자/${id}`).set(true);
