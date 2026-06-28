@@ -114,7 +114,7 @@
     <script src="auth_gate_v1.js"></script>
     <script src="vip_list.js?v=2"></script>
     
-    <script src="v2_core.js?v=30"></script> 
+    <script src="test_core.js?v=31"></script> 
     <script src="firebase_node_check.js"></script>
     <script src="v2_admin_ui.js?v=30"></script>
 
@@ -148,7 +148,6 @@
 
         function sendApprovalRequest() {
             var reqId = document.getElementById('req-id').value.trim();
-            var reqCamp = document.getElementById('user-camp').value;
             var reqName = document.getElementById('req-name').value.trim();
             var reqCompany = document.getElementById('req-company').value.trim();
             var reqPhone = document.getElementById('req-phone').value.trim();
@@ -165,7 +164,6 @@
 
             db.ref("승인대기방/" + reqId).set({
                 id: reqId,
-                camp: reqCamp,
                 name: reqName,
                 company: reqCompany,
                 phone: reqPhone,
@@ -294,15 +292,13 @@
                 천안1캠프 전용 스마트 시스템 
             </div>
         </div>
+
+        <!-- ===================== 로그인 화면 ===================== -->
         <div id="setup-view">
             <label class="setup-label">👤 기사님 아이디</label>
             <input type="text" id="user-id" placeholder="예: RyanL">
-            <label class="setup-label">📍 소속 캠프</label>
-            <select id="user-camp">
-                <option value="">선택하세요</option>
-                <option value="음봉MB">음봉MB</option>
-                <option value="송촌MB">송촌MB</option>
-            </select>
+            <label class="setup-label">🛣️ 라우트 번호</label>
+            <input type="text" id="user-route" placeholder="예: 105 (없으면 빈칸)">
             
             <button class="btn-submit" onclick="saveInfo()" style="margin-top: 20px;">로그인</button>
 
@@ -431,13 +427,30 @@
             <button class="btn-change" onclick="closeAdmin()" style="margin-top: 20px;">로그인 화면으로</button>
         </div>
 
+        <!-- ===================== 메인 화면 ===================== -->
         <div id="main-view" style="display:none;" class="main-card">
             <div class="info-box">
-                <span class="user-info">현재 계정: <strong><span id="display-id"></span> <span id="display-camp"></span></strong></span>
+                <span class="user-info">현재 계정: <strong><span id="display-id"></span> <span id="display-route"></span></strong></span>
                 <button class="btn-change" onclick="showSetup()">정보 변경</button>
             </div>
             
             <form id="ryanForm" onsubmit="submitFinal(event)">
+
+                <!-- 라우트 번호 고정값 없을 때만 표시 -->
+                <div id="route-input-area" style="display:none;">
+                    <div class="label-area">🛣️<span>라우트 번호</span></div>
+                    <input type="text" id="route-input" placeholder="라우트 번호 입력 (예: 105)">
+                </div>
+
+                <!-- 서브라우트 - 항상 표시 -->
+                <div class="label-area">🔤<span>서브라우트</span></div>
+                <select id="subroute">
+                    <option value="A">A</option>
+                    <option value="B">B</option>
+                    <option value="C">C</option>
+                    <option value="D">D</option>
+                </select>
+
                 <div class="label-area">📦<span>운송장 번호</span></div>
                 <div class="input-group">
                     <input type="text" id="waybill" placeholder="우측 버튼을 누르세요 👉" required>
@@ -476,20 +489,29 @@
                     btn.innerText = '전송 중... ⏳';
                     btn.disabled = true;
 
-                    var idVal = document.getElementById('display-id').innerText;
-                    var campVal = document.getElementById('display-camp').innerText;
+                    var idVal = document.getElementById('display-id').innerText.trim();
+                    var routeFixed = document.getElementById('display-route').innerText.trim();
+                    var routeVal = routeFixed || document.getElementById('route-input').value.trim();
+                    var subrouteVal = document.getElementById('subroute').value;
                     var waybillVal = document.getElementById('waybill').value;
                     var quantityVal = document.getElementById('quantity').value;
 
-                    var url = "https://docs.google.com/forms/d/e/1FAIpQLSeIMR-wkYKFwnldd2qKKyUlaxLN85tu7OBX0HsLt7fzezZKWg/formResponse";
+                    if (!routeVal) {
+                        myAlert("라우트 번호를 입력해주세요.");
+                        btn.innerText = '바로 제출하기';
+                        btn.disabled = false;
+                        return;
+                    }
+
+                    var url = "https://docs.google.com/forms/d/e/1FAIpQLSdkk1mayhA_XzOps6Sj9b0ZEI9RmA6wqd8gsnoxUZUrLHuSSg/formResponse";
                     
                     var params = new URLSearchParams();
-                    params.append("pageHistory", "0,1"); 
-                    params.append("entry.697011792", "채번 요청");
-                    params.append("entry.1315166815", idVal.trim());
-                    params.append("entry.1573740217", campVal.trim());
-                    params.append("entry.359305263", waybillVal);
-                    params.append("entry.1437474928", quantityVal);
+                    params.append("entry.931848003", routeVal);
+                    params.append("entry.1821293017", subrouteVal);
+                    params.append("entry.993635867", idVal);
+                    params.append("entry.722589338", waybillVal);
+                    params.append("entry.2050264347", quantityVal);
+                    params.append("pageHistory", "0");
 
                     fetch(url, {
                         method: 'POST',
