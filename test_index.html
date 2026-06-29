@@ -110,6 +110,7 @@
 
         .subroute-btn {
             flex: 1;
+            min-width: 0;
             padding: 14px 0;
             background: #f0f0f0;
             color: #555;
@@ -121,9 +122,9 @@
             transition: background 0.15s, color 0.15s;
         }
         .subroute-btn.active {
-            background: #152b52;
+            background: #ff8c00;
             color: #fff;
-            border-color: #152b52;
+            border-color: #ff8c00;
         }
         body.dark-mode .subroute-btn {
             background: #333;
@@ -458,7 +459,7 @@
         <!-- ===================== 메인 화면 ===================== -->
         <div id="main-view" style="display:none;" class="main-card">
             <div class="info-box">
-                <span class="user-info">현재 계정: <strong><span id="display-id"></span> <span id="display-route"></span></strong></span>
+                <span class="user-info"><strong><span id="display-id"></span></strong> &nbsp;라우트: <strong><span id="display-route"></span></strong></span>
                 <button class="btn-change" onclick="showSetup()">정보 변경</button>
             </div>
             
@@ -471,8 +472,8 @@
                 </div>
 
                 <!-- 서브라우트 - 항상 표시 -->
-                <div class="label-area">🔤<span>서브라우트</span></div>
-                <div style="display:flex; gap:8px; margin-bottom:18px;">
+                <div class="label-area" style="margin-top:15px;">🔤<span>서브라우트</span></div>
+                <div style="display:flex; gap:8px; margin-bottom:18px; width:100%;">
                     <button type="button" class="subroute-btn active" onclick="selectSubroute('A')">A</button>
                     <button type="button" class="subroute-btn" onclick="selectSubroute('B')">B</button>
                     <button type="button" class="subroute-btn" onclick="selectSubroute('C')">C</button>
