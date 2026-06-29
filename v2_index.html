@@ -472,7 +472,13 @@
                 </div>
 
                 <!-- 서브라우트 - 항상 표시 -->
-                <div class="label-area" style="margin-top:15px;">🔤<span>서브라우트</span></div>
+                <div class="label-area" style="margin-top:15px; display:flex; align-items:center; gap:8px;">
+                    🔤<span>서브라우트</span>
+                    <label style="display:flex; align-items:center; gap:4px; font-size:12px; font-weight:900; color:#ff8c00; background:rgba(255,140,0,0.15); padding:3px 10px; border-radius:10px; border:1.5px solid #ff8c00; cursor:pointer;">
+                        <input type="checkbox" id="subroute-fixed" onchange="toggleSubrouteFixed()" style="cursor:pointer; width:14px; height:14px;">
+                        고정
+                    </label>
+                </div>
                 <div style="display:flex; gap:8px; margin-bottom:18px; width:100%;">
                     <button type="button" class="subroute-btn active" onclick="selectSubroute('A')">A</button>
                     <button type="button" class="subroute-btn" onclick="selectSubroute('B')">B</button>
@@ -499,10 +505,38 @@
                 });
 
                 function selectSubroute(val) {
+                    const fixedCheckbox = document.getElementById('subroute-fixed');
+                    if (fixedCheckbox && fixedCheckbox.checked) return; // 고정 상태면 변경 불가
                     document.getElementById('subroute').value = val;
                     document.querySelectorAll('.subroute-btn').forEach(btn => {
                         btn.classList.toggle('active', btn.innerText === val);
                     });
+                }
+
+                function lockSubrouteBtns(locked, activeVal) {
+                    document.querySelectorAll('.subroute-btn').forEach(btn => {
+                        if (locked && btn.innerText !== activeVal) {
+                            btn.disabled = true;
+                            btn.style.opacity = '0.3';
+                            btn.style.cursor = 'default';
+                        } else {
+                            btn.disabled = false;
+                            btn.style.opacity = '1';
+                            btn.style.cursor = 'pointer';
+                        }
+                    });
+                }
+
+                function toggleSubrouteFixed() {
+                    const fixed = document.getElementById('subroute-fixed').checked;
+                    const currentVal = document.getElementById('subroute').value;
+                    if (fixed) {
+                        localStorage.setItem('ryanl_subroute_fixed', currentVal);
+                        lockSubrouteBtns(true, currentVal);
+                    } else {
+                        localStorage.removeItem('ryanl_subroute_fixed');
+                        lockSubrouteBtns(false, currentVal);
+                    }
                 }
 
                 async function pasteClipboard() {
