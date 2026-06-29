@@ -241,6 +241,25 @@ function showMain(id, route) {
         routeInputArea.style.display = route ? 'none' : 'block';
     }
 
+    // 서브라우트 고정값 복원
+    const fixedSubroute = localStorage.getItem('ryanl_subroute_fixed');
+    if (fixedSubroute) {
+        setTimeout(() => {
+            const hiddenInput = document.getElementById('subroute');
+            if (hiddenInput) hiddenInput.value = fixedSubroute;
+            document.querySelectorAll('.subroute-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.innerText === fixedSubroute);
+                if (btn.innerText !== fixedSubroute) {
+                    btn.disabled = true;
+                    btn.style.opacity = '0.3';
+                    btn.style.cursor = 'default';
+                }
+            });
+            const fixedCheckbox = document.getElementById('subroute-fixed');
+            if (fixedCheckbox) fixedCheckbox.checked = true;
+        }, 100);
+    }
+
     const today = getTodayDateString();
     db.ref(`통계/${today}/접속자/${id}`).set(true);
 
