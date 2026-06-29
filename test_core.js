@@ -233,7 +233,7 @@ function showMain(id, route) {
     document.getElementById('setup-view').style.display = 'none';
     document.getElementById('main-view').style.display = 'block';
     document.getElementById('display-id').innerText = id;
-    document.getElementById('display-route').innerText = route || '';
+    document.getElementById('display-route').innerText = route || '미지정';
 
     // 라우트 고정값 없으면 입력 필드 표시
     const routeInputArea = document.getElementById('route-input-area');
