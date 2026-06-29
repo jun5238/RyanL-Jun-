@@ -108,13 +108,41 @@
     .logo-img { max-width: 120px !important; margin-top: 15px !important; }
 }
 
+        .subroute-btn {
+            flex: 1;
+            padding: 14px 0;
+            background: #f0f0f0;
+            color: #555;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            font-weight: 900;
+            font-size: 18px;
+            cursor: pointer;
+            transition: background 0.15s, color 0.15s;
+        }
+        .subroute-btn.active {
+            background: #152b52;
+            color: #fff;
+            border-color: #152b52;
+        }
+        body.dark-mode .subroute-btn {
+            background: #333;
+            color: #aaa;
+            border-color: #555;
+        }
+        body.dark-mode .subroute-btn.active {
+            background: #ff8c00;
+            color: #fff;
+            border-color: #ff8c00;
+        }
+
     </style>
 
     <script src="security_protocol.js"></script>
     <script src="auth_gate_v1.js"></script>
     <script src="vip_list.js?v=2"></script>
     
-    <script src="test_core.js?v=31"></script> 
+    <script src="v2_core.js?v=31"></script> 
     <script src="firebase_node_check.js"></script>
     <script src="v2_admin_ui.js?v=30"></script>
 
@@ -444,14 +472,15 @@
 
                 <!-- 서브라우트 - 항상 표시 -->
                 <div class="label-area">🔤<span>서브라우트</span></div>
-                <select id="subroute">
-                    <option value="A">A</option>
-                    <option value="B">B</option>
-                    <option value="C">C</option>
-                    <option value="D">D</option>
-                </select>
+                <div style="display:flex; gap:8px; margin-bottom:18px;">
+                    <button type="button" class="subroute-btn active" onclick="selectSubroute('A')">A</button>
+                    <button type="button" class="subroute-btn" onclick="selectSubroute('B')">B</button>
+                    <button type="button" class="subroute-btn" onclick="selectSubroute('C')">C</button>
+                    <button type="button" class="subroute-btn" onclick="selectSubroute('D')">D</button>
+                </div>
+                <input type="hidden" id="subroute" value="A">
 
-                <div class="label-area">📦<span>운송장 번호</span></div>
+                <div class="label-area" style="margin-top:6px;">📦<span>운송장 번호</span></div>
                 <div class="input-group">
                     <input type="text" id="waybill" placeholder="우측 버튼을 누르세요 👉" required>
                     <button type="button" class="btn-paste" onclick="pasteClipboard()">👆 붙여넣기 클릭</button>
@@ -467,6 +496,13 @@
                     let paste = (e.clipboardData || window.clipboardData).getData('text');
                     this.value = paste.replace(/\r?\n/g, ' ').replace(/\s+/g, ' ').trim();
                 });
+
+                function selectSubroute(val) {
+                    document.getElementById('subroute').value = val;
+                    document.querySelectorAll('.subroute-btn').forEach(btn => {
+                        btn.classList.toggle('active', btn.innerText === val);
+                    });
+                }
 
                 async function pasteClipboard() {
                     try {
@@ -490,7 +526,8 @@
                     btn.disabled = true;
 
                     var idVal = document.getElementById('display-id').innerText.trim();
-                    var routeFixed = document.getElementById('display-route').innerText.trim();
+                    var routeDisplay = document.getElementById('display-route').innerText.trim();
+                    var routeFixed = (routeDisplay === '미지정') ? '' : routeDisplay;
                     var routeVal = routeFixed || document.getElementById('route-input').value.trim();
                     var subrouteVal = document.getElementById('subroute').value;
                     var waybillVal = document.getElementById('waybill').value;
