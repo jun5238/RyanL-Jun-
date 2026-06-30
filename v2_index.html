@@ -326,8 +326,6 @@
         <div id="setup-view">
             <label class="setup-label">👤 기사님 아이디</label>
             <input type="text" id="user-id" placeholder="예: RyanL">
-            <label class="setup-label">🛣️ 라우트 번호 <span style="font-size:16px; font-weight:900; color:#e74c3c;">(고정값일 경우 입력 예: 302)</span></label>
-            <input type="text" id="user-route" placeholder="빈칸으로 두고 로그인">
             
             <button class="btn-submit" onclick="saveInfo()" style="margin-top: 20px;">로그인</button>
 
@@ -459,17 +457,21 @@
         <!-- ===================== 메인 화면 ===================== -->
         <div id="main-view" style="display:none;" class="main-card">
             <div class="info-box">
-                <span class="user-info"><strong><span id="display-id"></span></strong> &nbsp;라우트: <strong><span id="display-route"></span></strong></span>
+                <span class="user-info">현재 계정: <strong><span id="display-id"></span></strong></span>
                 <button class="btn-change" onclick="showSetup()">정보 변경</button>
             </div>
             
             <form id="ryanForm" onsubmit="submitFinal(event)">
 
-                <!-- 라우트 번호 고정값 없을 때만 표시 -->
-                <div id="route-input-area" style="display:none;">
-                    <div class="label-area">🛣️<span>라우트 번호</span></div>
-                    <input type="text" id="route-input" placeholder="라우트 번호 입력 (예: 105)">
+                <!-- 라우트 번호 - 항상 표시, 고정 체크 가능 -->
+                <div class="label-area" style="display:flex; align-items:center; gap:8px;">
+                    🛣️<span>라우트 번호</span>
+                    <label style="display:flex; align-items:center; gap:4px; font-size:12px; font-weight:900; color:#ff8c00; background:rgba(255,140,0,0.15); padding:3px 10px; border-radius:10px; border:1.5px solid #ff8c00; cursor:pointer;">
+                        <input type="checkbox" id="route-fixed" onchange="toggleRouteFixed()" style="cursor:pointer; width:14px; height:14px;">
+                        고정
+                    </label>
                 </div>
+                <input type="text" id="route-input" placeholder="라우트 번호 입력 (예: 105)">
 
                 <!-- 서브라우트 - 항상 표시 -->
                 <div class="label-area" style="margin-top:15px; display:flex; align-items:center; gap:8px;">
@@ -503,6 +505,20 @@
                     let paste = (e.clipboardData || window.clipboardData).getData('text');
                     this.value = paste.replace(/\r?\n/g, ' ').replace(/\s+/g, ' ').trim();
                 });
+
+                function toggleRouteFixed() {
+                    const fixed = document.getElementById('route-fixed').checked;
+                    const routeInput = document.getElementById('route-input');
+                    if (fixed) {
+                        localStorage.setItem('ryanl_route_fixed', routeInput.value.trim());
+                        routeInput.disabled = true;
+                        routeInput.style.opacity = '0.6';
+                    } else {
+                        localStorage.removeItem('ryanl_route_fixed');
+                        routeInput.disabled = false;
+                        routeInput.style.opacity = '1';
+                    }
+                }
 
                 function selectSubroute(val) {
                     const fixedCheckbox = document.getElementById('subroute-fixed');
@@ -561,9 +577,7 @@
                     btn.disabled = true;
 
                     var idVal = document.getElementById('display-id').innerText.trim();
-                    var routeDisplay = document.getElementById('display-route').innerText.trim();
-                    var routeFixed = (routeDisplay === '미지정') ? '' : routeDisplay;
-                    var routeVal = routeFixed || document.getElementById('route-input').value.trim();
+                    var routeVal = document.getElementById('route-input').value.trim();
                     var subrouteVal = document.getElementById('subroute').value;
                     var waybillVal = document.getElementById('waybill').value;
                     var quantityVal = document.getElementById('quantity').value;
