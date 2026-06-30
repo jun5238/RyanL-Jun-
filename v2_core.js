@@ -19,7 +19,6 @@ window.onload = function() {
     setupNetworkMonitor();
 
     const savedId = localStorage.getItem('ryanl_id');
-    const savedRoute = localStorage.getItem('ryanl_route') || '';
 
     if (savedId) {
         if (savedId === 'ryanl82') {
@@ -31,10 +30,9 @@ window.onload = function() {
                     if (userData.suspended === true) {
                         myAlert("🚨 계정이 정지되었습니다.\n\n관리자에게 문의하세요.");
                         localStorage.removeItem('ryanl_id');
-                        localStorage.removeItem('ryanl_route');
                         showSetup();
                     } else {
-                        showMain(savedId, savedRoute);
+                        showMain(savedId);
                     }
                 } else {
                     showSetup();
@@ -190,7 +188,6 @@ function myAlert(msg) {
 
 function saveInfo() {
     const userId = document.getElementById('user-id').value.trim();
-    const userRoute = document.getElementById('user-route').value.trim();
 
     if (!userId) { myAlert("아이디를 입력해주세요."); return; }
 
@@ -207,8 +204,7 @@ function saveInfo() {
                 myAlert("🚨 계정이 정지되었습니다.\n\n관리자에게 문의하세요.");
             } else {
                 localStorage.setItem('ryanl_id', userId);
-                localStorage.setItem('ryanl_route', userRoute);
-                showMain(userId, userRoute);
+                showMain(userId);
             }
         } else {
             db.ref("승인대기방/" + userId).once('value', (pendingSnap) => {
@@ -229,16 +225,24 @@ function saveInfo() {
     });
 }
 
-function showMain(id, route) {
+function showMain(id) {
     document.getElementById('setup-view').style.display = 'none';
     document.getElementById('main-view').style.display = 'block';
     document.getElementById('display-id').innerText = id;
-    document.getElementById('display-route').innerText = route || '미지정';
 
-    // 라우트 고정값 없으면 입력 필드 표시
-    const routeInputArea = document.getElementById('route-input-area');
-    if (routeInputArea) {
-        routeInputArea.style.display = route ? 'none' : 'block';
+    // 라우트 번호 고정값 복원
+    const fixedRoute = localStorage.getItem('ryanl_route_fixed');
+    if (fixedRoute) {
+        setTimeout(() => {
+            const routeInput = document.getElementById('route-input');
+            const fixedCheckbox = document.getElementById('route-fixed');
+            if (routeInput) {
+                routeInput.value = fixedRoute;
+                routeInput.disabled = true;
+                routeInput.style.opacity = '0.6';
+            }
+            if (fixedCheckbox) fixedCheckbox.checked = true;
+        }, 100);
     }
 
     // 서브라우트 고정값 복원
