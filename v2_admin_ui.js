@@ -545,7 +545,7 @@ function loadNoticeHistory() {
     db.ref("공지사항내역").orderByChild("time").limitToLast(5).once('value', snap => {
         let html = '';
         const notices = [];
-        snap.forEach(child => { notices.unshift(child.val()); });
+        snap.forEach(child => { notices.unshift({key: child.key, ...child.val()}); });
         
         if(notices.length === 0) {
             html = '<div style="color:#999; text-align:center; padding:10px;">등록된 공지가 없습니다.</div>';
@@ -553,14 +553,48 @@ function loadNoticeHistory() {
             notices.forEach(n => {
                 const d = new Date(n.time);
                 const timeStr = `${d.getMonth()+1}/${d.getDate()} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
-                html += `<div style="padding: 10px; margin-bottom: 8px; background: rgba(255,140,0,0.1); border-radius: 8px; border-left: 3px solid #ff8c00;">
-                    <span style="color:#ff8c00; font-weight:bold; margin-right:5px; font-size:11px;">[${timeStr}]</span> 
+                const safeText = n.text.replace(/'/g, "\\'").replace(/`/g, "'");
+                html += `<div style="padding:10px; margin-bottom:8px; background:rgba(255,140,0,0.1); border-radius:8px; border-left:3px solid #ff8c00;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:5px;">
+                        <span style="color:#ff8c00; font-weight:bold; font-size:11px;">[${timeStr}]</span>
+                        <div style="display:flex; gap:5px;">
+                            <button onclick="editNoticeLoad('${safeText}')" style="padding:3px 8px; background:#3498db; color:white; border:none; border-radius:5px; font-size:11px; font-weight:bold; cursor:pointer;">수정</button>
+                            <button onclick="deleteNotice('${n.key}')" style="padding:3px 8px; background:#e74c3c; color:white; border:none; border-radius:5px; font-size:11px; font-weight:bold; cursor:pointer;">삭제</button>
+                        </div>
+                    </div>
                     <span style="color:#fff; font-weight:bold;">${n.text}</span>
                 </div>`;
             });
         }
         listObj.innerHTML = html;
     });
+}
+
+function deleteNotice(key) {
+    myConfirm("이 공지를 삭제하시겠습니까?\n현재 공지 중인 내용이면 공지가 해제됩니다.", () => {
+        db.ref("공지사항내역/" + key).once('value', snap => {
+            const notice = snap.val();
+            db.ref("공지사항내역/" + key).remove().then(() => {
+                db.ref("공지사항/최신공지").once('value', latestSnap => {
+                    const latest = latestSnap.val();
+                    if (latest && notice && latest.text === notice.text) {
+                        db.ref("공지사항/최신공지").remove();
+                    }
+                });
+                myAlert("공지가 삭제되었습니다.");
+                loadNoticeHistory();
+            }).catch(() => myAlert("삭제 중 오류가 발생했습니다."));
+        });
+    }, "#e74c3c");
+}
+
+function editNoticeLoad(text) {
+    const input = document.getElementById('admin-notice-input');
+    if (input) {
+        input.value = text;
+        input.focus();
+        myAlert("내용을 수정 후 '저장' 버튼을 눌러주세요.");
+    }
 }
 
 const adminObserver = new MutationObserver((mutations) => {
