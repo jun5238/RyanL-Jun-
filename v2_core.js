@@ -355,7 +355,31 @@ function sendFeedbackPrompt() {
     document.body.appendChild(modal);
 }
 
-const sunIconSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="#f1c40f" stroke="none"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3" stroke="#f1c40f" stroke-width="1.5"></line><line x1="12" y1="21" x2="12" y2="23" stroke="#f1c40f" stroke-width="1.5"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64" stroke="#f1c40f" stroke-width="1.5"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78" stroke="#f1c40f" stroke-width="1.5"></line><line x1="1" y1="12" x2="3" y2="12" stroke="#f1c40f" stroke-width="1.5"></line><line x1="21" y1="12" x2="23" y2="12" stroke="#f1c40f" stroke-width="1.5"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36" stroke="#f1c40f" stroke-width="1.5"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22" stroke="#f1c40f" stroke-width="1.5"></line></svg>`;
+function showInstallQR() {
+    const appUrl = window.location.href.split('?')[0];
+    const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(appUrl)}&bgcolor=ffffff&color=152b52&margin=10`;
+
+    const modal = document.createElement('div');
+    modal.style = "position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.7);display:flex;align-items:center;justify-content:center;z-index:999999;";
+
+    modal.innerHTML = `
+        <div style="background:#fff;width:80%;max-width:300px;border-radius:15px;padding:25px 20px;text-align:center;box-shadow:0 10px 25px rgba(0,0,0,0.3);">
+            <div style="font-size:18px;font-weight:900;color:#152b52;margin-bottom:5px;">📲 설치 QR코드</div>
+            <div style="font-size:12px;color:#888;margin-bottom:15px;">QR 스캔 후 브라우저에서 홈화면에 추가</div>
+            <img src="${qrUrl}" style="width:200px;height:200px;border-radius:10px;border:2px solid #eee;" onerror="this.style.display='none'">
+            <div style="margin-top:15px;background:#f4f4f4;border-radius:10px;padding:12px;text-align:left;font-size:12px;color:#555;line-height:1.7;">
+                📱 <b>갤럭시:</b> 크롬 점 3개 → 홈화면에 추가<br>
+                🍎 <b>아이폰:</b> 사파리 공유(↑) → 홈화면에 추가
+            </div>
+            <button onclick="this.closest('div').parentElement.remove()" style="margin-top:15px;width:100%;padding:12px;background:#152b52;color:#fff;border:none;border-radius:10px;font-weight:900;font-size:15px;cursor:pointer;">닫기</button>
+        </div>
+    `;
+
+    document.body.appendChild(modal);
+    modal.addEventListener('click', function(e) {
+        if (e.target === modal) modal.remove();
+    });
+} `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="#f1c40f" stroke="none"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3" stroke="#f1c40f" stroke-width="1.5"></line><line x1="12" y1="21" x2="12" y2="23" stroke="#f1c40f" stroke-width="1.5"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64" stroke="#f1c40f" stroke-width="1.5"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78" stroke="#f1c40f" stroke-width="1.5"></line><line x1="1" y1="12" x2="3" y2="12" stroke="#f1c40f" stroke-width="1.5"></line><line x1="21" y1="12" x2="23" y2="12" stroke="#f1c40f" stroke-width="1.5"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36" stroke="#f1c40f" stroke-width="1.5"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22" stroke="#f1c40f" stroke-width="1.5"></line></svg>`;
 
 function toggleDarkMode() {
     const body = document.body;
