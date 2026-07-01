@@ -316,6 +316,11 @@
             
             <div style="position: relative; display: inline-block;">
                 <img src="mlogo.jpg" class="logo-img">
+                <script>
+                    if (localStorage.getItem('ryanl_darkmode') === 'on') {
+                        document.querySelector('.logo-img').src = 'mlogo_dark.jpg';
+                    }
+                </script>
                 <div id="admin-badge" style="display:none; position:absolute; top:-5px; right:-5px; background:red; color:white; font-size:10px; font-weight:bold; padding:2px 6px; border-radius:10px; box-shadow:0 2px 4px rgba(0,0,0,0.3); z-index:11;">0</div>
             </div>
 
