@@ -43,7 +43,7 @@ window.onload = function() {
         showSetup();
     }
     
-    setTimeout(() => { updateDarkModeButton(isDark); }, 100);
+    setTimeout(() => { updateDarkModeButton(isDark); }, 500);
 };
 
 function setupNetworkMonitor() {
