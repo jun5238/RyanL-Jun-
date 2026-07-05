@@ -312,10 +312,15 @@
             
             <div style="position: relative; display: inline-block;">
                 <img src="mlogo.jpg" class="logo-img">
+                <script>
+                    if (localStorage.getItem('ryanl_darkmode') === 'on') {
+                        document.querySelector('.logo-img').src = 'mlogo_dark.jpg';
+                    }
+                </script>
                 <div id="admin-badge" style="display:none; position:absolute; top:-5px; right:-5px; background:red; color:white; font-size:10px; font-weight:bold; padding:2px 6px; border-radius:10px; box-shadow:0 2px 4px rgba(0,0,0,0.3); z-index:11;">0</div>
             </div>
 
-            <div class="rocket-title">🚀 채번 요청 1초컷 <span style="font-size: 13px; color: #3498db; font-weight: 900; background: rgba(52,152,219,0.15); padding: 2px 8px; border-radius: 20px; border: 1.5px solid #3498db; margin-left: 5px; vertical-align: middle;">쿠팡</span></div>
+            <div class="rocket-title">🚀 채번 요청 1초컷 <span style="font-size: 13px; color: #e74c3c; font-weight: 900; background: rgba(231,76,60,0.15); padding: 2px 8px; border-radius: 20px; border: 1.5px solid #e74c3c; margin-left: 5px; vertical-align: middle;">테스트버전</span></div>
             
             <div class="sub-tag">
                 천안1캠프 전용 스마트 시스템 
@@ -506,7 +511,7 @@
 
                 function selectSubroute(val) {
                     const fixedCheckbox = document.getElementById('subroute-fixed');
-                    if (fixedCheckbox && fixedCheckbox.checked) return; // 고정 상태면 변경 불가
+                    if (fixedCheckbox && fixedCheckbox.checked) return;
                     document.getElementById('subroute').value = val;
                     document.querySelectorAll('.subroute-btn').forEach(btn => {
                         btn.classList.toggle('active', btn.innerText === val);
