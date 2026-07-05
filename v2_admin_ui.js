@@ -214,7 +214,6 @@ function loadApprovalRequests() {
                     <div style="color:#eee; font-size:14px; margin-bottom:4px;"><b>성함:</b> ${request.name}</div>
                     <div style="color:#eee; font-size:14px; margin-bottom:4px;"><b>연락처:</b> ${request.phone || '미입력'}</div>
                     <div style="color:#eee; font-size:14px; margin-bottom:4px;"><b>업체:</b> ${request.company}</div>
-                    <div style="color:#aaa; font-size:12px;"><b>캠프:</b> ${request.camp}</div>
                     <div style="display:flex; gap:8px; margin-top:12px;">
                         <button onclick="approveUser('${request.id}', '${request.name}', '${request.company}', '${request.camp}', '${request.phone || ''}')" style="flex:1.2; padding:12px; background:#2ecc71; color:white; border:none; border-radius:8px; font-weight:900; cursor:pointer;">최종 승인</button>
                         <button onclick="rejectUser('${request.id}', '${request.phone || ''}')" style="flex:0.8; padding:12px; background:#e74c3c; color:white; border:none; border-radius:8px; font-weight:900; cursor:pointer;">거절</button>
@@ -318,7 +317,6 @@ function renderApprovedList() {
                         <div style="color:${isSuspended ? '#888' : '#3498db'}; font-size:12px; font-weight:bold;">📞 ${u.phone || '미입력'}</div>
                     </div>
                     <div style="display:flex; align-items:center; gap:6px;">
-                        <div style="color:#aaa; font-size:11px;">${u.camp}</div>
                         <button onclick="editUserInfo('${u.id}', '${u.name}', '${u.company}', '${u.camp}', '${u.phone || ''}')" style="padding:5px 8px; background:#3498db; color:white; border:none; border-radius:5px; font-size:11px; font-weight:bold; cursor:pointer; box-shadow:0 2px 4px rgba(0,0,0,0.2);">수정</button>
                         <button onclick="deleteUser('${u.id}', '${u.name}')" style="padding:5px 8px; background:#e74c3c; color:white; border:none; border-radius:5px; font-size:11px; font-weight:bold; cursor:pointer; box-shadow:0 2px 4px rgba(0,0,0,0.2);">탈퇴</button>
                         <button onclick="${suspendAction}" style="padding:5px 8px; background:${suspendBtnColor}; color:white; border:none; border-radius:5px; font-size:11px; font-weight:bold; cursor:pointer; box-shadow:0 2px 4px rgba(0,0,0,0.2);">정지</button>
