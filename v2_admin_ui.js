@@ -93,7 +93,7 @@ function checkAdminPw() {
     
     db.ref("admins/" + adminId).once('value', (snapshot) => {
         const adminData = snapshot.val();
-        if (adminData && pwInput === adminData.pw) {
+        if (adminData && pwInput === String(adminData.pw)) {
             document.getElementById('admin-login-view').style.display = 'none';
             document.getElementById('admin-dashboard-view').style.display = 'block';
             loadApprovalRequests(); 
