@@ -571,6 +571,7 @@
                         const text = await navigator.clipboard.readText();
                         if(text) {
                             waybillInput.value = text.replace(/\r?\n/g, ' ').replace(/\s+/g, ' ').trim();
+                            document.getElementById('quantity').focus();
                         }
                     } catch (err) {
                         const inputField = document.getElementById('waybill');
