@@ -4,34 +4,21 @@ function myConfirm(message, onConfirm, okColor) {
     if (!okColor) okColor = "#ff8c00";
     const modal = document.createElement('div');
     modal.style = "position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);display:flex;align-items:center;justify-content:center;z-index:999999;";
-
     const box = document.createElement('div');
     box.style = "background:#fff;width:80%;max-width:300px;border-radius:15px;padding:25px;text-align:center;box-shadow:0 10px 25px rgba(0,0,0,0.3);";
-
     const text = document.createElement('div');
     text.innerText = message;
     text.style = "font-size:15px;font-weight:bold;color:#333;line-height:1.5;margin-bottom:20px;white-space:pre-wrap;";
-
     const btnGroup = document.createElement('div');
     btnGroup.style = "display:flex;gap:10px;";
-
     const okBtn = document.createElement('button');
     okBtn.innerText = "확인";
     okBtn.style = "width:50%;padding:12px;background:" + okColor + ";color:#fff;border:none;border-radius:10px;font-weight:900;cursor:pointer;";
-
     const cancelBtn = document.createElement('button');
     cancelBtn.innerText = "취소";
     cancelBtn.style = "width:50%;padding:12px;background:#ccc;color:#333;border:none;border-radius:10px;font-weight:bold;cursor:pointer;";
-
-    okBtn.onclick = () => {
-        document.body.removeChild(modal);
-        if (onConfirm) onConfirm();
-    };
-
-    cancelBtn.onclick = () => {
-        document.body.removeChild(modal);
-    };
-
+    okBtn.onclick = () => { document.body.removeChild(modal); if (onConfirm) onConfirm(); };
+    cancelBtn.onclick = () => { document.body.removeChild(modal); };
     btnGroup.appendChild(okBtn);
     btnGroup.appendChild(cancelBtn);
     box.appendChild(text);
@@ -43,41 +30,30 @@ function myConfirm(message, onConfirm, okColor) {
 function myPrompt(message, onSubmit) {
     const modal = document.createElement('div');
     modal.style = "position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);display:flex;align-items:center;justify-content:center;z-index:999999;";
-
     const box = document.createElement('div');
     box.style = "background:#fff;width:80%;max-width:300px;border-radius:15px;padding:25px;text-align:center;box-shadow:0 10px 25px rgba(0,0,0,0.3);";
-
     const text = document.createElement('div');
     text.innerText = message;
     text.style = "font-size:15px;font-weight:bold;color:#333;line-height:1.5;margin-bottom:15px;";
-
     const input = document.createElement('input');
     input.type = "text";
     input.placeholder = "사유를 입력해주세요";
     input.style = "width:100%;padding:12px;margin-bottom:20px;border:1px solid #ccc;border-radius:8px;box-sizing:border-box;font-size:14px;";
-
     const btnGroup = document.createElement('div');
     btnGroup.style = "display:flex;gap:10px;";
-
     const okBtn = document.createElement('button');
     okBtn.innerText = "사유 등록";
     okBtn.style = "width:50%;padding:12px;background:#e74c3c;color:#fff;border:none;border-radius:10px;font-weight:900;cursor:pointer;";
-
     const cancelBtn = document.createElement('button');
     cancelBtn.innerText = "취소";
     cancelBtn.style = "width:50%;padding:12px;background:#ccc;color:#333;border:none;border-radius:10px;font-weight:bold;cursor:pointer;";
-
     okBtn.onclick = () => {
         const val = input.value.trim();
         if(!val) { myAlert("사유를 입력해야 처리가 가능합니다!"); return; }
         document.body.removeChild(modal);
         if(onSubmit) onSubmit(val);
     };
-
-    cancelBtn.onclick = () => {
-        document.body.removeChild(modal);
-    };
-
+    cancelBtn.onclick = () => { document.body.removeChild(modal); };
     btnGroup.appendChild(okBtn);
     btnGroup.appendChild(cancelBtn);
     box.appendChild(text);
@@ -90,7 +66,6 @@ function myPrompt(message, onSubmit) {
 function checkAdminPw() {
     const pwInput = document.getElementById('admin-pw').value;
     const adminId = 'ryanl82';
-    
     db.ref("admins/" + adminId).once('value', (snapshot) => {
         const adminData = snapshot.val();
         if (adminData && pwInput === String(adminData.pw)) {
@@ -111,7 +86,6 @@ function checkAdminPw() {
 function toggleStatsSection(contentId, headerEl) {
     const contentEl = document.getElementById(contentId);
     const iconEl = headerEl.querySelector('.toggle-icon');
-
     if (contentEl.style.display === 'none') {
         contentEl.style.display = 'block';
         iconEl.innerText = '▲ 접기';
@@ -124,21 +98,17 @@ function toggleStatsSection(contentId, headerEl) {
 function searchStats() {
     const start = document.getElementById('stat-start-date').value;
     const end = document.getElementById('stat-end-date').value;
-    
     if(!start || !end) { myAlert("시작일과 종료일을 모두 선택해주세요!"); return; }
     if(start > end) { myAlert("시작일이 종료일보다 늦을 수 없습니다!"); return; }
-
     const startDateObj = new Date(start);
     const endDateObj = new Date(end);
     const diffTime = Math.abs(endDateObj - startDateObj);
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1; 
-
     db.ref("통계").orderByKey().startAt(start).endAt(end).once('value', snapshot => {
         const data = snapshot.val();
         let totalReqs = 0;
         let uniqueUsers = new Set();
         let totalDau = 0; 
-
         if(data) {
             Object.keys(data).forEach(dateKey => {
                 const dayData = data[dateKey];
@@ -150,16 +120,13 @@ function searchStats() {
                 }
             });
         }
-
         const avgUsers = diffDays > 0 ? (totalDau / diffDays).toFixed(1) : "0.0";
         const avgReqs = diffDays > 0 ? (totalReqs / diffDays).toFixed(1) : "0.0";
-
         document.getElementById('search-total-dau').innerText = totalDau;
         document.getElementById('search-total-reqs').innerText = totalReqs;
         document.getElementById('search-unique-users').innerText = uniqueUsers.size;
         document.getElementById('search-avg-users').innerText = avgUsers;
         document.getElementById('search-avg-reqs').innerText = avgReqs;
-
         document.getElementById('stat-search-result').style.display = 'block';
     });
 }
@@ -167,13 +134,11 @@ function searchStats() {
 function loadTodayStats() {
     const today = getTodayDateString();
     document.getElementById('stat-date-display').innerText = today;
-    
     db.ref(`통계/${today}`).on('value', (snapshot) => {
         const data = snapshot.val();
         if (data) {
             const dauCount = data.접속자 ? Object.keys(data.접속자).length : 0;
             const reqCount = data.채번건수 ? data.채번건수 : 0;
-            
             document.getElementById('stat-dau').innerText = dauCount;
             document.getElementById('stat-reqs').innerText = reqCount;
         } else {
@@ -194,10 +159,8 @@ function loadApprovalRequests() {
     db.ref("승인대기방").on('value', (snapshot) => {
         const pendingSec = document.getElementById('pending-section');
         if (!pendingSec) return;
-        
         pendingSec.innerHTML = '<div style="color:#ff8c00; font-weight:bold; font-size:16px; margin-bottom:10px; text-align:left;">⏳ 대기 중인 신청건</div>';
         const data = snapshot.val();
-
         if (!data) {
             pendingSec.innerHTML += '<div style="color:#ccc; padding:10px; text-align:center;">대기 중인 신청건이 없습니다.</div>';
         } else {
@@ -205,7 +168,6 @@ function loadApprovalRequests() {
                 const request = data[key];
                 const card = document.createElement('div');
                 card.style.cssText = "background:rgba(255,255,255,0.1); border-radius:12px; padding:15px; margin-bottom:12px; text-align:left; border-left:5px solid #ff8c00;";
-                
                 card.innerHTML = `
                     <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:8px;">
                         <div style="color:#ff8c00; font-weight:900; font-size:16px;">👤 ID: ${request.id}</div>
@@ -232,10 +194,8 @@ function loadApprovalRequests() {
     db.ref("피드백방").on('value', (snapshot) => {
         const feedSec = document.getElementById('feedback-section');
         if (!feedSec) return;
-
         feedSec.innerHTML = '<div style="color:#9b59b6; font-weight:bold; font-size:16px; margin-bottom:10px; text-align:left; border-top:1px dashed rgba(255,255,255,0.2); padding-top:15px;">💡 도착한 피드백</div>';
         const data = snapshot.val();
-
         if (!data) {
             feedSec.innerHTML += '<div style="color:#ccc; padding:10px; text-align:center;">도착한 피드백이 없습니다.</div>';
         } else {
@@ -257,22 +217,17 @@ function loadApprovalRequests() {
 function renderApprovedList() {
     const appSec = document.getElementById('approved-section');
     if (!appSec) return;
-    
     appSec.innerHTML = '<div style="color:#2ecc71; font-weight:bold; font-size:16px; margin-bottom:10px; text-align:left; border-top:1px dashed rgba(255,255,255,0.2); padding-top:15px;">✅ 업체별 승인 완료 명단</div>';
-    
     const searchInput = document.getElementById('admin-search-input');
     const keyword = searchInput ? searchInput.value.toLowerCase().trim() : '';
-    
     const grouped = {};
     let count = 0;
-
     Object.keys(globalUsersData).forEach(key => {
         const user = globalUsersData[key];
         if (user.approved) {
             const comp = String(user.company || '기타');
             const name = String(user.name || '');
             const uid = String(user.id || ''); 
-            
             if (name.toLowerCase().includes(keyword) || uid.toLowerCase().includes(keyword)) {
                 if (!grouped[comp]) grouped[comp] = [];
                 grouped[comp].push(user);
@@ -280,21 +235,17 @@ function renderApprovedList() {
             }
         }
     });
-
     if (count === 0) {
         appSec.innerHTML += '<div style="color:#ccc; padding:10px; text-align:center;">검색 결과가 없습니다.</div>';
         return;
     }
-
     let compIndex = 0;
     for (const comp in grouped) {
         compIndex++;
         const compDiv = document.createElement('div');
         compDiv.style.cssText = "background:rgba(255,255,255,0.05); border-radius:8px; padding:12px; margin-bottom:10px; text-align:left;";
-        
         const displayStyle = keyword ? "block" : "none";
         const iconText = keyword ? "▲ 접기" : "▼ 펴기";
-
         let htmlStr = `
             <div onclick="toggleCompanyList('comp-list-${compIndex}', this)" style="display:flex; justify-content:space-between; align-items:center; cursor:pointer; color:#f1c40f; font-weight:bold; font-size:15px; padding:5px 0;">
                 <div>🏢 ${comp} <span style="font-size:12px; color:#aaa;">(${grouped[comp].length}명)</span></div>
@@ -302,14 +253,12 @@ function renderApprovedList() {
             </div>
             <div id="comp-list-${compIndex}" style="display:${displayStyle}; margin-top:10px; transition:all 0.3s ease;">
         `;
-        
         grouped[comp].forEach(u => {
             const isSuspended = u.suspended === true;
             const suspendBtnColor = isSuspended ? "#95a5a6" : "#2ecc71";
             const suspendAction = isSuspended 
                 ? `unsuspendUser('${u.id}', '${u.name}', '${u.suspendReason || '사유 없음'}')` 
                 : `suspendUser('${u.id}', '${u.name}')`;
-
             htmlStr += `
                 <div style="display:flex; justify-content:space-between; align-items:center; color:#eee; font-size:13px; padding:8px 0; border-bottom:1px solid rgba(255,255,255,0.05);">
                     <div style="display:flex; flex-direction:column; gap:5px;">
@@ -324,7 +273,6 @@ function renderApprovedList() {
                 </div>
             `;
         });
-        
         htmlStr += `</div>`; 
         compDiv.innerHTML = htmlStr;
         appSec.appendChild(compDiv);
@@ -333,30 +281,23 @@ function renderApprovedList() {
 
 function suspendUser(id, name) {
     myPrompt(name + " 기사님의 계정을 정지하려는 사유를 입력하세요.", (reason) => {
-        db.ref("users/" + id).update({
-            suspended: true,
-            suspendReason: reason
-        }).then(() => {
-            myAlert(name + " 기사님의 계정이 정지되었습니다.");
-        }).catch(() => myAlert("오류가 발생했습니다."));
+        db.ref("users/" + id).update({ suspended: true, suspendReason: reason })
+        .then(() => { myAlert(name + " 기사님의 계정이 정지되었습니다."); })
+        .catch(() => myAlert("오류가 발생했습니다."));
     });
 }
 
 function unsuspendUser(id, name, reason) {
     myConfirm(`[과거 정지 사유]\n${reason}\n\n${name} 기사님의 정지를 해제하시겠습니까?`, () => {
-        db.ref("users/" + id).update({
-            suspended: null,
-            suspendReason: null
-        }).then(() => {
-            myAlert(name + " 기사님 계정 정지가 해제되었습니다.");
-        }).catch(() => myAlert("오류가 발생했습니다."));
+        db.ref("users/" + id).update({ suspended: null, suspendReason: null })
+        .then(() => { myAlert(name + " 기사님 계정 정지가 해제되었습니다."); })
+        .catch(() => myAlert("오류가 발생했습니다."));
     }, "#2ecc71");
 }
 
 function toggleCompanyList(listId, headerEl) {
     const listEl = document.getElementById(listId);
     const iconEl = headerEl.querySelector('.toggle-icon');
-
     if (listEl.style.display === 'none') {
         listEl.style.display = 'block';
         iconEl.innerText = '▲ 접기';
@@ -377,81 +318,50 @@ function deleteUser(id, name) {
 function editUserInfo(id, oldName, oldComp, oldCamp, oldPhone) {
     const modal = document.createElement('div');
     modal.style = "position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.7);display:flex;align-items:center;justify-content:center;z-index:999999;";
-
     const box = document.createElement('div');
     box.style = "background:#fff;width:85%;max-width:320px;border-radius:15px;padding:25px;text-align:left;box-shadow:0 10px 30px rgba(0,0,0,0.4);";
-
     box.innerHTML = `
         <div style="font-size:18px;font-weight:900;color:#152b52;margin-bottom:20px;text-align:center;">✏️ 기사님 정보 수정</div>
-        
         <label style="font-size:12px; font-weight:bold; color:#555; display:block; margin-bottom:5px;">👤 성함</label>
         <input type="text" id="edit-name" value="${oldName}" style="width:100%;padding:12px;margin-bottom:15px;border:1px solid #ccc;border-radius:8px;box-sizing:border-box;font-size:14px;font-family:inherit;">
-        
         <label style="font-size:12px; font-weight:bold; color:#555; display:block; margin-bottom:5px;">📞 연락처</label>
         <input type="tel" id="edit-phone" oninput="formatPhoneNumber(this)" maxlength="13" value="${oldPhone === 'undefined' ? '' : oldPhone}" style="width:100%;padding:12px;margin-bottom:15px;border:1px solid #ccc;border-radius:8px;box-sizing:border-box;font-size:14px;font-family:inherit;">
-        
         <label style="font-size:12px; font-weight:bold; color:#555; display:block; margin-bottom:5px;">🏢 업체명</label>
-        <input type="text" id="edit-comp" value="${oldComp}" style="width:100%;padding:12px;margin-bottom:15px;border:1px solid #ccc;border-radius:8px;box-sizing:border-box;font-size:14px;font-family:inherit;">
-        
-        <label style="font-size:12px; font-weight:bold; color:#555; display:block; margin-bottom:5px;">📍 소속 캠프</label>
-        <select id="edit-camp" style="width:100%;padding:12px;margin-bottom:25px;border:1px solid #ccc;border-radius:8px;box-sizing:border-box;font-size:14px;font-family:inherit;">
-            <option value="음봉MB" ${oldCamp === '음봉MB' ? 'selected' : ''}>음봉MB</option>
-            <option value="송촌MB" ${oldCamp === '송촌MB' ? 'selected' : ''}>송촌MB</option>
-        </select>
-        
+        <input type="text" id="edit-comp" value="${oldComp}" style="width:100%;padding:12px;margin-bottom:25px;border:1px solid #ccc;border-radius:8px;box-sizing:border-box;font-size:14px;font-family:inherit;">
         <div style="display:flex;gap:10px;">
             <button id="btn-save-edit" style="width:50%;padding:14px;background:#3498db;color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:900;cursor:pointer;">저장</button>
             <button id="btn-cancel-edit" style="width:50%;padding:14px;background:#ccc;color:#333;border:none;border-radius:10px;font-size:15px;font-weight:bold;cursor:pointer;">취소</button>
         </div>
     `;
-
     modal.appendChild(box);
     document.body.appendChild(modal);
-
     document.getElementById('btn-save-edit').onclick = () => {
         const nName = document.getElementById('edit-name').value.trim();
         const nPhone = document.getElementById('edit-phone').value.trim();
         const nComp = document.getElementById('edit-comp').value.trim();
-        const nCamp = document.getElementById('edit-camp').value;
-
         if(!nName || !nComp) { myAlert("성함과 업체명을 모두 비워둘 수 없습니다!"); return; }
-
-        db.ref("users/" + id).update({
-            name: nName,
-            phone: nPhone,
-            company: nComp,
-            camp: nCamp
-        }).then(() => {
-            document.body.removeChild(modal);
-            myAlert("✨ 정보가 깔끔하게 수정되었습니다!");
-        }).catch(() => myAlert("수정 중 오류가 발생했습니다."));
+        db.ref("users/" + id).update({ name: nName, phone: nPhone, company: nComp })
+        .then(() => { document.body.removeChild(modal); myAlert("✨ 정보가 깔끔하게 수정되었습니다!"); })
+        .catch(() => myAlert("수정 중 오류가 발생했습니다."));
     };
-
-    document.getElementById('btn-cancel-edit').onclick = () => {
-        document.body.removeChild(modal);
-    };
+    document.getElementById('btn-cancel-edit').onclick = () => { document.body.removeChild(modal); };
 }
 
 function downloadExcel() {
-    if(Object.keys(globalUsersData).length === 0) {
-        myAlert("다운로드할 데이터가 없습니다."); return;
-    }
-    
+    if(Object.keys(globalUsersData).length === 0) { myAlert("다운로드할 데이터가 없습니다."); return; }
     let csv = '\uFEFF'; 
-    csv += "아이디,성함,연락처,업체명,캠프,가입일시\n";
-    
+    csv += "아이디,성함,연락처,업체명,가입일시\n";
     Object.keys(globalUsersData).forEach(key => {
         const u = globalUsersData[key];
         if(u.approved) {
             const dateStr = u.regDate ? new Date(u.regDate).toLocaleString() : '정보없음';
-            csv += `${u.id},${u.name},${u.phone || '미입력'},${u.company},${u.camp},${dateStr}\n`;
+            csv += `${u.id},${u.name},${u.phone || '미입력'},${u.company},${dateStr}\n`;
         }
     });
-
     const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
     const link = document.createElement("a");
     link.href = URL.createObjectURL(blob);
-    link.download = "라이언엘_기사명단.csv";
+    link.download = "택배잡_기사명단.csv";
     link.click();
 }
 
@@ -465,7 +375,7 @@ function approveUser(id, name, company, camp, phone) {
         .then(() => {
             myAlert(id + " 기사님 승인 완료!");
             if (phone) {
-                const msg = "천안1캠프 채번 시스템 가입이 승인되었습니다.\n처음 로그인 후 [👆 붙여넣기 클릭] 버튼을 눌러 권한을 [허용] 해주세요.";
+                const msg = "택배잡 채번 시스템 가입이 승인되었습니다.\n처음 로그인 후 [👆 붙여넣기 클릭] 버튼을 눌러 권한을 [허용] 해주세요.";
                 sendSMS(phone, msg);
             }
         })
@@ -475,16 +385,12 @@ function approveUser(id, name, company, camp, phone) {
 
 function rejectUser(id, phone) {
     myPrompt(id + " 기사님의 거절 사유를 입력해주세요.", (reason) => {
-        db.ref("승인거절방/" + id).set({
-            id: id,
-            reason: reason,
-            timestamp: new Date().getTime()
-        })
+        db.ref("승인거절방/" + id).set({ id: id, reason: reason, timestamp: new Date().getTime() })
         .then(() => db.ref("승인대기방/" + id).remove())
         .then(() => {
             myAlert("거절 처리 및 사유가 전송되었습니다!");
             if (phone) {
-                const msg = "천안1캠프 채번 시스템 가입이 거절되었습니다.\n앱에 접속하여 거절 사유를 확인해주세요.";
+                const msg = "택배잡 채번 시스템 가입이 거절되었습니다.\n앱에 접속하여 거절 사유를 확인해주세요.";
                 sendSMS(phone, msg);
             }
         })
@@ -518,18 +424,9 @@ function saveNotice() {
     const input = document.getElementById('admin-notice-input');
     const text = input.value.trim();
     if(!text) { myAlert("공지 내용을 입력해주세요!"); return; }
-    
     const now = new Date().getTime();
-    
-    db.ref("공지사항/최신공지").set({
-        text: text,
-        timestamp: now
-    });
-    
-    db.ref("공지사항내역").push({
-        text: text,
-        time: now
-    }).then(() => {
+    db.ref("공지사항/최신공지").set({ text: text, timestamp: now });
+    db.ref("공지사항내역").push({ text: text, time: now }).then(() => {
         input.value = '';
         myAlert("새로운 최신 공지가 성공적으로 등록되었습니다!");
         loadNoticeHistory();
@@ -539,12 +436,10 @@ function saveNotice() {
 function loadNoticeHistory() {
     const listObj = document.getElementById('notice-history-list');
     if(!listObj) return;
-    
     db.ref("공지사항내역").orderByChild("time").limitToLast(5).once('value', snap => {
         let html = '';
         const notices = [];
         snap.forEach(child => { notices.unshift({key: child.key, ...child.val()}); });
-        
         if(notices.length === 0) {
             html = '<div style="color:#999; text-align:center; padding:10px;">등록된 공지가 없습니다.</div>';
         } else {
