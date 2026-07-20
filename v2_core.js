@@ -230,7 +230,6 @@ function showMain(id) {
     document.getElementById('main-view').style.display = 'block';
     document.getElementById('display-id').innerText = id;
 
-    // 라우트 번호 고정값 복원
     const fixedRoute = localStorage.getItem('ryanl_route_fixed');
     if (fixedRoute) {
         setTimeout(() => {
@@ -245,7 +244,6 @@ function showMain(id) {
         }, 100);
     }
 
-    // 서브라우트 고정값 복원
     const fixedSubroute = localStorage.getItem('ryanl_subroute_fixed');
     if (fixedSubroute) {
         setTimeout(() => {
@@ -271,7 +269,6 @@ function showMain(id) {
         const val = snap.val();
         if(val && val.text) {
             const savedNotice = localStorage.getItem('notice_' + id);
-            
             if(savedNotice !== val.text) {
                 myAlert("📢 [전체 공지사항]\n\n" + val.text);
                 localStorage.setItem('notice_' + id, val.text); 
@@ -327,9 +324,7 @@ function sendFeedbackPrompt() {
     okBtn.onclick = () => {
         const val = input.value.trim();
         if(!val) { myAlert("내용을 입력해주세요!"); return; }
-        
         const userId = localStorage.getItem('ryanl_id') || '로그인 전 사용자';
-        
         db.ref("피드백방").push({
             id: userId,
             text: val,
@@ -342,9 +337,7 @@ function sendFeedbackPrompt() {
         });
     };
 
-    cancelBtn.onclick = () => {
-        document.body.removeChild(modal);
-    };
+    cancelBtn.onclick = () => { document.body.removeChild(modal); };
 
     btnGroup.appendChild(okBtn);
     btnGroup.appendChild(cancelBtn);
@@ -379,7 +372,7 @@ function showInstallQR() {
     modal.addEventListener('click', function(e) {
         if (e.target === modal) modal.remove();
     });
-} 
+}
 
 const sunIconSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="#f1c40f" stroke="none"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3" stroke="#f1c40f" stroke-width="1.5"></line><line x1="12" y1="21" x2="12" y2="23" stroke="#f1c40f" stroke-width="1.5"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64" stroke="#f1c40f" stroke-width="1.5"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78" stroke="#f1c40f" stroke-width="1.5"></line><line x1="1" y1="12" x2="3" y2="12" stroke="#f1c40f" stroke-width="1.5"></line><line x1="21" y1="12" x2="23" y2="12" stroke="#f1c40f" stroke-width="1.5"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36" stroke="#f1c40f" stroke-width="1.5"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22" stroke="#f1c40f" stroke-width="1.5"></line></svg>`;
 
@@ -414,6 +407,6 @@ function updateDarkModeButton(isDark) {
     }
 
     if (logo) {
-        logo.src = isDark ? 'mlogo_dark.jpg' : 'mlogo.jpg';
+        logo.src = 'tkbj_logo.png';
     }
 }
