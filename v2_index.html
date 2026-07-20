@@ -226,7 +226,7 @@
 </head>
 <body>
     <div id="splash-screen">
-        <img src="loading.jpg" class="splash-logo" alt="RyanL Loading">
+        <img src="loading.jpg" class="splash-logo" alt="택배잡 Loading">
         <div class="splash-text">Loading.....</div>
     </div>
 
@@ -244,9 +244,9 @@
             <div style="font-size:18px; font-weight:900; color:#152b52; margin-bottom:15px;">미승인 아이디입니다</div>
             <div style="font-size:14px; color:#444; line-height:1.6; text-align:left; background:#f4f4f4; padding:15px; border-radius:10px; margin-bottom:20px;">
                 관리자에게 승인을 요청하세요.<br><br>
-                <input type="text" id="req-id" placeholder="아이디 (예: RyanL)" style="width:100%; padding:10px; margin-bottom:10px; border:1px solid #ccc; border-radius:5px; box-sizing:border-box;">
+                <input type="text" id="req-id" placeholder="아이디 (예: taekbaejob)" style="width:100%; padding:10px; margin-bottom:10px; border:1px solid #ccc; border-radius:5px; box-sizing:border-box;">
                 <input type="text" id="req-name" placeholder="성함 (예: 홍길동)" style="width:100%; padding:10px; margin-bottom:10px; border:1px solid #ccc; border-radius:5px; box-sizing:border-box;">
-                <input type="text" id="req-company" placeholder="업체명 (예: 라이언엘)" style="width:100%; padding:10px; margin-bottom:10px; border:1px solid #ccc; border-radius:5px; box-sizing:border-box;">
+                <input type="text" id="req-company" placeholder="업체명 (예: 택배잡)" style="width:100%; padding:10px; margin-bottom:10px; border:1px solid #ccc; border-radius:5px; box-sizing:border-box;">
                 <input type="tel" id="req-phone" oninput="formatPhoneNumber(this)" maxlength="13" placeholder="연락처 (예: 010-1234-5678)" style="width:100%; padding:10px; margin-bottom:10px; border:1px solid #ccc; border-radius:5px; box-sizing:border-box;">
                 <label style="display:flex; align-items:flex-start; gap:5px; font-size:11px; color:#555; margin-bottom:10px; text-align:left; line-height:1.4;">
                     <input type="checkbox" id="privacy-consent" style="margin-top:2px;">
@@ -315,10 +315,10 @@
             </div>
             
             <div style="position: relative; display: inline-block;">
-                <img src="mlogo.jpg" class="logo-img">
+                <img src="tkbj_logo.png" class="logo-img">
                 <script>
                     if (localStorage.getItem('ryanl_darkmode') === 'on') {
-                        document.querySelector('.logo-img').src = 'mlogo_dark.jpg';
+                        document.querySelector('.logo-img').src = 'tkbj_logo.png';
                     }
                 </script>
                 <div id="admin-badge" style="display:none; position:absolute; top:-5px; right:-5px; background:red; color:white; font-size:10px; font-weight:bold; padding:2px 6px; border-radius:10px; box-shadow:0 2px 4px rgba(0,0,0,0.3); z-index:11;">0</div>
@@ -334,7 +334,7 @@
         <!-- ===================== 로그인 화면 ===================== -->
         <div id="setup-view">
             <label class="setup-label">👤 기사님 아이디</label>
-            <input type="text" id="user-id" placeholder="예: RyanL">
+            <input type="text" id="user-id" placeholder="예: taekbaejob">
             
             <button class="btn-submit" onclick="saveInfo()" style="margin-top: 20px;">로그인</button>
 
@@ -531,7 +531,7 @@
 
                 function selectSubroute(val) {
                     const fixedCheckbox = document.getElementById('subroute-fixed');
-                    if (fixedCheckbox && fixedCheckbox.checked) return; // 고정 상태면 변경 불가
+                    if (fixedCheckbox && fixedCheckbox.checked) return;
                     document.getElementById('subroute').value = val;
                     document.querySelectorAll('.subroute-btn').forEach(btn => {
                         btn.classList.toggle('active', btn.innerText === val);
@@ -636,7 +636,7 @@
 
         <div class="footer">
             <span class="contact-info">오류 및 기타 문의 : cndrone@naver.com</span>
-            © 2026 RyanL Logistics.<br>
+            © 2026 택배잡.<br>
             <span class="designer-tag">Created by LJH<span class="hidden-name">이준희</span></span>
             <span class="warning-text">무단 복제 및 도용 시 법적 처벌을 받을 수 있습니다.</span>
         </div>
